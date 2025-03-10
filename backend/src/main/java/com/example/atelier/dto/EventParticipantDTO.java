@@ -1,0 +1,21 @@
+package com.example.atelier.dto;
+
+import com.example.atelier.domain.User;
+import com.example.atelier.domain.Voucher;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.sql.Timestamp;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+public class EventParticipantDTO {
+    private Integer id;               // 참가자 ID
+    private Integer user_id;           // 사용자 ID
+    private Integer voucher_id;        // 쿠폰 ID
+    private Timestamp registered_at;   // 등록된 시간
+}
