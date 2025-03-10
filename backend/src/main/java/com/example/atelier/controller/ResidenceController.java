@@ -1,9 +1,9 @@
 package com.example.atelier.controller;
 
+
 import com.example.atelier.dto.ResidenceDTO;
 import com.example.atelier.repository.UserRepository;
 import com.example.atelier.service.ResidenceService;
-import com.example.atelier.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
