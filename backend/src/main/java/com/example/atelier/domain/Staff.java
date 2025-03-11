@@ -34,7 +34,7 @@ public class Staff {
     private Date hireDate;
 
     public enum Department {
-        reception, housekeeping, restaurant, spa
+        RECEPTION, HOUSEKEEPING, RESTAURANT, SPA
     }
 }
 

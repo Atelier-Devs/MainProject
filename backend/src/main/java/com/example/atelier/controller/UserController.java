@@ -55,7 +55,7 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         String email = loginRequestDTO.getEmail();
         String password = loginRequestDTO.getPassword();
-
+        System.out.println("login controller :" +loginRequestDTO);
         // 1) 이메일로 사용자 조회
         User user = userRepository.findByEmail(email);
 

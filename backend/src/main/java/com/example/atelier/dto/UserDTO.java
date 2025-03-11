@@ -18,6 +18,6 @@ public class UserDTO {
     private String email;                // 사용자 이메일
     private String password;             // 사용자 비밀번호
     private String phone;                // 사용자 전화번호
-    private String role;                 // 사용자 역할 (문자열로 표현)
-    private Timestamp created_at;        // 생성된 시간
+    private User.Role role;              // 사용자 역할 (문자열로 표현)
+    private Timestamp createdAt;        // 생성된 시간
 }

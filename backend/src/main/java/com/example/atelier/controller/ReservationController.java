@@ -28,6 +28,15 @@ public class ReservationController {
     @Autowired
     private ModelMapper modelMapper;
 
+    // POST
+    @PostMapping("/add")
+    public String addData(@RequestBody ReservationDTO dto){
+        System.out.println("contoller data : " + dto);
+
+        return ""+reservationService.register(dto);
+
+    }
+
     // GET
     @GetMapping("/")
     public List<ReservationDTO> get(@RequestParam String email) {

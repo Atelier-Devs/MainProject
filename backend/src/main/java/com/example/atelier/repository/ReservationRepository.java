@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation,Integer> {
     List<Reservation> findByUserEmail(String email); // 이메일로 예약 조회
+    List<Reservation> findByCreatedAtBefore(LocalDateTime date);
 
     // 취소 로그 기록
     @Transactional
