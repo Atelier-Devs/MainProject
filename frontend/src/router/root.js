@@ -17,7 +17,7 @@ const root = createBrowserRouter([
   },
 
   {
-    path: "/api/atelier",
+    path: "member",
     children: memberRouter(),
   },
 ]);

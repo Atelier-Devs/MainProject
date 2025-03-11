@@ -15,9 +15,9 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class ReviewDTO {
     private Integer id;               // 리뷰 ID
-    private Integer user_id;           // 사용자 ID
-    private Integer residence_id;       // 숙소 ID
+    private Integer userId;           // 사용자 ID
+    private Integer residenceId;       // 숙소 ID
     private Integer rating;            // 평점
     private String comment;            // 리뷰 내용
-    private Timestamp created_at;      // 생성된 시간
+    private Timestamp createdAt;      // 생성된 시간
 }

@@ -12,6 +12,6 @@ import lombok.Setter;
 @Setter
 public class RoomDetailDTO {
     private Integer id;               // 룸 상세 ID
-    private Integer residence_id;      // 숙소 ID
+    private Integer residenceId;      // 숙소 ID
     private String feature;           // 룸 특징
 }

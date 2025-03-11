@@ -30,14 +30,15 @@ public class Order {
 
     private String items;
     private BigDecimal totalPrice;
+    private String email;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @Column(name = "created_at")
+    @Column(name = "created_t")
     private Timestamp createdAt;
 
     public enum OrderStatus {
-        pending, completed, cancelled
+        PENDING, COMPLETED, CANCELLED
     }
 }

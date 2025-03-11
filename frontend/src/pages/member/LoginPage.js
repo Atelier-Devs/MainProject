@@ -46,8 +46,8 @@ const LoginPage = () => {
         </form>
 
         <div className="mt-4 text-center">
-          <button className="bg-[#ad9e87] text-[#fff] py-2 px-4 rounded-md font-bold hover:bg-[#f9de97]">
-            회원가입
+          <button className="bg-[#232323] text-[#f9de97] py-2 px-4 rounded-md font-bold hover:bg-gray-700">
+            추가 옵션
           </button>
         </div>
       </div>

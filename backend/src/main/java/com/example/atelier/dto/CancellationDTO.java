@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Setter
 public class CancellationDTO {
     private Integer id;               // 취소 로그 ID
-    private Integer reservation_id;     // 예약 ID
+    private Integer reservationId;     // 예약 ID
     private String reason;             // 취소 사유
-    private Timestamp cancelled_at;    // 취소된 시간
+    private Timestamp cancelledAt;    // 취소된 시간
 }

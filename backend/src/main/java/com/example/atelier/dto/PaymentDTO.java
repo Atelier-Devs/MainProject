@@ -18,19 +18,11 @@ import java.sql.Timestamp;
 @Setter
 public class PaymentDTO {
     private Integer id;                   // 결제 ID
-    private Integer user_id;               // 사용자 ID
-    private Integer reservation_id;         // 예약 ID
-    private Integer voucher_id;             // 쿠폰 ID
+    private Integer userId;               // 사용자 ID
+    private Integer reservationId;         // 예약 ID
+    private Integer voucherId;             // 쿠폰 ID
     private BigDecimal amount;             // 결제 금액
-    private String paymentStatus;          // 결제 상태 (문자열로 표현)
-    private String paymentMethod;          // 결제 방법 (문자열로 표현)
-    private Timestamp created_at;          // 생성된 시간
-
-    public enum PaymentStatus {
-        pending, completed, failed, refunded
-    }
-
-    public enum PaymentMethod {
-        credit_card, paypal, bank_transfer
-    }
+    private Payment.PaymentStatus paymentStatus; // 결제 상태 (문자열로 표현)
+    private Payment.PaymentMethod paymentMethod; // 결제 방법 (문자열로 표현)
+    private Timestamp createdAt;          // 생성된 시간
 }

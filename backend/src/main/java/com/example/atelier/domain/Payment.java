@@ -21,7 +21,7 @@ public class Payment {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_d")
     private User user;
 
     @ManyToOne
@@ -40,15 +40,15 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @Column(name = "created_at")
+    @Column(name = "created_t")
     private Timestamp createdAt;
 
     public enum PaymentStatus {
-        pending, completed, failed, refunded
+        PENDING, COMPLETED, FAILED, REFUNDED
     }
 
     public enum PaymentMethod {
-        credit_card, paypal, bank_transfer
+        CREDIT_CARD, PAYPAL, BANK_TRANSFER
     }
 }
 

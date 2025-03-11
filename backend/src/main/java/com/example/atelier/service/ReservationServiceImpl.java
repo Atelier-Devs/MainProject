@@ -2,17 +2,21 @@ package com.example.atelier.service;
 
 import com.example.atelier.domain.Reservation;
 import com.example.atelier.domain.Residence;
+import com.example.atelier.domain.User;
 import com.example.atelier.dto.ReservationDTO;
 import com.example.atelier.dto.ResidenceDTO;
 import com.example.atelier.repository.ReservationRepository;
 import com.example.atelier.repository.ResidenceRepository;
+import com.example.atelier.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +31,12 @@ public class ReservationServiceImpl implements ReservationService{
     private ModelMapper modelMapper;
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ResidenceRepository residenceRepository;
 
-    // 조회
+    // GET
     @Override
     public List<ReservationDTO> get(String email) {
         List<Reservation> result = reservationRepository.findByUserEmail(email); // 엔티티 타입 전부 찾아오기
@@ -40,7 +48,7 @@ public class ReservationServiceImpl implements ReservationService{
         return resultDtoList;
     }
 
-    // 수정
+    // PUT
     @Override
     public void modify(ReservationDTO reservationDTO) {
         // 예약 조회
@@ -52,7 +60,7 @@ public class ReservationServiceImpl implements ReservationService{
         reservationRepository.save(reservation);
     }
 
-    // 삭제
+    // DELETE
     @Override
     public void remove(Integer id, Reservation reservation, String reason) {
         // 취소 로그 기록
@@ -68,5 +76,50 @@ public class ReservationServiceImpl implements ReservationService{
 //        reservationRepository.refundPayment(reservation.getId());
         // 삭제
         reservationRepository.deleteById(id);
+    }
+
+    // POST
+    @Override
+    public Integer register(ReservationDTO reservationDTO) {
+        log.info("Registering new reservation: {}", reservationDTO);
+
+        // 사용자 & 숙소 조회
+        User user = userRepository.findById(reservationDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Residence residence = residenceRepository.findById(reservationDTO.getResidenceId())
+                .orElseThrow(() -> new IllegalArgumentException("Residence not found"));
+
+        // DTO → Entity 변환
+//            Reservation reservation = toEntity(reservationDTO, user, residence);
+        Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
+        System.out.println("reservatopm: " +reservation);
+        // DB 저장
+        return reservationRepository.save(reservation).getId();
+    }
+
+
+    // 특정 예약 삭제 (수동 삭제)
+    @Override
+    public void deleteReservation(Integer reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        reservationRepository.delete(reservation);
+        log.info("Deleted reservation with ID: {}", reservationId);
+    }
+
+    // 30일 지난 예약 자동 삭제 (매일 새벽 3시 실행)
+    @Scheduled(cron = "0 0 3 * * ?") // 매일 새벽 3시에 실행
+    public void deleteOldReservations() {
+        LocalDateTime thresholdDate = LocalDateTime.now().minusDays(30);
+        List<Reservation> oldReservations = reservationRepository.findByCreatedAtBefore(thresholdDate);
+
+        if (!oldReservations.isEmpty()) {
+            reservationRepository.deleteAll(oldReservations);
+            log.info("Deleted {} old reservations", oldReservations.size());
+        } else {
+            log.info("No old reservations found for deletion.");
+        }
     }
 }

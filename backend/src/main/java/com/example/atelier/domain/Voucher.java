@@ -34,10 +34,10 @@ public class Voucher {
     private Status status;
 
     public enum Category {
-        event, promotion, bakery
+        EVENT, PROMOTION, BAKERY
     }
 
     public enum Status {
-        active, expired, used
+        ACTIVE, EXPIRED, USED
     }
 }

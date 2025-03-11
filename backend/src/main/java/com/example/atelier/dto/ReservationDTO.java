@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReservationDTO {
     private Integer id;                      // 예약 ID
-    private Integer user_id;                  // 사용자 ID
-    private Integer residence_id;              // 숙소 ID
-    private LocalDateTime reservation_date;    // 예약 날짜
+    private Integer userId;                  // 사용자 ID
+    private Integer residenceId;              // 숙소 ID
+    private LocalDateTime reservationDate;    // 예약 날짜
     private Reservation.Status status;        // 예약 상태 (문자열로 표현)
-    private Timestamp created_at;             // 생성된 시간
+    private Timestamp createdAt;             // 생성된 시간
 }
