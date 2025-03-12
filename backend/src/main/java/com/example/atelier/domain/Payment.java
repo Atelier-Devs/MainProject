@@ -21,7 +21,7 @@ public class Payment {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_d")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
@@ -30,7 +30,11 @@ public class Payment {
 
     @ManyToOne
     @JoinColumn(name = "voucher_id")
-    private Voucher voucher;
+    private Membership voucher;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     private BigDecimal amount;
 
@@ -40,7 +44,7 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @Column(name = "created_t")
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
     public enum PaymentStatus {

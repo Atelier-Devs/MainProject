@@ -1,6 +1,7 @@
 package com.example.atelier.controller;
 
 import com.example.atelier.domain.Reservation;
+import com.example.atelier.dto.MembershipDTO;
 import com.example.atelier.dto.ReservationDTO;
 import com.example.atelier.dto.ResidenceDTO;
 import com.example.atelier.repository.ReservationRepository;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/atelier/reservation")
+@RequestMapping("/api/atelier/reservations")
 @Slf4j
 public class ReservationController {
 
@@ -25,22 +26,25 @@ public class ReservationController {
     private ReservationService reservationService;
     @Autowired
     private ReservationRepository reservationRepository;
-    @Autowired
-    private ModelMapper modelMapper;
 
     // POST
     @PostMapping("/add")
-    public String addData(@RequestBody ReservationDTO dto){
-        System.out.println("contoller data : " + dto);
-
-        return ""+reservationService.register(dto);
-
+    public String addData(@RequestBody ReservationDTO reservationDTO){
+        System.out.println("controller data : " + reservationDTO);
+        return ""+reservationService.register(reservationDTO);
     }
 
     // GET
+    @GetMapping("/{id}")
+    public List<ReservationDTO> get(@PathVariable("id") Integer id) {
+        System.out.println("여기 controller " + id);
+        return reservationService.get(id);
+    }
+
+    // GET ALL(관리자모드)
     @GetMapping("/")
-    public List<ReservationDTO> get(@RequestParam String email) {
-        return reservationService.get(email);
+    public List<ReservationDTO> get() {
+        return reservationService.getAllReservations();
     }
 
     // PUT
@@ -51,12 +55,8 @@ public class ReservationController {
     }
 
     // DELETE
-    @DeleteMapping("/{id}")
-    public void remove(@PathVariable Integer id, Reservation reservation, String reason) {
-        reservationService.remove(id, reservation, reason);
+    @DeleteMapping("/delete/{id}")
+    public void remove(@PathVariable Integer id) {
+        reservationService.remove(id);
     }
-
-
-
-
 }
