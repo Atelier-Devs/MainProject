@@ -1,9 +1,6 @@
 package com.example.atelier.domain;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
@@ -17,6 +14,7 @@ import java.util.Date;
 @Slf4j
 @Entity
 @Table(name = "residences")
+@ToString
 public class Residence {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

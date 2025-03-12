@@ -69,6 +69,4 @@ public class UserController {
                     .body(new ErrorResponseDTO("Login failed: Invalid email or password."));
         }
     }
-
-
 }

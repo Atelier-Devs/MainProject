@@ -1,0 +1,24 @@
+.footer {
+    position: fixed;
+    /* 화면에 고정 */
+    bottom: 0;
+    /* 화면 하단에 위치 */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFFF;
+    color: #cea062;
+    padding: 5px 10px;
+    border-top: 1px solid #ddd;
+    min-height: 10vh;
+    z-index: 100;
+}
+
+.footer-info,
+.footer-contact {
+    margin: 0 auto;
+    font-size: 12px;
+    line-height: 1.2;
+}

@@ -10,20 +10,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation,Integer> {
-    List<Reservation> findByUserEmail(String email); // 이메일로 예약 조회
+    List<Reservation> findByUserId(Integer userId);
     List<Reservation> findByCreatedAtBefore(LocalDateTime date);
 
-    // 취소 로그 기록
-    @Transactional
-    @Modifying
-    @Query(value = "INSERT INTO cancellation_logs (reservation_id, cancelled_at, reason) VALUES (?1, NOW(), ?2)", nativeQuery = true)
-    void logCancellation(Integer reservationId, String reason);
+//    // 취소 로그 기록
+//    @Transactional
+//    @Modifying
+//    @Query(value = "INSERT INTO cancellation_logs (reservation_id, cancelled_at, reason) VALUES (?1, NOW(), ?2)", nativeQuery = true)
+//    void logCancellation(Integer reservationId, String reason);
 
-    // 예약 ID로 취소 로그의 reservation_id를 NULL로 설정
-    @Transactional
-    @Modifying
-    @Query(value = "UPDATE cancellation_logs SET reservation_id = NULL WHERE reservation_id = ?1", nativeQuery = true)
-    void nullifyCancellationLogsByReservationId(Integer reservationId);
+//    // 예약 ID로 취소 로그의 reservation_id를 NULL로 설정
+//    @Transactional
+//    @Modifying
+//    @Query(value = "UPDATE cancellation_logs SET reservation_id = NULL WHERE reservation_id = ?1", nativeQuery = true)
+//    void nullifyCancellationLogsByReservationId(Integer reservationId);
 
     // 예약 상태를 '취소'로 변경
     @Transactional

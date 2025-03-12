@@ -25,7 +25,7 @@ public class EventParticipant {
 
     @ManyToOne
     @JoinColumn(name = "voucher_id")
-    private Voucher voucher;
+    private Membership voucher;
 
     @Column(name = "registered_at")
     private Timestamp registeredAt;

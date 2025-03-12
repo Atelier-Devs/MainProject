@@ -1,0 +1,71 @@
+/* 헤더 전체 스타일 */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffff;
+    /* 로고 배경과 동일하게 설정 */
+    color: #f9de97;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* 약간의 그림자 효과 */
+}
+
+/* 로고와 사이트 이름 스타일링 */
+.header .logo {
+    display: flex;
+    align-items: center;
+}
+
+.header .logo a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* 새로운 로고 이미지 삽입 */
+.header .logo img {
+    height: 50px;
+    /* 로고 크기 조정 */
+    margin-right: 10px;
+}
+
+/* 로고 이미지 경로 설정 */
+.header .logo a img {
+    content: url('../image/logo.png');
+    /* 새로운 로고 이미지 경로 설정 */
+}
+
+/* 사이트 이름 스타일 */
+.header .logo span {
+    font-size: 24px;
+    font-weight: bold;
+    color: #cea062;
+}
+
+/* 메뉴 스타일 */
+.header .menu {
+    display: flex;
+}
+
+.header .menu a {
+    color: #cea062;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 15px;
+    border-left: 1px solid #fff;
+    text-align: center;
+}
+
+.header .menu a:first-child {
+    border-left: none;
+}
+
+.header .menu a:hover {
+    background-color: #FAF0E6;
+}

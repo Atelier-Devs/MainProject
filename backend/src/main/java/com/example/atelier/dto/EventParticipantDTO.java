@@ -1,7 +1,5 @@
 package com.example.atelier.dto;
 
-import com.example.atelier.domain.User;
-import com.example.atelier.domain.Voucher;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

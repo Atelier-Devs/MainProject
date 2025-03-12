@@ -1,0 +1,142 @@
+/* 전체 레이아웃 설정 */
+.signup-container {
+    width: 80%;
+    margin: 60px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 회원가입 입력 필드 스타일 */
+.form-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    padding: 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 회원가입 제목 스타일 */
+.signup-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* 회원가입 버튼 컨테이너 - 버튼을 중앙 아래에 위치 */
+.signup-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    /* 폼과의 간격 조정 */
+    margin-bottom: 60px;
+    /* 하단 여백 추가 */
+}
+
+/* 회원가입 버튼 스타일 */
+.submit-button {
+    width: 250px;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #cea062;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #ad8c50;
+}
+
+.signup-container h1 {
+    font-size: 2.5rem;
+    /* 글자 크기 증가 */
+    font-weight: bold;
+    /* 글자 굵게 */
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* 버튼 스타일 */
+.input-group button,
+.btn-info,
+.submit-button {
+    padding: 10px 15px;
+    background-color: #cea062;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.input-group button:hover,
+.btn-info:hover,
+.submit-button:hover {
+    background-color: #b98d50;
+}
+
+/* 약관 동의 스타일 */
+.terms-container {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.terms-block {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 15px;
+}
+
+.terms-block h3 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.terms-block label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+/* 비밀번호 유효성 피드백 */
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
