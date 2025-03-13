@@ -21,8 +21,8 @@ import java.util.Optional;
 @Slf4j
 public class MembershipServiceImpl implements MembershipService{
 
-    private final MembershipRepository membershipRepository;
-    private final ModelMapper modelMapper;
+    private MembershipRepository membershipRepository;
+    private ModelMapper modelMapper;
 
     // POST
     @Override
@@ -72,7 +72,7 @@ public class MembershipServiceImpl implements MembershipService{
         List<Membership> result = membershipRepository.findAll(); // 모든 멤버십 조회
         List<MembershipDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
 
-        result.forEach(i -> { // Optional이므로 멤버십이 존재할 경우에만(ifPresent) DTO로 변환
+        result.forEach(i -> {
             MembershipDTO data = modelMapper.map(i, MembershipDTO.class); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });
@@ -90,7 +90,7 @@ public class MembershipServiceImpl implements MembershipService{
                     Membership.setStatus(membershipDTO.getStatus());
                     return membershipRepository.save(Membership);
                 })
-                .orElseThrow(() -> new RuntimeException("해당 바우처가 존재하지 않습니다."));
+                .orElseThrow(() -> new RuntimeException("해당 멤버십이 존재하지 않습니다."));
     }
 
     // DELETE
@@ -99,15 +99,15 @@ public class MembershipServiceImpl implements MembershipService{
         membershipRepository.deleteById(id);
     }
 
-    // 바우처 사용 처리 (유효성 검사 포함)
+    // 멤버십  사용 처리 (유효성 검사 포함)
     @Transactional
     @Override
     public void useMembership(Integer id) {
-        // 바우처 조회
+        // 멤버십 조회
         Membership membership = membershipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 멤버십이 존재하지 않습니다."));
 
-        // 바우처 상태 체크
+        // 멤버십 상태 체크
         if (membership.getStatus() != Membership.Status.ACTIVE) {
             throw new RuntimeException("이 멤버십은 사용할 수 없습니다.");
         }
@@ -118,7 +118,7 @@ public class MembershipServiceImpl implements MembershipService{
             throw new RuntimeException("이 멤버십은 이미 만료되었습니다.");
         }
 
-        // 바우처 사용 처리
+        // 멤버십 사용 처리
         membership.setStatus(Membership.Status.USED);
         membershipRepository.save(membership);
     }
