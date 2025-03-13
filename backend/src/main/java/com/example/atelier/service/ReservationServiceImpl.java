@@ -36,8 +36,9 @@ public class ReservationServiceImpl implements ReservationService{
     // GET
     @Override
     public List<ReservationDTO> get(Integer userId) {
-        System.out.println("service " +userId);
-        List<Reservation> result = reservationRepository.findByUserId(userId); // 엔티티 타입 전부 찾아오기
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
+        List<Reservation> result = reservationRepository.findByUserId(user); // 엔티티 타입 전부 찾아오기
         System.out.println("result:" +result);
         List<ReservationDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
         result.forEach(i -> {

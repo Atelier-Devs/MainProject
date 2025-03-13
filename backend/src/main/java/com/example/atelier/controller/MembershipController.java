@@ -25,9 +25,7 @@ import java.util.List;
 @Slf4j
 public class MembershipController {
 
-    @Autowired
     private MembershipRepository membershipRepository;
-    @Autowired
     private MembershipService membershipService;
 
     // POST
