@@ -16,6 +16,5 @@ public class ItemDTO {
     private Integer id; // 아이템 ID
     private String name; // 아이템 이름
     private BigDecimal price; // 아이템 가격
-    private Integer quantity; // 아이템 수량
     private Item.Category category; // 아이템 카테고리
 }

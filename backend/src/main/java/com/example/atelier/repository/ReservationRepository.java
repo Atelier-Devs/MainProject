@@ -1,6 +1,7 @@
 package com.example.atelier.repository;
 
 import com.example.atelier.domain.Reservation;
+import com.example.atelier.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,8 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation,Integer> {
-    List<Reservation> findByUserId(Integer userId);
-    List<Reservation> findByCreatedAtBefore(LocalDateTime date);
+    List<Reservation> findByUserId(User user);
 
 //    // 취소 로그 기록
 //    @Transactional

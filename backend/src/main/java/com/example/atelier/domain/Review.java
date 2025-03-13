@@ -27,9 +27,9 @@ public class Review {
     @JoinColumn(name = "residence_id")
     private Residence residence;
 
-    private Integer rating;
-    private String comment;
+    private Integer rating; // 평점을 숫자로 기록
+    private String comment; // 리뷰 내용
 
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private Timestamp createdAt; // 리뷰 작성일자
 }

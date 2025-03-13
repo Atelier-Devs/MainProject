@@ -21,6 +21,10 @@ public class Membership {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user; // 이 멤버십이 속한 사용자
+
     @Enumerated(EnumType.STRING)
     private Category category;
 
