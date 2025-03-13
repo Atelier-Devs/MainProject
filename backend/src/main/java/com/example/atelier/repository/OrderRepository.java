@@ -1,6 +1,7 @@
 package com.example.atelier.repository;
 
 import com.example.atelier.domain.Order;
+import com.example.atelier.dto.OrderDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +15,6 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
 
     @Query("SELECT o FROM Order o WHERE o.user.email = :email and o.residence. id= :id")
     List<Order> findByUserEmailAndResidenceId(@Param("email") String email ,@Param("id") Integer id);
+
+    List<Order> findByUserId(Integer userId);
 }

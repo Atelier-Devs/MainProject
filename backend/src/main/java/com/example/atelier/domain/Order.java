@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,7 +19,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "orders")
 public class Order {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
@@ -29,7 +31,9 @@ public class Order {
     @JoinColumn(name = "residence_id")
     private Residence residence;
 
-    private String items;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL) // Order를 삭제하면 그에 속한 Item들도 함께 삭제
+    private List<Item> items; // 주문에 포함된 아이템 리스트
+
     private BigDecimal totalPrice;
     private String email;
 
@@ -43,18 +47,36 @@ public class Order {
         PENDING, COMPLETED, CANCELLED
     }
 
-    // 주문의 residence 변경
-    public void changeResidence(Residence residence){
-        this.residence=residence;
+    public void updateOrder(OrderStatus orderStatus, List<Item> items, BigDecimal totalPrice, String email) {
+        if (orderStatus != null) {
+            this.changeOrderStatus(orderStatus); // 주문 상태 변경
+        }
+        if (items != null) {
+            this.changeItem(items); // 아이템 목록 변경
+        }
+        if (residence != null) {
+            this.changeResidence(residence); // 거주지 변경
+        }
+        if (totalPrice != null) {
+            this.totalPrice = totalPrice; // 총 가격 변경
+        }
+        if (email != null) {
+            this.email = email; // 이메일 변경
+        }
     }
-    // 주문의 items 변경
-    public void changeItems(String items){
-        this.items=items;
+
+    private void changeResidence(Residence residence) {
+        this.residence = residence;
     }
-    // 주문 상태 변경 (이넘 상태 변경 메서드)
-    public void changeOrderStatus(OrderStatus orderStatus){
+
+    private void changeItem(List<Item> items) {
+        this.items = items;
+    }
+
+    private void changeOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
+
 
     // 주문의 createdAt 변경
 //    public void changeCreatedAt(Timestamp createdAt){

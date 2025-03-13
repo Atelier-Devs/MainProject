@@ -1,7 +1,9 @@
 package com.example.atelier.service;
 
+import com.example.atelier.domain.Item;
 import com.example.atelier.domain.Order;
 import com.example.atelier.dto.OrderDTO;
+import com.example.atelier.dto.ReservationDTO;
 import com.example.atelier.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,7 @@ public class OrderServiceImpl implements OrderService{
     private final ModelMapper modelMapper;
     private final OrderRepository orderRepository;
 
-    // 주문생성
+    // 주문 생성
     @Override
     public int createOrder(OrderDTO orderDTO) {
         log.info("createOrder ------------------");
@@ -29,9 +31,9 @@ public class OrderServiceImpl implements OrderService{
         return orderRepository.save(order).getId();
     }
 
-    // 주문조회(직원,관리자모드)
+    // 주문 조회(직원,관리자모드)
     @Override
-    public OrderDTO searchOrder(int id) {
+    public OrderDTO searchOrder(Integer id) {
         log.info("Order service searchOrder ------------------" + id);
         Optional<Order> result = orderRepository.findById(id);
         Order order = result.orElseThrow();
@@ -50,28 +52,29 @@ public class OrderServiceImpl implements OrderService{
 
     // 특정 사용자의 주문 조회
     @Override
-    public List<OrderDTO> searchOnlyOrder(String email) {
-        log.info("Order service searchOnlyOrder ------------------" + email);
-        List<OrderDTO> orderDTO = new ArrayList<>();
-        List<Order> order = orderRepository.findByUserEmail(email);
-        order.forEach(i -> orderDTO.add(modelMapper.map(i, OrderDTO.class)));
-        return orderDTO;
+    public List<OrderDTO> searchOnlyOrder(Integer userId) {
+        log.info("Order service searchOnlyOrder ------------------" + userId);
+        List<Order> result = orderRepository.findByUserId(userId); // 엔티티 타입 전부 찾아오기
+        List<OrderDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
+        result.forEach(i -> {
+            OrderDTO data = modelMapper.map(i, OrderDTO.class); // 엔티티를 DTO타입으로 변환
+            resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
+        });
+        return resultDtoList;
     }
+
     // 여러 개의 주문 상태 및 아이템 수정
     @Override
-    //한사람이 여러개 주문한 걸 한 번에 수정할 수 있도록
-    public List<OrderDTO> modifyOrder(List<OrderDTO> orderDTOList) {
-        List<OrderDTO> orderDTO = new ArrayList<>();
-        orderDTOList.forEach(i -> { //주문 조회
-            List<Order> order = orderRepository.findByUserEmailAndResidenceId(i.getEmail(), i.getResidenceId());//장바구니
-            order.forEach(orderEntity -> {
-                //주문 상태,아이템 변경
-                orderEntity.changeOrderStatus(i.getOrderStatus());
-                orderEntity.changeItems(i.getItems());
+    public void modifyOrder(List<OrderDTO> orderDTOList, Integer userId) {
+        List<OrderDTO> updatedOrderDTOs = new ArrayList<>();
+        orderDTOList.forEach(orderDTO -> {
+            // 주문 조회: 사용자의 이메일과 거주지 ID로 주문을 찾음
+            List<Order> orders = orderRepository.findByUserId(userId);
+            orders.forEach(orderEntity -> {
+                orderEntity.updateOrder(orderDTO.getOrderStatus(), orderDTO.getItems(), orderDTO.getTotalPrice(),
+                        orderDTO.getEmail());
             });
+            orderRepository.saveAll(orders);
         });
-        return orderDTO;
     }
-
-
 }
