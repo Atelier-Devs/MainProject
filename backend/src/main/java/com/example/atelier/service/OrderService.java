@@ -18,5 +18,5 @@ public interface OrderService {
     public List<OrderDTO> searchOnlyOrder(Integer userId);
 
     // 여러 개의 주문 상태 및 아이템 수정
-    public void modifyOrder(List<OrderDTO> orderDTOList, Integer userId);
+    public List<OrderDTO> modifyOrder(List<OrderDTO> orderDTOList, Integer userId);
 }

@@ -18,10 +18,13 @@ public class Item {
 
     private String name; // 아이템 이름
     private BigDecimal price; // 아이템 가격
-    private Integer quantity; // 아이템 수량
 
     @Enumerated(EnumType.STRING)
     private Category category; // 아이템 카테고리
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user; // 이 아이템이 속한 사용자
 
     @ManyToOne
     @JoinColumn(name = "order_id")

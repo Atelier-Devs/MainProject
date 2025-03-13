@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService{
 
     // 여러 개의 주문 상태 및 아이템 수정
     @Override
-    public void modifyOrder(List<OrderDTO> orderDTOList, Integer userId) {
+    public List<OrderDTO> modifyOrder(List<OrderDTO> orderDTOList, Integer userId) {
         List<OrderDTO> updatedOrderDTOs = new ArrayList<>();
         orderDTOList.forEach(orderDTO -> {
             // 주문 조회: 사용자의 이메일과 거주지 ID로 주문을 찾음
@@ -75,6 +75,8 @@ public class OrderServiceImpl implements OrderService{
                         orderDTO.getEmail());
             });
             orderRepository.saveAll(orders);
+            orders.forEach(order -> updatedOrderDTOs.add(modelMapper.map(order, OrderDTO.class)));
         });
+        return updatedOrderDTOs;
     }
 }
