@@ -1,8 +1,10 @@
 package com.example.atelier.service;
 
 import com.example.atelier.domain.Item;
+import com.example.atelier.domain.User;
 import com.example.atelier.dto.ItemDTO;
 import com.example.atelier.repository.ItemRepository;
+import com.example.atelier.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +22,9 @@ import java.util.Optional;
 @Slf4j
 public class ItemServiceImpl implements ItemService{
 
-    public ItemRepository itemRepository;
-    public ModelMapper modelMapper;
+    private final ItemRepository itemRepository;
+    private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
     // POST
     @Override
@@ -53,11 +56,14 @@ public class ItemServiceImpl implements ItemService{
 
     // 특정 ID 조회
     @Override
-    public List<ItemDTO> get(Integer id) {
-        Optional<Item> result = itemRepository.findById(id); // 특정 ID의 엔티티 조회
+    public List<ItemDTO> get(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
+
+        List<Item> result = itemRepository.findByUserId(user); // 특정 ID의 엔티티 조회
         List<ItemDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
 
-        result.ifPresent(i -> { // Optional이므로 아이템이 존재할 경우에만(ifPresent) DTO로 변환
+        result.forEach(i -> {
             ItemDTO data = modelMapper.map(i, ItemDTO.class); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });
@@ -80,17 +86,21 @@ public class ItemServiceImpl implements ItemService{
 
     // PUT
     @Override
-    public Item modify(Integer id, ItemDTO itemDTO) {
-        return itemRepository.findById(id)
-                .map(Item -> {
-                    Item.setName(itemDTO.getName());
-                    Item.setPrice(itemDTO.getPrice());
-                    Item.setQuantity(itemDTO.getQuantity());
-                    Item.setCategory(itemDTO.getCategory());
-                    return itemRepository.save(Item);
+    public ItemDTO modify(Integer id, ItemDTO itemDTO) {
+        // 아이템 조회 및 수정
+        Item updatedItem = itemRepository.findById(id)
+                .map(item -> {
+                    item.setName(itemDTO.getName());
+                    item.setPrice(itemDTO.getPrice());
+                    item.setCategory(itemDTO.getCategory());
+                    return itemRepository.save(item); // 수정된 아이템 저장
                 })
                 .orElseThrow(() -> new RuntimeException("해당 아이템이 존재하지 않습니다."));
+
+        // Item 엔티티를 ItemDTO로 변환하여 반환
+        return modelMapper.map(updatedItem, ItemDTO.class);
     }
+
 
     // DELETE
     @Override

@@ -10,6 +10,6 @@ public interface ItemService {
     Item register(ItemDTO itemDTO);
     List<ItemDTO> get(Integer id);
     List<ItemDTO> getAllItems();
-    Item modify(Integer id, ItemDTO itemDTO);
+    ItemDTO modify(Integer id, ItemDTO itemDTO);
     void remove(Integer id);
 }

@@ -1,5 +1,6 @@
 package com.example.atelier.controller;
 
+import com.example.atelier.domain.User;
 import com.example.atelier.dto.OrderDTO;
 import com.example.atelier.repository.OrderRepository;
 import com.example.atelier.service.OrderService;
@@ -33,9 +34,9 @@ public class OrderController {
         return ResponseEntity.ok(orderId);
     }
 
-    // 주문조회(직원,관리자모드)
+    // 주문 조회(직원,관리자모드)
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDTO> searchOrder(@PathVariable int id) {
+    public ResponseEntity<OrderDTO> searchOrder(@PathVariable Integer id) {
         OrderDTO orderDTO = orderService.searchOrder(id);
         return ResponseEntity.ok(orderDTO);
     }
@@ -51,10 +52,10 @@ public class OrderController {
         }
     }
 
-    // 특정 사용자의 주문 조회
+    // 특정 사용자 주문 조회
     @GetMapping("/user")
-    public ResponseEntity<List<OrderDTO>> searchOrdersByEmail(@RequestParam String email) {
-        List<OrderDTO> orderList = orderService.searchOnlyOrder(email);
+    public ResponseEntity<List<OrderDTO>> searchOrdersByEmail(@RequestParam Integer userId) {
+        List<OrderDTO> orderList = orderService.searchOnlyOrder(userId);
 
         if (orderList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
@@ -63,9 +64,9 @@ public class OrderController {
     }
 
     // 여러 개의 주문 상태 및 아이템 수정
-    @PutMapping("/modify/{id}")
-    public ResponseEntity<List<OrderDTO>> modifyOrders(@RequestBody List<OrderDTO> orderDTOList) {
-        List<OrderDTO> modifiedOrders = orderService.modifyOrder(orderDTOList);
+    @PutMapping("/modify/{userId}")
+    public ResponseEntity<List<OrderDTO>> modifyOrders(@RequestBody List<OrderDTO> orderDTOList, @PathVariable Integer userId) {
+        List<OrderDTO> modifiedOrders = orderService.modifyOrder(orderDTOList, userId);
 
         if (modifiedOrders.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
