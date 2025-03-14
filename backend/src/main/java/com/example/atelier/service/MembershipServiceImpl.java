@@ -27,6 +27,20 @@ public class MembershipServiceImpl implements MembershipService{
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
 
+    public BigDecimal getDiscountByMembershipCategory(Membership.Category category) {
+        switch (category) {
+            case TRINITY:
+                return new BigDecimal("30"); // 30% 할인
+            case DIAMOND:
+                return new BigDecimal("20"); // 20% 할인
+            case GOLD:
+                return new BigDecimal("10"); // 10% 할인
+            default:
+                return BigDecimal.ZERO; // 기본값 (할인 없음)
+        }
+    }
+
+
     // POST
     @Override
     public Membership register(MembershipDTO membershipDTO){
@@ -58,12 +72,21 @@ public class MembershipServiceImpl implements MembershipService{
     // 특정 ID 조회
     @Override
     public List<MembershipDTO> get(Integer userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
-        List<Membership> result = membershipRepository.findByUserId(user); // 특정 ID의 엔티티 조회
+
+        // 사용자 존재 여부 체크
+        User userNone = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다." ));
+        //멤버십 조회
+        Optional<Membership> result = membershipRepository.findByUserId(userId); // 특정 ID의 엔티티 조회
+
+        //여기에 예외처리 result의 엔티티가 없으면  return new ArrayList<>();이걸 예외 대신 넣어도됨. -> 빈 배열 출력
+        if (result.isEmpty()) {
+            throw new RuntimeException("해당 사용자의 멤버십이 존재하지 않습니다.");
+        }
+
         List<MembershipDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
 
-        result.forEach(i -> {
+        result.ifPresent(i -> {
             MembershipDTO data = modelMapper.map(i, MembershipDTO.class); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });
@@ -113,7 +136,8 @@ public class MembershipServiceImpl implements MembershipService{
                 .orElseThrow(() -> new RuntimeException("해당 멤버십이 존재하지 않습니다."));
 
         // 멤버십 상태 체크
-        if (membership.getStatus() != Membership.Status.ACTIVE) {
+
+        if (membership.getStatus() != Membership.Status.NONE) {
             throw new RuntimeException("이 멤버십은 사용할 수 없습니다.");
         }
 
@@ -124,7 +148,7 @@ public class MembershipServiceImpl implements MembershipService{
         }
 
         // 멤버십 사용 처리
-        membership.setStatus(Membership.Status.USED);
+        membership.setStatus(Membership.Status.ACTIVE);
         membershipRepository.save(membership);
     }
 }
