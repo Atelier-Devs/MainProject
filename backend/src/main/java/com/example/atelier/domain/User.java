@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Getter
@@ -23,6 +24,9 @@ public class User {
     private String email;
     private String password;
     private String phone;
+
+    @Column(name = "total_spent", nullable = false)
+    private BigDecimal totalSpent = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     private Role role;
