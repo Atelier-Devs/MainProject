@@ -21,16 +21,16 @@ public class Payment {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "reservation_id")
+    @JoinColumn(name = "reservation_id", nullable = false)
     private Reservation reservations;
 
     @ManyToOne
-    @JoinColumn(name = "voucher_id")
-    private Membership voucher;
+    @JoinColumn(name = "membership_id")
+    private Membership membership;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
@@ -54,5 +54,6 @@ public class Payment {
     public enum PaymentMethod {
         CREDIT_CARD, PAYPAL, BANK_TRANSFER
     }
+
 }
 
