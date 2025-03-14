@@ -64,6 +64,6 @@ public class MembershipController {
     @PostMapping("/{id}/use")
     public ResponseEntity<?> useMembership(@PathVariable Integer id) {
         membershipService.useMembership(id);
-        return ResponseEntity.ok("바우처가 정상적으로 사용되었습니다.");
+        return ResponseEntity.ok("멤버십이 정상적으로 사용되었습니다.");
     }
 }
