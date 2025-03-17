@@ -26,33 +26,33 @@ public class ItemServiceImpl implements ItemService{
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
 
-    // POST
-    @Override
-    public Item register(ItemDTO itemDTO){
-        Item item = modelMapper.map(itemDTO, Item.class);
-
-        // Category에 따른 가격 설정
-        BigDecimal price = calculatePrice(item.getCategory());
-        // Item에 가격 적용
-        itemDTO.setPrice(price);
-
-        // DB에 저장
-        return itemRepository.save(item);
-    }
-
-    // 카테고리별 할인율 계산 메서드
-    private BigDecimal calculatePrice(Item.Category category) {
-        switch (category) {
-            case RESTAURANT:
-                return new BigDecimal("100000"); // 10만원
-            case ROOM_SERVICE:
-                return new BigDecimal("100000"); // 10만원
-            case BAKERY:
-                return new BigDecimal("50000"); // 5만원
-            default:
-                return BigDecimal.ZERO; // 기본값 (0원)
-        }
-    }
+//    // POST
+//    @Override
+//    public Item register(ItemDTO itemDTO){
+//        Item item = modelMapper.map(itemDTO, Item.class);
+//
+//        // Category에 따른 가격 설정
+//        BigDecimal price = calculatePrice(item.getCategory());
+//        // Item에 가격 적용
+//        itemDTO.setPrice(price);
+//
+//        // DB에 저장
+//        return itemRepository.save(item);
+//    }
+//
+//    // 카테고리별 가격 계산 메서드
+//    private BigDecimal calculatePrice(Item.Category category) {
+//        switch (category) {
+//            case RESTAURANT:
+//                return new BigDecimal("100000"); // 10만원
+//            case ROOM_SERVICE:
+//                return new BigDecimal("100000"); // 10만원
+//            case BAKERY:
+//                return new BigDecimal("50000"); // 5만원
+//            default:
+//                return BigDecimal.ZERO; // 기본값 (0원)
+//        }
+//    }
 
     // 특정 ID 조회
     @Override
@@ -84,22 +84,22 @@ public class ItemServiceImpl implements ItemService{
         return resultDtoList; // 결과 DTO 리스트 반환
     }
 
-    // PUT
-    @Override
-    public ItemDTO modify(Integer id, ItemDTO itemDTO) {
-        // 아이템 조회 및 수정
-        Item updatedItem = itemRepository.findById(id)
-                .map(item -> {
-                    item.setName(itemDTO.getName());
-                    item.setPrice(itemDTO.getPrice());
-                    item.setCategory(itemDTO.getCategory());
-                    return itemRepository.save(item); // 수정된 아이템 저장
-                })
-                .orElseThrow(() -> new RuntimeException("해당 아이템이 존재하지 않습니다."));
-
-        // Item 엔티티를 ItemDTO로 변환하여 반환
-        return modelMapper.map(updatedItem, ItemDTO.class);
-    }
+//    // PUT
+//    @Override
+//    public ItemDTO modify(Integer id, ItemDTO itemDTO) {
+//        // 아이템 조회 및 수정
+//        Item updatedItem = itemRepository.findById(id)
+//                .map(item -> {
+//                    item.setName(itemDTO.getName());
+//                    item.setPrice(itemDTO.getPrice());
+//                    item.setCategory(itemDTO.getCategory());
+//                    return itemRepository.save(item); // 수정된 아이템 저장
+//                })
+//                .orElseThrow(() -> new RuntimeException("해당 아이템이 존재하지 않습니다."));
+//
+//        // Item 엔티티를 ItemDTO로 변환하여 반환
+//        return modelMapper.map(updatedItem, ItemDTO.class);
+//    }
 
 
     // DELETE

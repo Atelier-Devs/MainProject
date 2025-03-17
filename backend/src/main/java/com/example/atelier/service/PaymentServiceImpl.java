@@ -132,7 +132,7 @@ public class PaymentServiceImpl implements PaymentService {
                 // ✅ 멤버십 등급별 할인율 적용
                 discountRate = membershipService.getDiscountByMembershipCategory(membership.getCategory());
                 //할인율을 결제 금액에 반영하는 과정
-                BigDecimal discountAmount = finalAmount.multiply(discountRate.divide(new BigDecimal("100")));
+                BigDecimal discountAmount = finalAmount.multiply(discountRate);
                 finalAmount = finalAmount.subtract(discountAmount);
 
                 // 멤버십 카테고리 저장
@@ -157,8 +157,5 @@ public class PaymentServiceImpl implements PaymentService {
 
         //  **저장된 결제 ID 반환**
         return payment.getId();
-
     }
-
-
 }

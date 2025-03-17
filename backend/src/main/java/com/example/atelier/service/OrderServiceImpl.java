@@ -1,9 +1,7 @@
 package com.example.atelier.service;
 
-import com.example.atelier.domain.Item;
 import com.example.atelier.domain.Order;
 import com.example.atelier.dto.OrderDTO;
-import com.example.atelier.dto.ReservationDTO;
 import com.example.atelier.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
