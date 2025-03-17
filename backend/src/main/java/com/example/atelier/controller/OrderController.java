@@ -1,13 +1,9 @@
 package com.example.atelier.controller;
 
-import com.example.atelier.domain.User;
 import com.example.atelier.dto.OrderDTO;
-import com.example.atelier.repository.OrderRepository;
 import com.example.atelier.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +19,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class OrderController {
 
-    private OrderService orderService;
-    private OrderRepository orderRepository;
-    private ModelMapper modelMapper;
+    private final OrderService orderService;
 
     // 주문 생성
     @PostMapping("/register")

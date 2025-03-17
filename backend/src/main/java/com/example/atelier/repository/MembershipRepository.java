@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface    MembershipRepository extends JpaRepository<Membership,Integer> {
     Optional<Membership> findByUserId(Integer userId);
-
+    Optional<Membership> findByCategory(Membership.Category category);
 }

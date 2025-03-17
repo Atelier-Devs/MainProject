@@ -1,9 +1,7 @@
 package com.example.atelier.service;
 
-import com.example.atelier.domain.Item;
 import com.example.atelier.domain.Review;
 import com.example.atelier.domain.User;
-import com.example.atelier.dto.ItemDTO;
 import com.example.atelier.dto.ReviewDTO;
 import com.example.atelier.repository.ReviewRepository;
 import com.example.atelier.repository.UserRepository;
@@ -13,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +18,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class ReviewServiceImpl implements ReviewService{
+public class ReviewServiceServiceImpl implements ReviewService{
     private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;

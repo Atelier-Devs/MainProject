@@ -21,19 +21,17 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/atelier/item")
 @Slf4j
 public class ItemController {
-    private ItemService itemService;
-    private ItemRepository itemRepository;
-    private ModelMapper modelMapper;
+    private final ItemService itemService;
 
-    // 주문 생성
-    @PostMapping("/register")
-    public ResponseEntity<?> create(@RequestBody ItemDTO itemDTO) {
-        Item item = itemService.register(itemDTO);
-        return ResponseEntity.ok(item);
-    }
+//    // 아이템 생성
+//    @PostMapping("/register")
+//    public ResponseEntity<?> create(@RequestBody ItemDTO itemDTO) {
+//        Item item = itemService.register(itemDTO);
+//        return ResponseEntity.ok(item);
+//    }
 
-    // 특정 사용자 주문 조회
-    @GetMapping("/user")
+    // 특정 사용자 아이템 조회
+    @GetMapping("/user/{userId}")
     public ResponseEntity<?> search(@PathVariable Integer userId) {
         List<ItemDTO> itemDTO = itemService.get(userId);
         return ResponseEntity.ok(itemDTO);
@@ -50,15 +48,15 @@ public class ItemController {
         }
     }
 
-    // 아이템 수정
-    @PutMapping("/modify/{userId}")
-    public ResponseEntity<ItemDTO> modifyOrders(@RequestBody ItemDTO itemDTO, @PathVariable Integer id) {
-        ItemDTO modifiedItem = itemService.modify(id, itemDTO);
-        if (modifiedItem == null) { // null 체크
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok(modifiedItem); // 수정된 아이템 DTO 반환
-    }
+//    // 아이템 수정
+//    @PutMapping("/modify/{userId}")
+//    public ResponseEntity<ItemDTO> modifyOrders(@RequestBody ItemDTO itemDTO, @PathVariable Integer id) {
+//        ItemDTO modifiedItem = itemService.modify(id, itemDTO);
+//        if (modifiedItem == null) { // null 체크
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }
+//        return ResponseEntity.ok(modifiedItem); // 수정된 아이템 DTO 반환
+//    }
 
     // 아이템 삭제
     @DeleteMapping("/{id}")

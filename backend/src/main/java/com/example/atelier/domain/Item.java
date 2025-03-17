@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,12 +17,6 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name; // 아이템 이름
-    private BigDecimal price; // 아이템 가격
-
-    @Enumerated(EnumType.STRING)
-    private Category category; // 아이템 카테고리
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user; // 이 아이템이 속한 사용자
@@ -30,7 +25,12 @@ public class Item {
     @JoinColumn(name = "order_id")
     private Order order; // 이 아이템이 속한 주문
 
-    public enum Category {
-        RESTAURANT, ROOM_SERVICE, BAKERY // 카테고리 정의
-    }
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Restaurant> restaurant;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<RoomService> roomService;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Bakery> bakery;
 }

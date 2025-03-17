@@ -1,8 +1,10 @@
 package com.example.atelier.controller;
 
 import com.example.atelier.domain.Reservation;
+import com.example.atelier.dto.ItemDTO;
 import com.example.atelier.dto.MembershipDTO;
 import com.example.atelier.dto.ReservationDTO;
+import com.example.atelier.dto.RoomServiceDTO;
 import com.example.atelier.repository.MembershipRepository;
 import com.example.atelier.repository.UserRepository;
 import com.example.atelier.service.MembershipService;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -49,9 +52,12 @@ public class MembershipController {
 
     // PUT
     @PutMapping("/modify/{id}")
-    public void modify(@PathVariable Integer id, @RequestBody MembershipDTO membershipDTO) {
-        membershipDTO.setId(id);
-        membershipService.modify(id, membershipDTO);
+    public ResponseEntity<MembershipDTO> modify(@PathVariable Integer id, @RequestBody MembershipDTO membershipDTO) {
+        MembershipDTO updatedRoomMembership = membershipService.modify(id, membershipDTO);
+        if (updatedRoomMembership == null) { // null 체크
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(updatedRoomMembership);
     }
 
     // DELETE
