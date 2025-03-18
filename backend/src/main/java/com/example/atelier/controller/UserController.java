@@ -4,21 +4,16 @@ import com.example.atelier.domain.User;
 import com.example.atelier.dto.ErrorResponseDTO;
 import com.example.atelier.dto.LoginRequestDTO;
 import com.example.atelier.dto.LoginResponseDTO;
-import com.example.atelier.dto.UserDTO;
 import com.example.atelier.repository.UserRepository;
 import com.example.atelier.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.asm.Advice;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor

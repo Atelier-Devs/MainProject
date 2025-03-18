@@ -42,6 +42,7 @@ public class RoomServiceController {
     @PutMapping("/{id}")
     public ResponseEntity<RoomServiceDTO> updateRoomService(@PathVariable Integer id,
                                                             @RequestBody RoomServiceDTO roomServiceDTO) {
+        roomServiceDTO.setId(id);
         RoomServiceDTO updatedRoomService = roomServiceService.updateRoomService(id, roomServiceDTO);
         if (updatedRoomService == null) { // null 체크
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

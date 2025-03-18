@@ -41,7 +41,7 @@ public class DatabaseInitializer {
                         new Bakery("PremiumCroissant", "5000"),
                         new Bakery("Macaroon", "3000"),
                         new Bakery("Brownie", "4000"),
-                        new Bakery("Baguette", "6000"),
+                        new Bakery("AtelierStrawBerry", "60000"),
                         new Bakery("Scone", "8000"),
                         new Bakery("LemonPoundCake", "9000")
                 ));

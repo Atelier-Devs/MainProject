@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,30 +19,23 @@ import java.util.List;
 @RequestMapping("/api/atelier/residence")
 @Slf4j
 public class ResidenceController {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ResidenceService residenceService;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ResidenceService residenceService;
 
-//    // POST
-//    @PostMapping("/")
-//    public String register(@RequestBody ScoreDTO scoreDTO) {
-//        scoreService.register(scoreDTO); // 서비스에서 생성된 ScoreDTO를 가져옴
-//        return "성공";
-//    }
-//
-//    // PUT
-//    @PutMapping("/modify/{sno}")
-//    public Map<String, String> modify(
-//            @PathVariable(name = "sno") Long sno,
-//            @RequestBody ScoreDTO scoreDTO) {
-//        scoreDTO.setSno(sno);
-//        log.info("Modify: " + scoreDTO);
-//        scoreService.modify(scoreDTO);
-//        return Map.of("RESULT", "성공");
-//    }
+    // POST
+    @PostMapping("/")
+    public String register(@RequestBody ResidenceDTO residenceDTO) {
+        residenceService.register(residenceDTO);
+        return "성공";
+    }
+
+    // PUT
+    @PutMapping("/modify/{sno}")
+    public Map<String, String> modify(@PathVariable Integer id, @RequestBody ResidenceDTO residenceDTO) {
+        residenceDTO.setId(id);
+        log.info("Modify: " + residenceDTO);
+        residenceService.modify(residenceDTO);
+        return Map.of("RESULT", "성공");
+    }
 
     // GET
     @GetMapping("/list")
@@ -49,10 +43,10 @@ public class ResidenceController {
         return residenceService.get();
     }
 
-//    // DELETE
-//    @DeleteMapping("/delete")
-//    public String removeAll (List<Long> tnos){
-//        service.removeAll(tnos);
-//        return "DELETE SUCCESS";
-//    }
+    // DELETE
+    @DeleteMapping("/delete/{id}")
+    public String delete (@PathVariable Integer id){
+        residenceService.delete(id);
+        return "DELETE SUCCESS";
+    }
 }

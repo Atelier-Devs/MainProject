@@ -51,6 +51,7 @@ public class ItemController {
 //    // 아이템 수정
 //    @PutMapping("/modify/{userId}")
 //    public ResponseEntity<ItemDTO> modifyOrders(@RequestBody ItemDTO itemDTO, @PathVariable Integer id) {
+//        itemDTO.setId(id);
 //        ItemDTO modifiedItem = itemService.modify(id, itemDTO);
 //        if (modifiedItem == null) { // null 체크
 //            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

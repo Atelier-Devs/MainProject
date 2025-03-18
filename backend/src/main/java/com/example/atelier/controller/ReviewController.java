@@ -1,15 +1,10 @@
 package com.example.atelier.controller;
 
 import com.example.atelier.domain.Review;
-import com.example.atelier.dto.ItemDTO;
-import com.example.atelier.dto.MembershipDTO;
-import com.example.atelier.dto.OrderDTO;
 import com.example.atelier.dto.ReviewDTO;
-import com.example.atelier.repository.ReviewRepository;
 import com.example.atelier.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +20,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class ReviewController {
 
-    private ReviewRepository reviewRepository;
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
     // 리뷰 생성
     @PostMapping("/register")
@@ -56,6 +50,7 @@ public class ReviewController {
     // 리뷰 수정
     @PutMapping("/modify/{userId}")
     public ResponseEntity<ReviewDTO> modifyReview(@RequestBody ReviewDTO reviewDTO, @PathVariable Integer id) {
+        reviewDTO.setId(id);
         ReviewDTO modifiedReview = reviewService.modify(id, reviewDTO);
         if (modifiedReview == null) { // null 체크
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
