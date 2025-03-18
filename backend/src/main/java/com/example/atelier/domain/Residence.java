@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +32,9 @@ public class Residence {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @OneToMany(mappedBy = "residence", cascade = CascadeType.ALL)
+    private List<Product> productImages = new ArrayList<>();
+
     public enum Type {
         ROOM, FACILITY, DINING
     }
@@ -37,6 +42,4 @@ public class Residence {
     public enum Status {
         AVAILABLE, UNAVAILABLE
     }
-
 }
-

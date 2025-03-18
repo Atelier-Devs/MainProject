@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,6 +31,9 @@ public class Restaurant {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<Product> productImages = new ArrayList<>();
 
     // 직접 생성자 추가 (id 없이 name과 price만)
     public Restaurant(String name, String price) {

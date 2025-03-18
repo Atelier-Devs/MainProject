@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,6 +31,9 @@ public class Bakery {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL)
+    private List<Product> productImages = new ArrayList<>();
 
     public Bakery(String name, String price) {
         this.name = name;

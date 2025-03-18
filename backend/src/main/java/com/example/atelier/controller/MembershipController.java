@@ -53,6 +53,7 @@ public class MembershipController {
     // PUT
     @PutMapping("/modify/{id}")
     public ResponseEntity<MembershipDTO> modify(@PathVariable Integer id, @RequestBody MembershipDTO membershipDTO) {
+        membershipDTO.setId(id);
         MembershipDTO updatedRoomMembership = membershipService.modify(id, membershipDTO);
         if (updatedRoomMembership == null) { // null 체크
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
