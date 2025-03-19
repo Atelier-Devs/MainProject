@@ -16,7 +16,6 @@ const LoginPage = () => {
     // 예제: 아이디 & 비밀번호가 특정 값일 경우 로그인 성공 (실제 프로젝트에서는 API 호출 필요)
     loginPost({ email: username, password }).then((data) => {
       console.log("data", data)
-      alert("환영합니다");
       navigate("/dashboard"); // 로그인 성공 시 대시보드로 이동
     }
 

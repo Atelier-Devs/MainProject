@@ -1,24 +1,54 @@
 .footer {
     position: fixed;
-    /* 화면에 고정 */
     bottom: 0;
-    /* 화면 하단에 위치 */
     left: 0;
     right: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     background-color: #FFFF;
     color: #cea062;
-    padding: 5px 10px;
+    padding: 10px 20px;
     border-top: 1px solid #ddd;
     min-height: 10vh;
     z-index: 100;
 }
 
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    gap: 50px;
+    /* 요소 간 간격 */
+}
+
 .footer-info,
 .footer-contact {
-    margin: 0 auto;
     font-size: 12px;
     line-height: 1.2;
+    text-align: center;
+    flex: 1;
+}
+
+.footer-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.footer-logo-img {
+    height: 50px;
+    /* 크기 조정 */
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        gap: 20px;
+    }
 }

@@ -30,6 +30,7 @@ public class ProductServiceImpl implements ProductService {
     private final CustomFileUtil fileUtil;
     private final ModelMapper modelMapper;
 
+    // 이미지 등록
     @Override
     public Integer register(ProductDTO productDTO) {
         log.info("register() 실행됨: ProductDTO = {}", productDTO);
@@ -48,6 +49,7 @@ public class ProductServiceImpl implements ProductService {
         return product.getId();
     }
 
+    // 이미지 조회
     @Override
     public ProductDTO get(Integer id) {
         Product product = productRepository.selectOne(id)
@@ -55,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
         return modelMapper.map(product, ProductDTO.class);
     }
 
+    // 이미지 리스트 조회
     @Override
     public PageResponseDTO<ProductDTO> getList(PageRequestDTO pageRequestDTO) {
         Pageable pageable = PageRequest.of(
@@ -83,6 +86,7 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
+    // 이미지 수정
     @Override
     public void modify(ProductDTO productDTO) {
         Product product = productRepository.findById(productDTO.getId())
@@ -93,6 +97,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+    // 이미지 삭제
     @Override
     public void remove(Integer id) {
         Product product = productRepository.findById(id)

@@ -14,18 +14,21 @@ const LoginCompleteHeader = () => {
         }
     };
 
+
     return (
         <header className="header">
             <div className="logo">
-                <Link to="/">
+                <Link to="/Dashboard">
                     <img src={logo} alt="로고" />
                 </Link>
             </div>
             <nav className="menu">
+                <Link to="/member/reservation/manage">예약 관리</Link>
+                <Link to="/member/Facilities">시설 안내</Link>
+                <Link to="/member/Review">리뷰</Link>
                 <Link to="#" onClick={handleLogout}>로그아웃</Link>
-                <Link to="/member/reservation">예약 조회</Link>
-                <Link to="/member/completeFacilitiesLogin">시설 안내</Link>
             </nav>
+
         </header>
     );
 };

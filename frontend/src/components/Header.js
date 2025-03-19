@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../css/header.css";
 import logo from "../image/logo.png";
 
+
 const Header = () => {
     return (
         <header className="header">
@@ -14,7 +15,6 @@ const Header = () => {
             <nav className="menu">
                 <Link to="/member/login">로그인</Link>
                 <Link to="/member/signup">회원가입</Link>
-                <Link to="/member/facilities">시설 안내</Link>
             </nav>
         </header>
     );
