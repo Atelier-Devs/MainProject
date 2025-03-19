@@ -140,3 +140,16 @@
 .red {
     color: red;
 }
+
+/* 전체 레이아웃 설정 */
+.signup-container {
+    width: 80%;
+    margin: 60px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding-bottom: 50px;
+}

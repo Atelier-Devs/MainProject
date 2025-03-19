@@ -1,0 +1,36 @@
+/* 예약 조회 페이지 스타일 */
+#reservation-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    background-color: #ffffff !important;
+    padding: 50px !important;
+}
+
+/* 입력 필드 */
+#reservation-input {
+    width: 100% !important;
+    padding: 12px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    font-size: 16px !important;
+    text-align: center !important;
+    margin-bottom: 15px !important;
+}
+
+/* 조회 버튼 */
+#reservation-button {
+    background-color: #cea062 !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+}
+
+#reservation-button:hover {
+    background-color: #b98d50 !important;
+}

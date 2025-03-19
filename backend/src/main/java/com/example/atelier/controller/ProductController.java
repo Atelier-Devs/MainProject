@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
-@RequestMapping("/api/atelier/products")
+@RequestMapping("/api/atelier/product")
 public class ProductController {
 
     private final ProductService productService;

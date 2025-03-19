@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/atelier/reservations")
+@RequestMapping("/api/atelier/reservation")
 @Slf4j
 public class ReservationController {
 
@@ -42,7 +42,7 @@ public class ReservationController {
     }
 
     // GET ALL(관리자모드)
-    @GetMapping("/")
+    @GetMapping("")
     public List<ReservationDTO> get() {
         return reservationService.getAllReservations();
     }

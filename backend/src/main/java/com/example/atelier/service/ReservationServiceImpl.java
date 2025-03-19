@@ -54,7 +54,7 @@ public class ReservationServiceImpl implements ReservationService{
         List<Reservation> result = reservationRepository.findAll(); // 모든 멤버십 조회
         List<ReservationDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
 
-        result.forEach(i -> { // Optional이므로 멤버십이 존재할 경우에만(ifPresent) DTO로 변환
+        result.forEach(i -> {
             ReservationDTO data = modelMapper.map(i, ReservationDTO.class); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });
