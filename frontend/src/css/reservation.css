@@ -1,36 +1,98 @@
 /* 예약 조회 페이지 스타일 */
-#reservation-container {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-height: 100vh !important;
-    background-color: #ffffff !important;
-    padding: 50px !important;
+.reservation-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #fff;
+    padding: 50px;
+    font-family: 'Arial', sans-serif;
 }
 
-/* 입력 필드 */
-#reservation-input {
-    width: 100% !important;
-    padding: 12px !important;
-    border: 1px solid #ddd !important;
-    border-radius: 4px !important;
-    font-size: 16px !important;
-    text-align: center !important;
-    margin-bottom: 15px !important;
+.reservation-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
 }
 
-/* 조회 버튼 */
-#reservation-button {
-    background-color: #cea062 !important;
-    color: white !important;
-    border: none !important;
-    padding: 12px 20px !important;
-    font-size: 16px !important;
-    cursor: pointer !important;
-    border-radius: 5px !important;
+.reservation-content h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #b98d50;
+    margin-bottom: 15px;
 }
 
-#reservation-button:hover {
-    background-color: #b98d50 !important;
+.reservation-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 15px;
+    transition: all 0.3s ease-in-out;
+    background-color: #f7f7f7;
+}
+
+.reservation-input:focus {
+    border-color: #cea062;
+    box-shadow: 0 0 8px rgba(206, 160, 98, 0.5);
+    background-color: white;
+}
+
+.reservation-button {
+    background: #b98d50;
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.3s;
+    width: 100%;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.reservation-button:hover {
+    background: #9c7445;
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.reservation-table-container {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.reservation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.reservation-table th,
+.reservation-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.reservation-table th {
+    background: #f5f5f5;
+    color: #b98d50;
+    font-weight: bold;
+}
+
+.reservation-table tr:nth-child(even) {
+    background: #f9f9f9;
 }

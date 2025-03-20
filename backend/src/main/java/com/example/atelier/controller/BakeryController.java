@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 public class BakeryController {
     private final BakeryService bakeryService;
 
-    // 모든 베이커리 조회(관리자모드)
+    // 모든 베이커리 조회
     @GetMapping("/all")
     public ResponseEntity<List<BakeryDTO>> getAllBakeries() {
         try {

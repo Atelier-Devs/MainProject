@@ -2,29 +2,42 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { loginPost } from "../../api/memberApi";
+import useCustomLogin from "../../hooks/useCustomLogin";
+import { a } from "framer-motion/client";
+
+const initState = { email: "", password: "" };
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginParam, setLoginParam] = useState(initState);
+  const { doLogin, moveToPath } = useCustomLogin();
 
-  const handleLogin = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLoginParam((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("handle login")
-    console.log("email: ", username, ",password:", password)
-    // 예제: 아이디 & 비밀번호가 특정 값일 경우 로그인 성공 (실제 프로젝트에서는 API 호출 필요)
-    loginPost({ email: username, password }).then((data) => {
-      console.log("data", data)
-      navigate("/dashboard"); // 로그인 성공 시 대시보드로 이동
+    console.log("로그인 파라미터:", loginParam);
+    try {
+      const data = await doLogin(loginParam);
+      console.log("로그인 성공:", data);
+      const { payload } = data;
+      console.log("payload", payload);
+      localStorage.setItem("login", JSON.stringify(payload));
+      localStorage.setItem("accessToken", payload.accessToken);
+      if (data.error) {
+        alert("이메일과 암호를 재입력해주세요");
+      } else {
+        alert("로그인 성공");
+        moveToPath("/dashboard"); // 로그인 성공 후 이동 경로 수정 가능
+      }
+    } catch (err) {
+      console.error("로그인 실패:", err);
+      alert("로그인에 실패했습니다");
     }
-
-    ).catch(err => {
-      console.error(err);
-      alert("아이디/비밀번호를 다시 입력해주십시오")
-    })
-
-  }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -48,8 +61,9 @@ const LoginPage = () => {
                 className="w-full h-10 px-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#cea062] focus:outline-none"
                 type="text"
                 placeholder="아이디 혹은 리워즈 번호를 입력하세요"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                name="email"
+                value={loginParam.email}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -59,8 +73,9 @@ const LoginPage = () => {
                 className="w-full h-10 px-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#cea062] focus:outline-none"
                 type="password"
                 placeholder="비밀번호를 입력하세요"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                value={loginParam.password}
+                onChange={handleChange}
                 required
               />
             </div>

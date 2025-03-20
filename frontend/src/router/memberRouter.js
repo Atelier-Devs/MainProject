@@ -1,35 +1,45 @@
 import { lazy, Suspense } from "react";
+import ReservationReadComponent from "../components/reservation/ReservationReadComponent";
 
 const Loading = <div>Loading...</div>;
 const Login = lazy(() => import("../pages/member/LoginPage"));
 const Signup = lazy(() => import("../pages/member/SignupForm"));
 const Facilities = lazy(() => import("../pages/member/Facilities"));
-const Reservationread = lazy(() => import("../pages/reservation/ReservationReadPage"));
-const Reservationmanage = lazy(() => import("../pages/reservation/ReservationManagementPage"));
-
 
 const memberRouter = () => {
   return [
     {
       path: "login",
-      element: <Suspense fallback={Loading}><Login /></Suspense>,
+      element: (
+        <Suspense fallback={Loading}>
+          <Login />
+        </Suspense>
+      ),
     },
     {
       path: "signup",
-      element: <Suspense fallback={Loading}><Signup /></Suspense>,
+      element: (
+        <Suspense fallback={Loading}>
+          <Signup />
+        </Suspense>
+      ),
     },
     {
       path: "facilities",
-      element: <Suspense fallback={Loading}><Facilities /></Suspense>,
+      element: (
+        <Suspense fallback={Loading}>
+          <Facilities />
+        </Suspense>
+      ),
     },
     {
-      path: "reservation",
-      element: <Suspense fallback={Loading}><Reservationread /></Suspense>,
+      path: "reservation/manage",
+      element: (
+        <Suspense fallback={Loading}>
+          <ReservationReadComponent />
+        </Suspense>
+      ),
     },
-    // {
-    //   path: "reservation",
-    //   element: <Suspense fallback={Loading}><Reservationmanage /></Suspense>,
-    // },
   ];
 };
 

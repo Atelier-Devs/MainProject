@@ -36,17 +36,21 @@ public class ReservationServiceImpl implements ReservationService{
     // GET
     @Override
     public List<ReservationDTO> get(Integer userId) {
+        System.out.println("1) reservation service userid:" + userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
-        List<Reservation> result = reservationRepository.findByUserId(user); // 엔티티 타입 전부 찾아오기
-        System.out.println("result:" +result);
-        List<ReservationDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
+        System.out.println("2) user " + user);
+        // user 객체 대신 user의 id를 전달
+        List<Reservation> result = reservationRepository.findByUser_Id(user.getId());
+        System.out.println("3) result:" + result);
+        List<ReservationDTO> resultDtoList = new ArrayList<>();
         result.forEach(i -> {
-            ReservationDTO data = modelMapper.map(i, ReservationDTO.class); // 엔티티를 DTO타입으로 변환
-            resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
+            ReservationDTO data = modelMapper.map(i, ReservationDTO.class);
+            resultDtoList.add(data);
         });
         return resultDtoList;
     }
+
 
     // 모든 예약 조회(관리자모드)
     @Override
@@ -54,7 +58,7 @@ public class ReservationServiceImpl implements ReservationService{
         List<Reservation> result = reservationRepository.findAll(); // 모든 멤버십 조회
         List<ReservationDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
 
-        result.forEach(i -> {
+        result.forEach(i -> { // Optional이므로 멤버십이 존재할 경우에만(ifPresent) DTO로 변환
             ReservationDTO data = modelMapper.map(i, ReservationDTO.class); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });

@@ -13,7 +13,9 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation,Integer> {
-    List<Reservation> findByUserId(User user);
+    List<Reservation> findByUser_Id(Integer userId);
+
+
 
 //    // 취소 로그 기록
 //    @Transactional
