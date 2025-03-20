@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/atelier/reservation")
+@RequestMapping("/api/atelier/reservations")
 @Slf4j
 public class ReservationController {
 
@@ -36,15 +37,19 @@ public class ReservationController {
 
     // GET
     @GetMapping("/{id}")
-    public List<ReservationDTO> get(@PathVariable("id") Integer id) {
+    public ResponseEntity< List<ReservationDTO>> get(@PathVariable("id") Integer id) {
         System.out.println("여기 controller " + id);
-        return reservationService.get(id);
+        List<ReservationDTO> data = reservationService.get(id);
+        return ResponseEntity.ok(data);
     }
 
     // GET ALL(관리자모드)
-    @GetMapping("")
-    public List<ReservationDTO> get() {
-        return reservationService.getAllReservations();
+    @GetMapping("/list")
+    public ResponseEntity< List<ReservationDTO>> list() {
+        System.out.println("reservation controller: ");
+        List<ReservationDTO> list = reservationService.getAllReservations();
+        System.out.println("reservation list all : " +list);
+        return ResponseEntity.ok(list);
     }
 
     // PUT

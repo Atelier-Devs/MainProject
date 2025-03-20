@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "users")
 @ToString
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,7 @@ public class User {
     private BigDecimal totalSpent = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role roleNames;
 
     @Column(name = "created_at")
     private Timestamp createdAt;

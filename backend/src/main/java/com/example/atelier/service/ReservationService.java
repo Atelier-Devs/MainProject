@@ -13,7 +13,7 @@ public interface ReservationService {
     Integer register(ReservationDTO reservationDTO);
 
     // 특정 ID 예약 조회
-    List<ReservationDTO> get(Integer id);
+    public List<ReservationDTO> get(Integer userId);
 
     // 모든 예약 조회(관리자모드)
     List<ReservationDTO> getAllReservations();

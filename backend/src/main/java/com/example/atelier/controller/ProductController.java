@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
-@RequestMapping("/api/atelier/product")
+@RequestMapping("/api/atelier/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -38,7 +38,7 @@ public class ProductController {
         try {
             log.info("register() 컨트롤러 실행됨 - productDTO: {}", productDTO);
 
-            // 🚨 컨트롤러에서는 파일을 저장하지 않고, DTO를 그대로 서비스로 전달
+            // 컨트롤러에서는 파일을 저장하지 않고, DTO를 그대로 서비스로 전달
             Integer id = productService.register(productDTO);
 
             // 정상 처리 응답
@@ -57,15 +57,15 @@ public class ProductController {
     @GetMapping("/view/{fileName}") // img src = "/view/1234_송준항.jpg"
     public ResponseEntity<Resource> viewFileGET(@PathVariable String fileName) {
         try {
-            log.info("🔥 요청된 파일명: {}", fileName);
+            log.info("요청된 파일명: {}", fileName);
 
             // URL 디코딩 (특수 문자 포함 가능성 고려)
             String decodedFileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
-            log.info("✅ 디코딩된 파일명: {}", decodedFileName);
+            log.info("디코딩된 파일명: {}", decodedFileName);
 
             return fileUtil.getFile(decodedFileName);
         } catch (Exception e) {
-            log.error("🚨 파일 조회 오류 발생: {}", e.getMessage());
+            log.error("파일 조회 오류 발생: {}", e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }

@@ -28,7 +28,8 @@ import java.util.List;
 @Slf4j
 public class MembershipController {
 
-    private final MembershipService membershipService;
+    private MembershipRepository membershipRepository;
+    private MembershipService membershipService;
 
     // POST
     @PostMapping("/add")
