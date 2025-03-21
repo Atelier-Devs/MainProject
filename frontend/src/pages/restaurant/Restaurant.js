@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/LoginCompleteHeader";
+import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import restaurant1 from "../../image/restaurant1.jpg";
 import restaurant2 from "../../image/restaurant2.jpg";

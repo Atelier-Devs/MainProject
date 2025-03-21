@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 
 const Loading = <div>Loading...</div>;
 
-const ReviewPage = lazy(() => import("../pages/ReviewPage"));
+const ReviewPage = lazy(() => import("../pages/member/ReviewPage"));
 const ReviewReadComponent = lazy(() => import("../components/review/ReviewReadComponent"));
 const ReviewWriteComponent = lazy(() => import("../components/review/ReviewWriteComponent"));
 

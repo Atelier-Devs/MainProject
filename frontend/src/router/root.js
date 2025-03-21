@@ -6,6 +6,7 @@ import restaurantRouter from "./restaurantRouter";
 import bakeryRouter from "./bakeryRouter";
 import roomserviceRouter from "./roomserviceRouter";
 import reviewRouter from "./reviewRouter";
+import reservationRouter from "./reservationRouter";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -51,12 +52,15 @@ const root = createBrowserRouter([
     path: "roomservice",
     children: roomserviceRouter(),
   },
-  
+
   {
     path: "review",
     children: reviewRouter(),
   },
-
+  {
+    path: "reservation",
+    children: reservationRouter(),
+  },
 ]);
 
 export default root;

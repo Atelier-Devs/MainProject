@@ -45,9 +45,12 @@ public class JWTCheckFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         log.info("----- JWTCheckFilter -----");
-
+        String uri = request.getRequestURI();
         String authHeaderStr = request.getHeader("Authorization");
-
+        if (uri.equals("/api/atelier/logout")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         try {
             // "Bearer " 접두어 제거 후 토큰 검증
             String accessToken = authHeaderStr.substring(7);

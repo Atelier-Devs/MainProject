@@ -50,6 +50,7 @@ public class CustomSecurityConfig {
                 // /api/atelier/signup의 POST 요청 허용
                 .requestMatchers(HttpMethod.POST, "/api/atelier/register/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/atelier/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/atelier/logout").permitAll()
                 .requestMatchers("/error").permitAll()
                 // 그 외 모든 요청은 인증 필요
                 .anyRequest().authenticated()
