@@ -2,14 +2,15 @@ import { lazy, Suspense } from "react";
 
 const Loading = <div>Loading...</div>;
 
-const ReviewPage = lazy(() => import("../pages/member/ReviewPage"));
-const ReviewReadComponent = lazy(() => import("../components/review/ReviewReadComponent"));
+// 페이지 컴포넌트 동적 로드
+const ReviewPage = lazy(() => import("../pages/review/Review"));
 const ReviewWriteComponent = lazy(() => import("../components/review/ReviewWriteComponent"));
+const ReviewReadComponent = lazy(() => import("../components/review/ReviewReadComponent"));
 
 const reviewRouter = () => {
     return [
         {
-            path: "",
+            index: true,  // 기본 경로 /review 에서 ReviewPage 렌더링
             element: (
                 <Suspense fallback={Loading}>
                     <ReviewPage />
@@ -17,7 +18,7 @@ const reviewRouter = () => {
             ),
         },
         {
-            path: "write",
+            path: "write",  // /review/write - 리뷰 작성 페이지
             element: (
                 <Suspense fallback={Loading}>
                     <ReviewWriteComponent />
@@ -25,7 +26,7 @@ const reviewRouter = () => {
             ),
         },
         {
-            path: ":reviewId",
+            path: ":reviewId",  // /review/:reviewId - 특정 리뷰 상세보기 페이지
             element: (
                 <Suspense fallback={Loading}>
                     <ReviewReadComponent />

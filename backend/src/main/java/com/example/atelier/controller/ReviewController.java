@@ -3,6 +3,7 @@ package com.example.atelier.controller;
 import com.example.atelier.domain.Review;
 import com.example.atelier.dto.ReviewDTO;
 import com.example.atelier.service.ReviewService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class ReviewController {
     // 리뷰 생성
     @PostMapping("/register")
     public ResponseEntity<?> create(@RequestBody ReviewDTO reviewDTO) {
+        System.out.println("review 등록 controller: " +reviewDTO);
         Review review = reviewService.register(reviewDTO);
         return ResponseEntity.ok(review);
     }
@@ -50,7 +52,7 @@ public class ReviewController {
     // 리뷰 수정
     @PutMapping("/modify/{userId}")
     public ResponseEntity<ReviewDTO> modifyReview(@RequestBody ReviewDTO reviewDTO, @PathVariable Integer id) {
-        reviewDTO.setId(id);
+        reviewDTO.setId(String.valueOf(id));
         ReviewDTO modifiedReview = reviewService.modify(id, reviewDTO);
         if (modifiedReview == null) { // null 체크
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

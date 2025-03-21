@@ -1,12 +1,22 @@
 import axios from "axios";
 
 export const API_SERVER_HOST = "http://localhost:8080";
-const prefix = `${API_SERVER_HOST}/api/atelier/reviews`;
+const prefix = `${API_SERVER_HOST}/api/atelier/review`;
+
+// 토큰 가져오기 함수
+const getAuthToken = () => {
+  return localStorage.getItem("accessToken");
+};
 
 // 모든 리뷰 조회
 export const getAllReviews = async () => {
   try {
-    const res = await axios.get(`${prefix}`);
+    const token = getAuthToken();
+    const res = await axios.get(`${prefix}/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.data;
   } catch (error) {
     console.error("리뷰 목록 조회 실패:", error);
@@ -14,8 +24,10 @@ export const getAllReviews = async () => {
   }
 };
 
+
 // 특정 리뷰 조회
 export const getReviewById = async (reviewId) => {
+
   try {
     const res = await axios.get(`${prefix}/${reviewId}`);
     return res.data;
@@ -25,17 +37,25 @@ export const getReviewById = async (reviewId) => {
   }
 };
 
-// 리뷰 작성
 export const createReview = async (reviewData) => {
+  console.log("reviewData : ", reviewData);
+  const token = getAuthToken();
+  console.log("token create review :", token);
+  const url = `${prefix}/register`;
+  console.log("url:", url);
+
   try {
-    const res = await axios.post(`${prefix}`, reviewData);
+    const res = await axios.post(url, reviewData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.data;
   } catch (error) {
     console.error("리뷰 등록 실패:", error);
     throw error;
   }
 };
-
 // 리뷰 수정
 export const updateReview = async (reviewId, updateData) => {
   try {
