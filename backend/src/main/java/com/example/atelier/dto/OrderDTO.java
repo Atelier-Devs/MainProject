@@ -1,29 +1,20 @@
 package com.example.atelier.dto;
 
-import com.example.atelier.domain.Item;
 import com.example.atelier.domain.Order;
-import com.example.atelier.domain.Residence;
-import com.example.atelier.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.List;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
+@Builder
+@Data
 public class OrderDTO {
-    private Integer id;                   // 주문 ID
-    private Integer userId;               // 사용자 ID
-    private Integer residenceId;           // 숙소 ID
-    private List<Item> items;             // 주문 항목
-    private BigDecimal totalPrice;         // 총 가격
-    private Order.OrderStatus orderStatus; // 주문 상태 (문자열로 표현)
-    private Timestamp createdAt;          // 생성된 시간
-    private String email;                 // 이메일
+    private Integer id;
+    private Integer paymentId; // ✅ Payment 참조 (ID만 저장)
+    private Integer userId; // ✅ User 참조 (ID만 저장)
+    private BigDecimal totalPrice;
+    private Order.PaymentStatus paymentStatus;
+    private Order.RefundStatus refundStatus;
+    private Timestamp createdAt;
 }

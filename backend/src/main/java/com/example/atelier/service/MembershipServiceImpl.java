@@ -4,6 +4,7 @@ import com.example.atelier.domain.Membership;
 import com.example.atelier.domain.User;
 import com.example.atelier.dto.MembershipDTO;
 import com.example.atelier.repository.MembershipRepository;
+import com.example.atelier.repository.PaymentRepository;
 import com.example.atelier.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +27,44 @@ public class MembershipServiceImpl implements MembershipService{
     private final MembershipRepository membershipRepository;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
+    private final PaymentRepository paymentRepository;
+
+
+        void upgradeMembershipIfEligible(Membership membership,User user) {
+
+        //  현재까지 누적 결제액 계산
+        BigDecimal totalSpent = paymentRepository.getTotalSpentByUser(user.getId());
+        if (totalSpent == null) {
+            totalSpent = BigDecimal.ZERO;
+        }
+
+        log.info("🔍 [디버깅] User ID {} - totalSpent from DB: {}", user.getId(), totalSpent);
+        //  현재 등급 확인 후 승급 조건 적용
+        if (membership.getCategory() == Membership.Category.GOLD && totalSpent.compareTo(new BigDecimal("1000000")) >= 0) {
+            membership.setCategory(Membership.Category.DIAMOND);
+            membership.setValidUntil(LocalDateTime.now().plusMonths(12)); // 승급 후 1년 유효기간
+            log.info("User ID {} upgraded to DIAMOND", user.getId());
+
+        } else if (membership.getCategory() == Membership.Category.DIAMOND && totalSpent.compareTo(new BigDecimal("3000000")) >= 0) {
+            membership.setCategory(Membership.Category.TRINITY);
+            membership.setValidUntil(LocalDateTime.now().plusMonths(24)); // 승급 후 2년 유효기간
+            log.info("User ID {} upgraded to TRINITY", user.getId());
+        } else {
+            return; // 승급 조건 미충족 시 리턴
+        }
+
+        //  변경된 멤버십 저장
+        membershipRepository.save(membership);
+    }
 
     public BigDecimal getDiscountByMembershipCategory(Membership.Category category) {
         switch (category) {
             case TRINITY:
-                return new BigDecimal("30"); // 30% 할인
+                return new BigDecimal("0.30"); // 30% 할인
             case DIAMOND:
-                return new BigDecimal("20"); // 20% 할인
+                return new BigDecimal("0.20"); // 20% 할인
             case GOLD:
-                return new BigDecimal("10"); // 10% 할인
+                return new BigDecimal("0.10"); // 10% 할인
             default:
                 return BigDecimal.ZERO; // 기본값 (할인 없음)
         }
@@ -128,7 +158,6 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     // 멤버십  사용 처리 (유효성 검사 포함)
-    @Transactional
     @Override
     public void useMembership(Integer id) {
         // 멤버십 조회
