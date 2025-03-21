@@ -1,0 +1,95 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+button {
+    transition: transform 0.2s ease-in-out, background-color 0.2s;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(1.03);
+}
+
+/* 공통 카드 스타일 */
+.card {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+/* 버튼 스타일 */
+.btn-primary {
+    background-color: #3b82f6;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+/* 녹색 버튼 (등록 등) */
+.btn-success {
+    background-color: #22c55e;
+    color: #fff;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+}
+
+.btn-success:hover {
+    background-color: #16a34a;
+}
+
+/* 입력 필드 */
+.input,
+.textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.input:focus,
+.textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+/* 텍스트 영역 */
+.textarea {
+    height: 10rem;
+    resize: vertical;
+}
+
+
+.write-review-btn {
+    position: fixed;
+    bottom: 50vh;
+    left: 46vw;
+    z-index: 50;
+}

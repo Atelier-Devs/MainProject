@@ -31,7 +31,7 @@ public class ReservationController {
     // POST
     @PostMapping("/add")
     public String addData(@RequestBody ReservationDTO reservationDTO){
-        System.out.println("controller data : " + reservationDTO);
+        System.out.println("reservation controller data : " + reservationDTO);
         return ""+reservationService.register(reservationDTO);
     }
 

@@ -66,7 +66,7 @@ public class ReviewServiceServiceImpl implements ReviewService{
         // 아이템 조회 및 수정
         Review updatedReview = reviewRepository.findById(id)
                 .map(reveiw -> {
-                    reveiw.setRating(reviewDTO.getRating());
+                    reveiw.setRating(Integer.parseInt(reviewDTO.getRating()));
                     reveiw.setComment(reviewDTO.getComment());
                     return reviewRepository.save(reveiw); // 수정된 아이템 저장
                 })
