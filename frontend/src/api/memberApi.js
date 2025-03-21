@@ -14,6 +14,19 @@ export const loginPost = async (loginParam) => {
   return res.data;
 };
 
+export const logout = async () => {
+  const token = localStorage.getItem("accessToken");
+
+  const header = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const res = await axios.get(`${prefix}/logout`, header);
+  return res.data;
+};
+
 export const signupPost = async (signupParam) => {
   console.log("signupPost:", signupParam);
 

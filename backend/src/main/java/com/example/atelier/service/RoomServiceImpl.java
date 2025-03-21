@@ -40,7 +40,7 @@ public class RoomServiceImpl implements RoomServiceService {
     public List<RoomServiceDTO> getRoomServiceById(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
-        List<RoomService> result = roomServiceRepository.findByUserId(userId); // 엔티티 타입 전부 찾아오기
+        List<RoomService> result = roomServiceRepository.findByUserId(user.getId()); // 엔티티 타입 전부 찾아오기
         System.out.println("result:" +result);
         List<RoomServiceDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
         result.forEach(i -> {

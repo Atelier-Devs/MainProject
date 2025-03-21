@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import LoginCompleteHeader from "../../components/LoginCompleteHeader";
+import LoginCompleteHeader from "../../components/Header";
 import Footer from "../../components/Footer";
 import roomImg from "../../image/room0.jpg";
 import restaurantImg from "../../image/dining2.jpg";
@@ -77,7 +77,7 @@ const Facilities = () => {
             >
                 <div className="overlay">
                     <div className="content">
-                        <h2>프라이빗 룸서비스 – 내 방에서 즐기는 맞춤형 다이닝</h2>
+                        <h2>프라이빗 룸서비스 – 내 방에서 즐기는 <br />맞춤형 다이닝</h2>
                         <p>
                             호텔 ATELIER의 룸서비스는 단순한 객실 식사가 아닙니다.
                             미쉐린 셰프가 선보이는 최고급 요리부터, 편안한 아침을 위한 조식 세트,

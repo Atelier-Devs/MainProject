@@ -41,7 +41,7 @@ public class ReservationServiceImpl implements ReservationService{
                 .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
         System.out.println("2) user " + user);
         // user 객체 대신 user의 id를 전달
-        List<Reservation> result = reservationRepository.findByUser_Id(user.getId());
+        List<Reservation> result = reservationRepository.findByUserId(user.getId());
         System.out.println("3) result:" + result);
         List<ReservationDTO> resultDtoList = new ArrayList<>();
         result.forEach(i -> {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Header from "../components/Header";
+import BeforeLoginHeader from "../components/BeforeLoginHeader";
 import Footer from "../components/Footer";
 import hotel from "../image/hotel.jpg";
 import room from "../image/room7.jpg";
@@ -22,7 +22,7 @@ const MainPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen w-full overflow-hidden">
-      <Header />
+      <BeforeLoginHeader />
 
       {/* 상단 이미지 슬라이드 */}
       <div className="flex-grow pb-32">

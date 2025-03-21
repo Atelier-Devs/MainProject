@@ -35,9 +35,17 @@ public class ReservationController {
         return ""+reservationService.register(reservationDTO);
     }
 
-    // GET
+    // GET (조회)
     @GetMapping("/{id}")
-    public ResponseEntity< List<ReservationDTO>> get(@PathVariable("id") Integer id) {
+    public ResponseEntity< List<ReservationDTO>> search(@PathVariable("id") Integer id) {
+        System.out.println("여기 controller " + id);
+        List<ReservationDTO> data = reservationService.get(id);
+        return ResponseEntity.ok(data);
+    }
+
+    // GET (상세페이지)
+    @GetMapping("/read/{id}")
+    public ResponseEntity< List<ReservationDTO>> read(@PathVariable("id") Integer id) {
         System.out.println("여기 controller " + id);
         List<ReservationDTO> data = reservationService.get(id);
         return ResponseEntity.ok(data);

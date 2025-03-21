@@ -1,8 +1,8 @@
 import { lazy, Suspense } from "react";
-import ReservationReadComponent from "../components/reservation/ReservationReadComponent";
 
 const Loading = <div>Loading...</div>;
 const Login = lazy(() => import("../pages/member/LoginPage"));
+const Logout = lazy(() => import("../pages/member/LogoutPage"));
 const Signup = lazy(() => import("../pages/member/SignupForm"));
 const Facilities = lazy(() => import("../pages/member/Facilities"));
 
@@ -17,6 +17,15 @@ const memberRouter = () => {
       ),
     },
     {
+      path: "logout",
+      element: (
+        <Suspense fallback={Loading}>
+          <Logout />
+        </Suspense>
+      ),
+    },
+
+    {
       path: "signup",
       element: (
         <Suspense fallback={Loading}>
@@ -29,14 +38,6 @@ const memberRouter = () => {
       element: (
         <Suspense fallback={Loading}>
           <Facilities />
-        </Suspense>
-      ),
-    },
-    {
-      path: "reservation/manage",
-      element: (
-        <Suspense fallback={Loading}>
-          <ReservationReadComponent />
         </Suspense>
       ),
     },

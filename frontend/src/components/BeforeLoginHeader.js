@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../css/header.css";
 import logo from "../image/logo.png";
 
-const Header = () => {
-  const navigate = useNavigate();
+const BeforeLoginHeader = () => {
   const [showHeader, setShowHeader] = useState(true);
   const token = localStorage.getItem("accessToken");
   console.log("token page:", token);
@@ -16,13 +15,6 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = (e) => {
-    e.preventDefault();
-    if (window.confirm("로그아웃 하시겠습니까?")) {
-      navigate("/");
-    }
-  };
-
   return (
     <header
       className={`header fixed top-0 left-0 w-full transition-transform duration-700 ease-in-out ${
@@ -30,22 +22,20 @@ const Header = () => {
       }`}
     >
       <div className="logo">
-        <Link to="/Dashboard">
+        <Link to="/">
           <img src={logo} alt="로고" />
         </Link>
       </div>
       <nav className="menu">
-        <Link to="/reservation/list">예약 관리</Link>
-        <Link to="/member/Facilities">시설 안내</Link>
-        <Link to="/review">리뷰</Link>
         {!token ? (
           <Link to="/member/login">로그인</Link>
         ) : (
           <Link to="/member/logout">로그아웃</Link>
         )}
+        <Link to="/member/signup">회원가입</Link>
       </nav>
     </header>
   );
 };
 
-export default Header;
+export default BeforeLoginHeader;

@@ -3,7 +3,7 @@ import { createReview } from "../../api/reviewApi";
 import { useNavigate } from "react-router-dom";
 
 const ReviewWriteComponent = () => {
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState("");  
     const [content, setContent] = useState("");
     const navigate = useNavigate();
 

@@ -7,6 +7,7 @@ import com.example.atelier.dto.LoginResponseDTO;
 import com.example.atelier.dto.UserDTO;
 import com.example.atelier.repository.UserRepository;
 import com.example.atelier.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -68,5 +69,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponseDTO("Login failed: Invalid email or password."));
         }
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        System.out.println(
+                "controller logout 들어왔어요 " 
+        );
+        session.invalidate(); // ✅ 세션 종료
+        return ResponseEntity.ok("로그아웃 완료");
     }
 }
