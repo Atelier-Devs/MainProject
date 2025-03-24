@@ -23,6 +23,10 @@ public class User {
 
     private String name;
     private String email;
+
+
+    private BigDecimal refundableAmount = BigDecimal.ZERO; // ✅ 환불 가능한 금액
+
     private String password;
     private String phone;
 

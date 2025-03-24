@@ -8,6 +8,7 @@ public interface OrderService {
     // 주문 생성
     public int createOrder(OrderDTO orderDTO);
 
+
     // 주문조회(직원,관리자모드)
     public OrderDTO searchOrder(Integer id);
 
@@ -18,5 +19,13 @@ public interface OrderService {
     public List<OrderDTO> searchOnlyOrder(Integer userId);
 
     // 여러 개의 주문 상태 및 아이템 수정
-    public List<OrderDTO> modifyOrder(List<OrderDTO> orderDTOList, Integer userId);
+//    public List<OrderDTO> modifyOrder(List<OrderDTO> orderDTOList, Integer userId);
+
+    //환불로직
+    void approveRefund(Integer orderId, Integer staffId, String reason);
+
+    void requestRefund(Integer orderId, Integer userId);
+
+    public boolean refundPayment(Integer paymentId);
+
 }

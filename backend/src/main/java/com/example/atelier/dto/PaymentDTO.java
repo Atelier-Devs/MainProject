@@ -1,10 +1,7 @@
 package com.example.atelier.dto;
 
 import com.example.atelier.domain.Payment;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -13,6 +10,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
+@ToString
 public class PaymentDTO {
     private Integer id; // 결제 ID
     private Integer userId; // 사용자 ID
@@ -23,4 +21,6 @@ public class PaymentDTO {
     private Payment.PaymentStatus paymentStatus; // 결제 상태
     private Payment.PaymentMethod paymentMethod; // 결제 방법
     private Timestamp createdAt; // 생성된 시간
+
+
 }

@@ -5,15 +5,11 @@ import com.example.atelier.dto.MembershipDTO;
 import com.example.atelier.dto.ReservationDTO;
 import jakarta.transaction.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface MembershipService {
 
-//    // POST
-//    Membership register(MembershipDTO membershipDTO);
-
-    // POST(신규 멤버십 추가할 경우)
+    // POST
     Membership register(MembershipDTO membershipDTO);
 
     // 특정 ID 조회
@@ -23,7 +19,7 @@ public interface MembershipService {
     List<MembershipDTO> getAllMemberships();
 
     // PUT
-    MembershipDTO modify(Integer id, MembershipDTO membershipDTO);
+    Membership modify(Integer id, MembershipDTO membershipDTO);
 
     // DELETE
     void remove(Integer id);
