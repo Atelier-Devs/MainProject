@@ -4,6 +4,7 @@ import com.example.atelier.domain.Membership;
 import com.example.atelier.domain.User;
 import com.example.atelier.dto.MembershipDTO;
 import com.example.atelier.repository.MembershipRepository;
+import com.example.atelier.repository.PaymentRepository;
 import com.example.atelier.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,34 +27,51 @@ public class MembershipServiceImpl implements MembershipService{
     private final MembershipRepository membershipRepository;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
+    private final PaymentRepository paymentRepository;
 
-    public BigDecimal getDiscountByMembershipCategory(Membership.Category category) {
-        if (category == null) {
-            log.warn("Membership category is null. Returning default discount 0%.");
-            return BigDecimal.ZERO;
-        }
-        try {
-            return membershipRepository.findByCategory(category)
-                    .map(Membership::getDiscount)
-                    .orElse(BigDecimal.ZERO);
-        } catch (Exception e) {
-            log.error("Error retrieving discount for category {}: {}", category, e.getMessage());
-            return BigDecimal.ZERO; // 에러 발생 시 기본값 반환
+
+    void upgradeMembershipIfEligible(Membership membership,User user) {
+
+        //  현재까지 누적 결제액 계산
+        BigDecimal totalSpent = paymentRepository.getTotalSpentByUser(user.getId());
+        if (totalSpent == null) {
+            totalSpent = BigDecimal.ZERO;
         }
 
-//        switch (category) {
-//            case TRINITY:
-//                return new BigDecimal("0.30"); // 30% 할인
-//            case DIAMOND:
-//                return new BigDecimal("0.20"); // 20% 할인
-//            case GOLD:
-//                return new BigDecimal("0.10"); // 10% 할인
-//            default:
-//                return BigDecimal.ZERO; // 기본값 (할인 없음)
-//        }
+        log.info("🔍 [디버깅] User ID {} - totalSpent from DB: {}", user.getId(), totalSpent);
+        //  현재 등급 확인 후 승급 조건 적용
+        if (membership.getCategory() == Membership.Category.GOLD && totalSpent.compareTo(new BigDecimal("1000000")) >= 0) {
+            membership.setCategory(Membership.Category.DIAMOND);
+            membership.setValidUntil(LocalDateTime.now().plusMonths(12)); // 승급 후 1년 유효기간
+            log.info("User ID {} upgraded to DIAMOND", user.getId());
+
+        } else if (membership.getCategory() == Membership.Category.DIAMOND && totalSpent.compareTo(new BigDecimal("3000000")) >= 0) {
+            membership.setCategory(Membership.Category.TRINITY);
+            membership.setValidUntil(LocalDateTime.now().plusMonths(24)); // 승급 후 2년 유효기간
+            log.info("User ID {} upgraded to TRINITY", user.getId());
+        } else {
+            return; // 승급 조건 미충족 시 리턴
+        }
+
+        //  변경된 멤버십 저장
+        membershipRepository.save(membership);
     }
 
-    // POST(신규 멤버십 추가할 경우)
+    public BigDecimal getDiscountByMembershipCategory(Membership.Category category) {
+        switch (category) {
+            case TRINITY:
+                return new BigDecimal("0.30"); // 30% 할인
+            case DIAMOND:
+                return new BigDecimal("0.20"); // 20% 할인
+            case GOLD:
+                return new BigDecimal("0.10"); // 10% 할인
+            default:
+                return BigDecimal.ZERO; // 기본값 (할인 없음)
+        }
+    }
+
+
+    // POST
     @Override
     public Membership register(MembershipDTO membershipDTO){
         Membership membership = modelMapper.map(membershipDTO, Membership.class);
@@ -81,7 +99,7 @@ public class MembershipServiceImpl implements MembershipService{
         }
     }
 
-    // 특정 ID 조회(관리자모드)
+    // 특정 ID 조회
     @Override
     public List<MembershipDTO> get(Integer userId) {
 
@@ -119,31 +137,27 @@ public class MembershipServiceImpl implements MembershipService{
         return resultDtoList; // 결과 DTO 리스트 반환
     }
 
-    // PUT(관리자모드)
+    // PUT
     @Override
-    public MembershipDTO modify(Integer id, MembershipDTO membershipDTO) {
-        // 카테고리에 해당하는 멤버십을 찾는다
-        Membership membership = membershipRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 멤버십을 찾을 수 없습니다."));
-
-        // DTO로 전달된 값으로 멤버십 수정
-        membership.setDiscount(membershipDTO.getDiscount());
-        membership.setValidUntil(membershipDTO.getValidUntil());
-        membership.setStatus(membershipDTO.getStatus());
-
-        // 수정된 멤버십 저장
-        membershipRepository.save(membership);
-        return modelMapper.map(membership, MembershipDTO.class);
+    public Membership modify(Integer id, MembershipDTO membershipDTO) {
+        return membershipRepository.findById(id)
+                .map(Membership -> {
+                    Membership.setCategory(membershipDTO.getCategory());
+                    Membership.setDiscount(membershipDTO.getDiscount());
+                    Membership.setValidUntil(membershipDTO.getValidUntil());
+                    Membership.setStatus(membershipDTO.getStatus());
+                    return membershipRepository.save(Membership);
+                })
+                .orElseThrow(() -> new RuntimeException("해당 멤버십이 존재하지 않습니다."));
     }
 
-    // DELETE(관리자모드)
+    // DELETE
     @Override
     public void remove(Integer id) {
         membershipRepository.deleteById(id);
     }
 
-    // 멤버십  사용 처리 (유효성 검사 포함)(관리자모드)
-    @Transactional
+    // 멤버십  사용 처리 (유효성 검사 포함)
     @Override
     public void useMembership(Integer id) {
         // 멤버십 조회
