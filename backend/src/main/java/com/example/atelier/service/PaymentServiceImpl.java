@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -85,7 +86,10 @@ public class PaymentServiceImpl implements PaymentService {
         BigDecimal finalAmount = paymentDTO.getAmount();
 
         // 4. 멤버십 조회 및 유효성 검사
-        Membership membership = membershipRepository.findByUserId(userId)
+        List<Membership> memberships = membershipRepository.findByUserId(userId);
+        Membership membership = memberships.stream()
+                .filter(m -> m.getStatus() == Membership.Status.ACTIVE)
+                .findFirst()
                 .orElse(null);
 
         Membership.Category membershipCategory = null;
@@ -104,7 +108,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (membership == null || membership.getStatus() != Membership.Status.ACTIVE) {
                 log.warn("User ID {} has no active membership. Skipping discount.", user.getId());
             }else {
-                // ✅ 멤버십 등급별 할인율 적용
+                // 멤버십 등급별 할인율 적용
                 discountRate = membershipServiceImpl.getDiscountByMembershipCategory(membership.getCategory());
                 //할인율을 결제 금액에 반영하는 과정
                 BigDecimal discountAmount = finalAmount.multiply(discountRate);
@@ -134,7 +138,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         //  **저장된 결제 ID 반환**
         return payment.getId();
-
     }
 
     //결제상태 조회
@@ -157,7 +160,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setPaymentStatus(newStatus);
         paymentRepository.save(payment);
 
-        log.info("✅ Payment ID {} - 결제 상태 변경: {}", paymentId, newStatus);
+        log.info("Payment ID {} - 결제 상태 변경: {}", paymentId, newStatus);
     }
 
     //결제방법 변경
@@ -169,11 +172,11 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalStateException("진행 중인 결제만 결제 방법을 변경할 수 있습니다.");
         }
 
-        payment.changePaymentMethod(newMethod); // ✅ 엔티티 내부의 메서드를 호출
+        payment.changePaymentMethod(newMethod); // 엔티티 내부의 메서드를 호출
         paymentRepository.save(payment);
 
 
-        log.info("✅ Payment ID {} - 결제 방법 변경: {}", paymentId, newMethod);
+        log.info("Payment ID {} - 결제 방법 변경: {}", paymentId, newMethod);
     }
 
     //환불페이지에 결제내역 보내기
@@ -185,7 +188,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalStateException("완료된 결제만 주문으로 전송할 수 있습니다.");
         }
 
-        // ✅ ModelMapper로 한 번에 변환
+        // ModelMapper로 한 번에 변환
 //        OrderDTO orderDTO = modelMapper.map(payment, OrderDTO.class);
         OrderDTO orderDTO = OrderDTO.builder()
                 .paymentId(payment.getId())                   // Payment ID
@@ -196,9 +199,9 @@ public class PaymentServiceImpl implements PaymentService {
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .build();
 
-        // ✅ OrderService를 호출하여 주문 생성
+        // OrderService를 호출하여 주문 생성
         orderService.createOrder(orderDTO);
-        log.info("✅ Payment ID {} - 결제 정보가 OrderService로 전달됨", paymentId);
+        log.info("Payment ID {} - 결제 정보가 OrderService로 전달됨", paymentId);
 
     }
     public void confirmPayment(Integer paymentId) {
@@ -210,11 +213,11 @@ public class PaymentServiceImpl implements PaymentService {
             return;
         }
 
-//        // ✅ 외부 결제 승인 API 호출
+//        // 외부 결제 승인 API 호출
 //        String paymentApprovalUrl = "https://api.paymentgateway.com/payments/" + paymentId + "/approve";
 //
 //        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", "Bearer your-api-key"); // ✅ API 키 필요할 경우
+//        headers.set("Authorization", "Bearer your-api-key"); // API 키 필요할 경우
 //
 //        HttpEntity<String> requestEntity = new HttpEntity<>("{}", headers);
 //
@@ -225,22 +228,22 @@ public class PaymentServiceImpl implements PaymentService {
 //            if (!response.getStatusCode().is2xxSuccessful()) {
 //                throw new RuntimeException("결제 승인 요청 실패: " + response.getBody());
 //            }
-//            log.info("✅ 결제 승인 성공: Payment ID = {}", paymentId);
+//            log.info("결제 승인 성공: Payment ID = {}", paymentId);
 //        } catch (Exception e) {
-//            log.error("❌ 결제 승인 실패: Payment ID = {}, 오류: {}", paymentId, e.getMessage());
+//            log.error("결제 승인 실패: Payment ID = {}, 오류: {}", paymentId, e.getMessage());
 //            throw new RuntimeException("결제 승인 요청 실패");
 //        }
 
         //결제상태 completed로 변경
         payment.setPaymentStatus(Payment.PaymentStatus.COMPLETED);
         Payment savedPayment = paymentRepository.save(payment);
-        log.info("✅ Payment saved, ID = {}, status updated to COMPLETED",
+        log.info("Payment saved, ID = {}, status updated to COMPLETED",
                 savedPayment.getId());
 
-        // ✅ 결제 완료 후 주문 정보 전송
+        // 결제 완료 후 주문 정보 전송
         sendPaymentInfoToOrder(paymentId);
 
-        // ✅ 누적 결제 금액 업데이트
+        // 누적 결제 금액 업데이트
         User user = payment.getUser();
         BigDecimal updatedTotal = user.getTotalSpent().add(payment.getAmount());
         user.setTotalSpent(updatedTotal);
@@ -251,7 +254,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentDTO approvePayment(String impUid, PaymentDTO paymentDTO) {
-        log.info("🔄 결제 승인 요청 시작: impUid = {}", impUid);
+        log.info("결제 승인 요청 시작: impUid = {}", impUid);
 
         try {
             // 1️⃣ PortOne API에서 결제 정보 조회
@@ -283,8 +286,4 @@ public class PaymentServiceImpl implements PaymentService {
             throw new RuntimeException("결제 승인 중 오류 발생");
         }
     }
-
-
-
-
 }

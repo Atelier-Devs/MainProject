@@ -51,7 +51,7 @@ const services = [
   },
 ];
 
-const priceMap = {
+const roomServicePriceMap = {
     "Morning Delight": "12000",           // Breakfast
     "Grand Lunch Experience": "18000",    // Lunch
     "Elegant Dinner": "25000",            // Dinner
@@ -89,11 +89,14 @@ const Roomservice = () => {
                   className="text-blue-600 text-sm font-semibold hover:underline"
                   onClick={() =>
                     navigate(`/roomservice/${roomservice.id}`, {
-                      state: { roomservice },
-                    })
+                        state: {
+                          ...roomservice,
+                          price: roomServicePriceMap[roomservice.title]
+                        }
+                      })
                   }
                 >
-                  {priceMap[roomservice.title]} &gt;
+                  {Number(roomServicePriceMap[roomservice.title]).toLocaleString()} KRW &gt;
                 </button>
               </div>
             </div>

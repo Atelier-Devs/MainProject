@@ -1,119 +1,118 @@
-/* 예약 관리 페이지 디자인 유지 및 정중앙 배치 (스타일 개선) */
-.reservation-container {
+/* 로고 영역 */
+.reservation-logo-box {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.reservation-logo {
+    width: 140px;
+    height: auto;
+}
+
+/* 제목 */
+.reservation-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #5a3e2b;
+    margin-bottom: 24px;
+}
+
+/* 검색 폼 */
+.reservation-form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: linear-gradient(to bottom, #f8f8f8, #e6e6e6);
-    padding: 50px;
-    font-family: 'Arial', sans-serif;
-}
-
-.reservation-content {
-    background: white;
-    padding: 40px;
-    border-radius: 35px;
-    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    max-width: 800px;
-    width: 100%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.reservation-content h1 {
-    font-size: 30px;
-    font-weight: bold;
-    color: #5a3e2b;
+    gap: 14px;
     margin-bottom: 20px;
 }
 
-.reservation-results-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #7a5a3a;
-    margin-top: 20px;
-    text-align: center;
-    background: #f3e7d3;
-    padding: 10px;
-    border-radius: 8px;
-    display: inline-block;
-}
-
 .reservation-input {
-    width: 30%;
-    padding: 14px;
-    border: 2px solid #d1bfa7;
-    border-radius: 10px;
-    font-size: 17px;
+    width: 250px;
+    padding: 12px;
+    font-size: 16px;
     text-align: center;
-    margin-bottom: 18px;
-    background-color: #fcfcfc;
-    transition: all 0.3s;
+    border: 2px solid #c9b9a2;
+    border-radius: 10px;
+    background-color: #fff;
+    transition: all 0.3s ease;
 }
 
-.reservation-input:focus {
-    border-color: #a07c5b;
-    box-shadow: 0 0 10px rgba(160, 124, 91, 0.5);
-    background-color: white;
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 .reservation-button {
     background: #a07c5b;
     color: white;
-    border: none;
-    padding: 14px;
-    font-size: 17px;
-    cursor: pointer;
-    border-radius: 10px;
-    transition: transform 0.2s, box-shadow 0.3s;
-    width: 10%;
+    font-size: 15px;
     font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .reservation-button:hover {
     background: #8b6847;
     transform: scale(1.05);
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 상태 텍스트 */
+.reservation-status-box {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.reservation-status-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #5a3e2b;
 }
 
 .reservation-table-container {
-    margin-top: 25px;
-    width: 100%;
-    max-width: 950px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    padding-bottom: 40px;
 }
 
+/* 테이블 너비를 줄임 (예: 90% → 70%) */
 .reservation-table {
-    width: 100%;
+    width: 70%;
+    max-width: 1000px;
     border-collapse: collapse;
-    margin-top: 12px;
-    background: white;
-    border-radius: 12px;
+    background-color: white;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    font-size: 19px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    font-size: 15px;
+    /* 폰트도 살짝 줄임 */
 }
 
 .reservation-table th,
 .reservation-table td {
-    border: 1px solid #d1bfa7;
-    padding: 18px;
+    border: 1px solid #e8dbc9;
+    padding: 14px;
     text-align: center;
 }
 
 .reservation-table th {
-    background: #f3e7d3;
-    color: #7a5a3a;
+    background-color: #f8eddf;
+    color: #5a3e2b;
     font-weight: bold;
 }
 
 .reservation-table tr:nth-child(even) {
-    background: #faf8f6;
+    background-color: #fdfbf9;
+}
+
+.reservation-container {
+    margin-top: 80px;
+    /* header 높이 + 여유 공간 */
 }

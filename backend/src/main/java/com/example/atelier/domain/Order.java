@@ -23,9 +23,8 @@ public class Order {
     private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "payment_id", nullable = false) // ✅ Payment 참조 추가
+    @JoinColumn(name = "payment_id", nullable = false) // Payment 참조 추가
     private Payment payment;
-
 
     @ManyToOne
     @JoinColumn(name = "reservation_id", nullable = false)
@@ -35,13 +34,13 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private BigDecimal totalPrice; // ✅ 결제 금액
+    private BigDecimal totalPrice; // 결제 금액
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus; // ✅ 결제 상태 관리
+    private PaymentStatus paymentStatus; // 결제 상태 관리
 
     @Enumerated(EnumType.STRING)
-    private RefundStatus refundStatus; // ✅ 환불 상태 관리
+    private RefundStatus refundStatus; // 환불 상태 관리
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -54,7 +53,7 @@ public class Order {
         NONE, REFUND_PENDING, REFUNDED
     }
 
-    // ✅ 환불 요청
+    // 환불 요청
     public void requestRefund() {
         if (this.refundStatus == RefundStatus.NONE && this.paymentStatus == PaymentStatus.COMPLETED) {
             this.refundStatus = RefundStatus.REFUND_PENDING;
@@ -62,7 +61,7 @@ public class Order {
             throw new IllegalStateException("환불 요청이 불가능한 상태입니다.");
         }
     }
-    // ✅ 환불 완료
+    // 환불 완료
     public void completeRefund() {
         if (this.refundStatus == RefundStatus.REFUND_PENDING) {
             this.refundStatus = RefundStatus.REFUNDED;

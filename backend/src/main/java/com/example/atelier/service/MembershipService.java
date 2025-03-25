@@ -27,4 +27,7 @@ public interface MembershipService {
     // 바우처 사용 처리 (유효성 검사 포함)
     @Transactional
     void useMembership(Integer id);
+
+
+
 }

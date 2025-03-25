@@ -19,9 +19,11 @@ const Header = () => {
   const handleLogout = (e) => {
     e.preventDefault();
     if (window.confirm("로그아웃 하시겠습니까?")) {
-      navigate("/");
+      localStorage.removeItem("accessToken"); // 토큰 제거
+      navigate("/"); // 메인 페이지로 이동
     }
   };
+  
 
   return (
     <header
@@ -38,11 +40,8 @@ const Header = () => {
         <Link to="/reservation/list">예약 관리</Link>
         <Link to="/member/Facilities">시설 안내</Link>
         <Link to="/review">리뷰</Link>
-        {!token ? (
-          <Link to="/member/login">로그인</Link>
-        ) : (
-          <Link to="/member/logout">로그아웃</Link>
-        )}
+        <Link to="/mypage">마이 페이지</Link>
+        <button onClick={handleLogout} className="logout-button">로그아웃</button>
       </nav>
     </header>
   );

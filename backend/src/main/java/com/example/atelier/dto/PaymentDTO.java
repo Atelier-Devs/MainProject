@@ -22,5 +22,21 @@ public class PaymentDTO {
     private Payment.PaymentMethod paymentMethod; // 결제 방법
     private Timestamp createdAt; // 생성된 시간
 
+    public static PaymentDTO fromEntity(Payment payment) {
+        if (payment == null) return null;
+
+        return new PaymentDTO(
+                payment.getId(),
+                payment.getUser() != null ? payment.getUser().getId() : null,
+                payment.getReservation() != null ? payment.getReservation().getId() : null,
+                payment.getMembership() != null ? payment.getMembership().getId() : null,
+                payment.getOrder() != null ? payment.getOrder().getId() : null,
+                payment.getAmount(),
+                payment.getPaymentStatus(),
+                payment.getPaymentMethod(),
+                payment.getCreatedAt()
+        );
+    }
+
 
 }

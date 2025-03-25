@@ -28,6 +28,7 @@ public class Review {
     private Residence residence;
 
     private Integer rating; // 평점을 숫자로 기록
+    private String title; // 리뷰 제목
     private String comment; // 리뷰 내용
 
     @Column(name = "created_at")

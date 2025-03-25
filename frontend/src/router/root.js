@@ -7,6 +7,7 @@ import bakeryRouter from "./bakeryRouter";
 import roomserviceRouter from "./roomserviceRouter";
 import reviewRouter from "./reviewRouter";
 import reservationRouter from "./reservationRouter";
+import mypageRouter from "./mypageRouter";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -52,7 +53,6 @@ const root = createBrowserRouter([
     path: "roomservice",
     children: roomserviceRouter(),
   },
-
   {
     path: "review",
     children: reviewRouter(),
@@ -60,6 +60,10 @@ const root = createBrowserRouter([
   {
     path: "reservation",
     children: reservationRouter(),
+  },
+  {
+    path: "mypage",
+    children: mypageRouter(),
   },
 ]);
 

@@ -27,8 +27,9 @@ const LoginPage = () => {
       console.log("payload", payload);
       localStorage.setItem("login", JSON.stringify(payload));
       localStorage.setItem("accessToken", payload.accessToken);
-      if (data.error) {
+      if (!payload.accessToken) {
         alert("이메일과 암호를 재입력해주세요");
+        return
       } else {
         alert("로그인 성공");
         moveToPath("/dashboard"); // 로그인 성공 후 이동 경로 수정 가능

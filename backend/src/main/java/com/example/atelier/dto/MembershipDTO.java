@@ -20,4 +20,15 @@ public class MembershipDTO {
     private BigDecimal discount;            // 할인 금액
     private LocalDateTime validUntil;       // 유효 기간
     private Membership.Status status;       // 상태 (문자열로 표현)
+    public static MembershipDTO fromEntity(Membership membership) {
+        if (membership == null) return null;
+
+        return new MembershipDTO(
+                membership.getId(),
+                membership.getCategory(),
+                membership.getDiscount(),
+                membership.getValidUntil(),
+                membership.getStatus()
+        );
+    }
 }

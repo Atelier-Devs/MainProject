@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,10 +27,13 @@ public class User {
     private String email;
 
 
-    private BigDecimal refundableAmount = BigDecimal.ZERO; // ✅ 환불 가능한 금액
+    private BigDecimal refundableAmount = BigDecimal.ZERO; // 환불 가능한 금액
 
     private String password;
     private String phone;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Membership> memberships = new ArrayList<>();
 
     @Column(name = "total_spent", nullable = false)
     private BigDecimal totalSpent = BigDecimal.ZERO;
