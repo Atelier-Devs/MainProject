@@ -24,6 +24,7 @@ import java.util.Map;
 @Log4j2
 public class JWTCheckFilter extends OncePerRequestFilter {
 
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         // OPTIONS 요청은 필터 대상에서 제외
@@ -45,25 +46,48 @@ public class JWTCheckFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         log.info("----- JWTCheckFilter -----");
+
         String uri = request.getRequestURI();
         String authHeaderStr = request.getHeader("Authorization");
+        log.info("🔑 Authorization Header: {}", authHeaderStr);
         if (uri.equals("/api/atelier/logout")) {
             filterChain.doFilter(request, response);
             return;
         }
+
         try {
+            if (authHeaderStr == null || !authHeaderStr.startsWith("Bearer ")) {
+                throw new IllegalArgumentException("Authorization 헤더가 없거나 형식이 올바르지 않습니다.");
+            }
+
             // "Bearer " 접두어 제거 후 토큰 검증
-            String accessToken = authHeaderStr.substring(7);
+            String accessToken = authHeaderStr.substring(7).trim();
+            if (accessToken.isEmpty()) {
+                throw new IllegalArgumentException("토큰이 비어있습니다.");
+            }
+
             Map<String, Object> claims = JWTUtil.validateToken(accessToken);
             log.info("JWT claims : " + claims);
 
-            // 클레임에서 필요한 값 추출
+            Integer userId = null;
+            Object userIdClaim = claims.get("userId");
+            if (userIdClaim instanceof Number) {
+                userId = ((Number) userIdClaim).intValue();
+            } else if (userIdClaim instanceof String) {
+                userId = Integer.parseInt((String) userIdClaim);
+            }
+            if (userId == null) {
+                throw new IllegalArgumentException("userId 클레임이 누락되었습니다.");
+            }
             String email = (String) claims.get("email");
             String password = (String) claims.get("password");
             String phone = (String) claims.get("phone");
             String name = (String) claims.get("name");
 
-            // roleNames 처리: 클레임이 List 또는 String 또는 User.Role 인 경우 처리
+            if (email == null) {
+                throw new IllegalArgumentException("필수 클레임이 누락되었습니다.");
+            }
+
             Object roleNamesClaim = claims.get("roleNames");
             List<String> roleNames;
             if (roleNamesClaim instanceof List) {
@@ -73,48 +97,47 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             } else if (roleNamesClaim instanceof User.Role) {
                 roleNames = List.of(((User.Role) roleNamesClaim).name());
             } else {
-                throw new IllegalArgumentException("Invalid roleNames claim type: " + roleNamesClaim);
+                throw new IllegalArgumentException("유효하지 않은 roleNames claim 타입: " + roleNamesClaim);
             }
 
-            roleNames.forEach(System.out::println);
-
-            // roleNames에서 첫 번째 역할을 선택하여 User.Role enum으로 변환 (예: CUSTOMER, STAFF, ADMIN)
-            User.Role role = null;
-            if (!roleNames.isEmpty()) {
-                try {
-                    // 역할 문자열 앞뒤의 공백 제거 후 대문자로 변환하여 enum과 매칭
-                    role = User.Role.valueOf(roleNames.get(0).trim().toUpperCase(Locale.ROOT));
-                    System.out.println("100)role:" + role);
-                } catch (IllegalArgumentException e) {
-                    log.error("유효하지 않은 역할: " + roleNames.get(0));
-                    throw e;
-                }
+            if (roleNames.isEmpty()) {
+                throw new IllegalArgumentException("역할(roleNames)이 비어있습니다.");
             }
 
-            // UserDTO 생성 (id, phone, createdAt는 JWT에 포함되지 않았으므로 null로 처리)
-            UserDTO userDTO = new UserDTO(null, name, email, password, phone, role, null);
+            User.Role role;
+            try {
+                role = User.Role.valueOf(roleNames.get(0).trim().toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                log.error("유효하지 않은 역할: {}", roleNames.get(0));
+                throw e;
+            }
 
-            log.info("----------");
-            log.info(userDTO);
-            // UserDTO의 역할을 기반으로 GrantedAuthority 생성 (ROLE_ 접두어 추가 권장)
+            UserDTO userDTO = new UserDTO(userId, null, email, null, null, role, null);
+
+            log.info("👤 인증된 사용자 1): {}", userDTO);
+
+            // 권한 설정
             GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.name());
             List<GrantedAuthority> authorities = List.of(authority);
-
+            log.info("👤 authorities 2): {}", authorities);
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(email, password, authorities);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
+            log.info("👤 authenticationToken 3): {}", authenticationToken);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            log.error("JWT Check Error......");
-            log.error(e.getMessage());
+            log.error("JWT Check Error");
+            log.error("예외 메시지: {}", e.getMessage());
 
             Gson gson = new Gson();
             String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
-            response.setContentType("application/json");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json; charset=UTF-8");
             PrintWriter printWriter = response.getWriter();
             printWriter.print(msg);
             printWriter.close();
         }
     }
+
 }

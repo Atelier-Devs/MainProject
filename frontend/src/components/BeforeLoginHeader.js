@@ -17,9 +17,8 @@ const BeforeLoginHeader = () => {
 
   return (
     <header
-      className={`header fixed top-0 left-0 w-full transition-transform duration-700 ease-in-out ${
-        showHeader ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
-      }`}
+      className={`header fixed top-0 left-0 w-full transition-transform duration-700 ease-in-out ${showHeader ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+        }`}
     >
       <div className="logo">
         <Link to="/">
@@ -27,11 +26,7 @@ const BeforeLoginHeader = () => {
         </Link>
       </div>
       <nav className="menu">
-        {!token ? (
-          <Link to="/member/login">로그인</Link>
-        ) : (
-          <Link to="/member/logout">로그아웃</Link>
-        )}
+        <Link to="/member/login">로그인</Link>
         <Link to="/member/signup">회원가입</Link>
       </nav>
     </header>

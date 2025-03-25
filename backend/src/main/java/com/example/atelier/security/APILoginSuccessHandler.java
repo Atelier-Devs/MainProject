@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -29,20 +30,21 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         log.info("-----------------");
 
         // 기본적으로 Spring Security는 org.springframework.security.core.userdetails.User를 반환함
-        org.springframework.security.core.userdetails.User principal =
-                (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
         String email = principal.getUsername();
         String encodedPassword = principal.getPassword();
-
+        int userId = principal.getUserId();
+        log.info("principal.getUserId() = {}", userId); // 확인
         // 권한 추출: 예를 들어, 첫 번째 권한에서 "ROLE_" 접두어를 제거
         String authority = principal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse(new SimpleGrantedAuthority("ROLE_CUSTOMER"))
-                .getAuthority();
+                .orElse("ROLE_CUSTOMER");
+//                .getAuthority();
         String roleStr = authority.startsWith("ROLE_") ? authority.substring(5) : authority;
 
         // 새 UserDTO를 생성 (이름, 전화번호, createdAt 등은 필요에 따라 null 처리)
-        UserDTO dto = new UserDTO(null, null, email, encodedPassword, null, User.Role.valueOf(roleStr.toUpperCase()), null);
+        UserDTO dto = new UserDTO(userId, null, email, encodedPassword, null, User.Role.valueOf(roleStr.toUpperCase()), null);
         // getClaims()는 dto에 설정된 값을 기반으로 map을 만듭니다.
         Map<String, Object> claims = dto.getClaims();
 
@@ -58,5 +60,7 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         PrintWriter printWriter = response.getWriter();
         printWriter.println(json);
         printWriter.close();
+        log.info("userId from principal: {}", userId);
+        log.info("claims before token: {}", claims);
     }
 }

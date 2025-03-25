@@ -26,7 +26,9 @@ public class ReviewController {
     // 리뷰 생성
     @PostMapping("/register")
     public ResponseEntity<?> create(@RequestBody ReviewDTO reviewDTO) {
-        System.out.println("review 등록 controller: " +reviewDTO);
+        System.out.println("ReviewDTO: " + reviewDTO);
+        System.out.println("userId: " + reviewDTO.getUserId());
+        System.out.println("residenceId: " + reviewDTO.getResidenceId());
         Review review = reviewService.register(reviewDTO);
         return ResponseEntity.ok(review);
     }
@@ -52,7 +54,7 @@ public class ReviewController {
     // 리뷰 수정
     @PutMapping("/modify/{userId}")
     public ResponseEntity<ReviewDTO> modifyReview(@RequestBody ReviewDTO reviewDTO, @PathVariable Integer id) {
-        reviewDTO.setId(String.valueOf(id));
+        reviewDTO.setId(id);
         ReviewDTO modifiedReview = reviewService.modify(id, reviewDTO);
         if (modifiedReview == null) { // null 체크
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

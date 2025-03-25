@@ -107,16 +107,16 @@ public class MembershipServiceImpl implements MembershipService{
         User userNone = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다." ));
         //멤버십 조회
-        Optional<Membership> result = membershipRepository.findByUserId(userId); // 특정 ID의 엔티티 조회
+        List<Membership> result = membershipRepository.findByUserId(userId); // 특정 ID의 엔티티 조회
 
-        //여기에 예외처리 result의 엔티티가 없으면  return new ArrayList<>();이걸 예외 대신 넣어도됨. -> 빈 배열 출력
+        //여기에 예외처리 result의 엔티티가 없으면 return new ArrayList<>();이걸 예외 대신 넣어도됨. -> 빈 배열 출력
         if (result.isEmpty()) {
             throw new RuntimeException("해당 사용자의 멤버십이 존재하지 않습니다.");
         }
 
         List<MembershipDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
 
-        result.ifPresent(i -> {
+        result.forEach(i -> {
             MembershipDTO data = modelMapper.map(i, MembershipDTO.class); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });

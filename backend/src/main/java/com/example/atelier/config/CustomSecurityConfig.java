@@ -45,13 +45,17 @@ public class CustomSecurityConfig {
 // [1] 폼 로그인 비활성화
         http.formLogin(form -> form.disable());
         http.authorizeHttpRequests(authorize -> authorize
-                // 모든 OPTIONS 요청 허용
-//                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // /api/atelier/signup의 POST 요청 허용
+                // 회원가입, 로그인, 로그아웃은 허용
                 .requestMatchers(HttpMethod.POST, "/api/atelier/register/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/atelier/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/atelier/logout").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/atelier/logout").permitAll()
+
+                // 리뷰 등록은 인증 필요하도록 설정
+//                .requestMatchers(HttpMethod.POST, "/api/atelier/review/register").authenticated()
+
+                // 오류 페이지는 허용
                 .requestMatchers("/error").permitAll()
+
                 // 그 외 모든 요청은 인증 필요
                 .anyRequest().authenticated()
         );

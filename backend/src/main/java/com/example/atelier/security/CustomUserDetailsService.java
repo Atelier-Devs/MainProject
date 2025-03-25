@@ -22,20 +22,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        log.info("loadUserByUsername: {}", email);
-
-        // 이메일로 사용자 조회 (UserRepository에 findByEmail 메서드가 있다고 가정)
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다. 이메일: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("이메일 없음"));
 
-        // 단일 Role을 GrantedAuthority로 변환 (ROLE_ 접두어 추가 권장)
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRoleNames().name());
         List<GrantedAuthority> authorities = List.of(authority);
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),     // username
-                user.getPassword(),  // password
-                authorities          // 권한 목록
-        );
+        // 반드시 커스텀 클래스 사용해야 함!
+        return new CustomUserDetails(user, authorities);
     }
 }

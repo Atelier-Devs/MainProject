@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder; // BCryptPasswordEncoder
 
     public Integer registerUser(UserDTO userDTO) {
@@ -48,6 +47,4 @@ public class UserServiceImpl implements UserService {
         // 생성된 사용자 ID 반환
         return savedUser.getId();
     }
-
-
 }

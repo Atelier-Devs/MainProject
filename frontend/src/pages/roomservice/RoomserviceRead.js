@@ -5,23 +5,18 @@ import Footer from '../../components/Footer';
 
 const RoomserviceRead = () => {
     const location = useLocation();
-    const { roomservice } = location.state || {};
+    const { title, description, image, price } = location.state || {};
 
     return (
         <div className="flex flex-col min-h-screen">
             <Header />
             <div className="flex-grow flex items-center justify-center py-16">
                 <div className="max-w-5xl w-full bg-white shadow-lg rounded-lg overflow-hidden flex">
-
-                    <img
-                        src={roomservice.image}
-                        alt={roomservice.title}
-                        className="w-3/5 object-cover"
-                    />
+                    <img src={image} alt={title} className="w-3/5 object-cover" />
                     <div className="p-8 w-2/5">
-                        <h2 className="text-3xl font-semibold">{roomservice.title}</h2>
-                        <p className="text-gray-700 mt-3">{roomservice.description}</p>
-                        <div className="mt-5 text-xl font-bold">가격: {roomservice.price} KRW</div>
+                        <h2 className="text-3xl font-semibold">{title}</h2>
+                        <p className="text-gray-700 mt-3">{description}</p>
+                        <div className="mt-5 text-xl font-bold">가격: {Number(price).toLocaleString()} KRW</div>
                         <form className="mt-6 space-y-5">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">객실 번호 입력</label>
@@ -41,6 +36,7 @@ const RoomserviceRead = () => {
             <Footer />
         </div>
     );
-}
+};
+
 
 export default RoomserviceRead;

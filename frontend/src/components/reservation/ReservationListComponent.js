@@ -4,6 +4,7 @@ import {
   getReservationsByUserId,
 } from "../../api/reservationApi";
 import { Link } from "react-router-dom";
+import logo from "../../image/logo1.png";
 import "../../css/reservation.css";
 
 const ReservationListComponent = () => {
@@ -19,7 +20,7 @@ const ReservationListComponent = () => {
     try {
       const data = await getAllReservations();
       setReservations(Array.isArray(data) ? data : [data]);
-      setSearchMode(false); // 전체 목록 모드로 되돌리기
+      setSearchMode(false);
     } catch (error) {
       console.error("예약 목록을 불러오지 못했습니다.");
       setReservations([]);
@@ -47,8 +48,17 @@ const ReservationListComponent = () => {
   };
 
   return (
-    <div className="reservation-table-container">
-      <div className="reservation-search">
+    <>
+      {/* 로고 */}
+      <div className="reservation-logo-box">
+        <img src={logo} alt="ATELIER 로고" className="reservation-logo" />
+      </div>
+
+      {/* 타이틀 */}
+      <h1 className="reservation-title">예약 목록</h1>
+
+      {/* 검색창 + 버튼 */}
+      <div className="reservation-form">
         <input
           type="text"
           placeholder="유저 ID 입력"
@@ -56,52 +66,63 @@ const ReservationListComponent = () => {
           onChange={(e) => setUserId(e.target.value)}
           className="reservation-input"
         />
-        <button onClick={handleSearch} className="reservation-button">
-          조회
-        </button>
-        {searchMode && (
-          <button onClick={handleReset} className="reservation-button cancel">
-            전체 보기
+        <div className="button-row">
+          <button onClick={handleSearch} className="reservation-button">
+            조회
           </button>
-        )}
+          {searchMode && (
+            <button onClick={handleReset} className="reservation-button">
+              전체 보기
+            </button>
+          )}
+        </div>
       </div>
 
-      <h2>{searchMode ? `유저 ID ${userId} 결과` : "전체 예약 목록"}</h2>
-      <table className="reservation-table">
-        <thead>
-          <tr>
-            <th>아이디</th>
-            <th>유저 아이디</th>
-            <th>예약 객실</th>
-            <th>예약 날짜</th>
-            <th>예약 상태</th>
-          </tr>
-        </thead>
-        <tbody>
-          {reservations.length > 0 ? (
-            reservations.map((reservation) => (
-              <tr key={reservation.id}>
-                <td>{reservation.id}</td>
-                <td>
-                  <Link to={`/reservation/read/${reservation.userId}`}>
-                    {reservation.userId}
-                  </Link>
-                </td>
-                <td>{reservation.residenceId}</td>
-                <td>
-                  {new Date(reservation.reservationDate).toLocaleString()}
-                </td>
-                <td>{reservation.status}</td>
-              </tr>
-            ))
-          ) : (
+      {/* 상태 문구 */}
+      <div className="reservation-status-box">
+        <span className="reservation-status-text">
+          {searchMode ? `유저 ID ${userId} 결과` : "전체 예약 목록"}
+        </span>
+      </div>
+
+      {/* 예약 테이블 */}
+      <div className="reservation-table-container">
+        <table className="reservation-table">
+          <thead>
             <tr>
-              <td colSpan="5">예약 정보가 없습니다.</td>
+              <th>아이디</th>
+              <th>유저 아이디</th>
+              <th>예약 객실</th>
+              <th>예약 날짜</th>
+              <th>예약 상태</th>
             </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {reservations.length > 0 ? (
+              reservations.map((reservation) => (
+                <tr key={reservation.id}>
+                  <td>{reservation.id}</td>
+                  <td>
+                    <Link to={`/reservation/read/${reservation.userId}`}>
+                      {reservation.userId}
+                    </Link>
+                  </td>
+                  <td>{reservation.residenceId}</td>
+                  <td>
+                    {new Date(reservation.reservationDate).toLocaleString()}
+                  </td>
+                  <td>{reservation.status}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">예약 정보가 없습니다.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 
