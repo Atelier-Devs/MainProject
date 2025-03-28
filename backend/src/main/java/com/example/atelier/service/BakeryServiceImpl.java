@@ -3,7 +3,6 @@ package com.example.atelier.service;
 import com.example.atelier.domain.Bakery;
 import com.example.atelier.domain.User;
 import com.example.atelier.dto.BakeryDTO;
-import com.example.atelier.dto.RestaurantDTO;
 import com.example.atelier.repository.BakeryRepository;
 import com.example.atelier.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -24,13 +23,13 @@ public class BakeryServiceImpl implements BakeryService{
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
 
-    // 모든 베이커리 조회(관리자모드)
+    // 모든 베이커리 조회(프론트 출력)
     @Override
     public List<BakeryDTO> getAllBakeries() {
         List<Bakery> result = bakeryRepository.findAll(); // 엔티티 타입 전부 찾아오기
         List<BakeryDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
         result.forEach(i -> {
-            BakeryDTO data = modelMapper.map(i, BakeryDTO.class); // 엔티티를 DTO타입으로 변환
+            BakeryDTO data = bakeryRepository.toDTO(i); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });
         return resultDtoList;
@@ -72,5 +71,19 @@ public class BakeryServiceImpl implements BakeryService{
     public void deleteBakery(Integer id) {
         Bakery bakery = bakeryRepository.findById(id).orElseThrow(() -> new RuntimeException("Bakery not found"));
         bakeryRepository.delete(bakery);
+    }
+
+    // 베이커리 이미지 전체 조회(서버시작 시)
+    @Override
+    public List<BakeryDTO> getAllBakeriesWithImages() {
+        return bakeryRepository.findAll().stream().map(bakery -> {
+            BakeryDTO dto = modelMapper.map(bakery, BakeryDTO.class);
+            dto.setImages(
+                    bakery.getProductImages().stream()
+                            .map(img -> "/upload/bakery/" + img.getFileName())
+                            .toList()
+            );
+            return dto;
+        }).toList();
     }
 }

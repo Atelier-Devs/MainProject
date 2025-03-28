@@ -23,13 +23,13 @@ public class RoomServiceImpl implements RoomServiceService {
     private final RoomServiceRepository roomServiceRepository;
     private final UserRepository userRepository;
 
-    // 모든 룸서비스 조회(관리자모드)
+    // 모든 룸서비스 조회(프론트 출력)
     @Override
     public List<RoomServiceDTO> getAllRoomServices() {
         List<RoomService> result = roomServiceRepository.findAll(); // 엔티티 타입 전부 찾아오기
         List<RoomServiceDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
         result.forEach(i -> {
-            RoomServiceDTO data = modelMapper.map(i, RoomServiceDTO.class); // 엔티티를 DTO타입으로 변환
+            RoomServiceDTO data = roomServiceRepository.toDTO(i); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });
         return resultDtoList;
@@ -71,5 +71,19 @@ public class RoomServiceImpl implements RoomServiceService {
     public void deleteRoomService(Integer id) {
         RoomService roomService = roomServiceRepository.findById(id).orElseThrow(() -> new RuntimeException("RoomService not found"));
         roomServiceRepository.delete(roomService);
+    }
+
+    // 룸서비스 이미지 전체 조회(서버시작 시)
+    @Override
+    public List<RoomServiceDTO> getAllRoomServicesWithImages() {
+        return roomServiceRepository.findAll().stream().map(service -> {
+            RoomServiceDTO dto = modelMapper.map(service, RoomServiceDTO.class);
+            dto.setImages(
+                    service.getProductImages().stream()
+                            .map(img -> "/upload/roomservice/" + img.getFileName())
+                            .toList()
+            );
+            return dto;
+        }).toList();
     }
 }

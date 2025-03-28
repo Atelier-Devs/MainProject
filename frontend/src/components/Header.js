@@ -23,13 +23,12 @@ const Header = () => {
       navigate("/"); // 메인 페이지로 이동
     }
   };
-  
+
 
   return (
     <header
-      className={`header fixed top-0 left-0 w-full transition-transform duration-700 ease-in-out ${
-        showHeader ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
-      }`}
+      className={`header fixed top-0 left-0 w-full transition-transform duration-700 ease-in-out ${showHeader ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+        }`}
     >
       <div className="logo">
         <Link to="/Dashboard">
@@ -37,9 +36,10 @@ const Header = () => {
         </Link>
       </div>
       <nav className="menu">
+        <Link to="/map">오시는 길</Link>
         <Link to="/reservation/list">예약 관리</Link>
         <Link to="/member/Facilities">시설 안내</Link>
-        <Link to="/review">리뷰</Link>
+        {/* <Link to="/review">리뷰</Link> */}
         <Link to="/mypage">마이 페이지</Link>
         <button onClick={handleLogout} className="logout-button">로그아웃</button>
       </nav>

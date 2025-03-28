@@ -17,4 +17,7 @@ public interface BakeryService {
 
     // 베이커리 삭제(관리자모드)
     void deleteBakery(Integer id);
+
+    // 베이커리 이미지 전체 조회(서버시작 시)
+    List<BakeryDTO> getAllBakeriesWithImages();
 }

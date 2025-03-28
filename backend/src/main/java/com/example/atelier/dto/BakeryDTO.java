@@ -17,4 +17,5 @@ public class BakeryDTO {
     private String price;
     private Integer itemId;
     private Integer userId;
+    private List<String> images; // 이미지
 }

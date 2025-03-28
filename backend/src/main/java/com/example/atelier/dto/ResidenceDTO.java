@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -20,4 +21,6 @@ public class ResidenceDTO {
     private BigDecimal price;            // 숙소 가격
     private Integer capacity;            // 수용 인원
     private Residence.Status status;     // 숙소 상태 (문자열로 표현)
+    private List<String> images;         // 객실 이미지
+
 }

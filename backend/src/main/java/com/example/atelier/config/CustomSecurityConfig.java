@@ -48,10 +48,8 @@ public class CustomSecurityConfig {
                 // 회원가입, 로그인, 로그아웃은 허용
                 .requestMatchers(HttpMethod.POST, "/api/atelier/register/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/atelier/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/atelier/view/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/atelier/logout").permitAll()
-
-                // 리뷰 등록은 인증 필요하도록 설정
-//                .requestMatchers(HttpMethod.POST, "/api/atelier/review/register").authenticated()
 
                 // 오류 페이지는 허용
                 .requestMatchers("/error").permitAll()

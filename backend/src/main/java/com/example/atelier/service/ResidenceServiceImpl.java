@@ -33,13 +33,13 @@ public class ResidenceServiceImpl implements ResidenceService{
         return savedResidence.getId();
     }
 
-    // 객실 조회
+    // 모든 객실 조회(프론트 출력)
     @Override
     public List<ResidenceDTO> get() {
         List<Residence> result = residenceRepository.findAll(); // 엔티티 타입 전부 찾아오기
         List<ResidenceDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
         result.forEach(i -> {
-            ResidenceDTO data = modelMapper.map(i, ResidenceDTO.class); // 엔티티를 DTO타입으로 변환
+            ResidenceDTO data = residenceRepository.toDTO( i); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });
         return resultDtoList;
@@ -64,4 +64,20 @@ public class ResidenceServiceImpl implements ResidenceService{
         Residence residence = residenceRepository.findById(id).orElseThrow(() -> new RuntimeException("Restaurant not found"));
         residenceRepository.delete(residence);
     }
+
+    // 객실 이미지 전체 조회(서버시작 시)
+    @Override
+    public List<ResidenceDTO> getAllRooms() {
+        return residenceRepository.findAllByType(Residence.Type.ROOM).stream()
+                .map(res -> {
+                    ResidenceDTO dto = modelMapper.map(res, ResidenceDTO.class);
+                    dto.setImages(
+                            res.getProductImages().stream()
+                                    .map(img -> "/upload/residence/" + img.getFileName())
+                                    .toList()
+                    );
+                    return dto;
+                }).toList();
+    }
+
 }

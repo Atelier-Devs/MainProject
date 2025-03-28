@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,10 +38,13 @@ public class ResidenceController {
         return Map.of("RESULT", "성공");
     }
 
-    // GET
+    // GET(프론트에서 출력)
     @GetMapping("/list")
-    public List<ResidenceDTO> get() {
-        return residenceService.get();
+    public ResponseEntity<List<ResidenceDTO>> get() {
+        System.out.println("residence list : ");
+        List<ResidenceDTO> list = residenceService.get();
+        System.out.println("list" +list);
+        return ResponseEntity.ok(list);
     }
 
     // DELETE
@@ -49,4 +53,11 @@ public class ResidenceController {
         residenceService.delete(id);
         return "DELETE SUCCESS";
     }
+
+    // GET(이미지 조회)
+//    @GetMapping("/a")
+//    public ResponseEntity<List<ResidenceDTO>> getAllRooms() {
+//        System.out.println("여기는 분명 들어오는데 service에서 문제가 있은듯 ");
+//        return ResponseEntity.ok(residenceService.getAllRooms());
+//    }
 }

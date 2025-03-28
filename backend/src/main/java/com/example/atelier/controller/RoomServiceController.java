@@ -20,8 +20,8 @@ import java.util.NoSuchElementException;
 public class RoomServiceController {
     private final RoomServiceService roomServiceService;
 
-    // 모든 룸서비스 조회(관리자모드)
-    @GetMapping("/all")
+    // 모든 룸서비스 조회(프론트에서 출력)
+    @GetMapping("/list")
     public ResponseEntity<List<RoomServiceDTO>> getAllRoomServices() {
         try {
             List<RoomServiceDTO> roomServices = roomServiceService.getAllRoomServices();
@@ -56,4 +56,11 @@ public class RoomServiceController {
         roomServiceService.deleteRoomService(id);
         return ResponseEntity.noContent().build();
     }
+
+    // GET(이미지 조회)
+    @GetMapping("/with-images")
+    public ResponseEntity<List<RoomServiceDTO>> getAllRoomServicesWithImages() {
+        return ResponseEntity.ok(roomServiceService.getAllRoomServicesWithImages());
+    }
+
 }

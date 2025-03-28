@@ -28,7 +28,7 @@ public class RestaurantServiceImpl implements RestaurantService{
         List<Restaurant> result = restaurantRepository.findAll(); // 엔티티 타입 전부 찾아오기
         List<RestaurantDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
         result.forEach(i -> {
-            RestaurantDTO data = modelMapper.map(i, RestaurantDTO.class); // 엔티티를 DTO타입으로 변환
+            RestaurantDTO data = restaurantRepository.toDTO(i); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });
         return resultDtoList;
@@ -71,4 +71,19 @@ public class RestaurantServiceImpl implements RestaurantService{
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new RuntimeException("Restaurant not found"));
         restaurantRepository.delete(restaurant);
     }
+
+    // 레스토랑 이미지 전체 조회(서버시작 시)
+    @Override
+    public List<RestaurantDTO> getAllRestaurantsWithImages() {
+        return restaurantRepository.findAll().stream().map(restaurant -> {
+            RestaurantDTO dto = modelMapper.map(restaurant, RestaurantDTO.class);
+            dto.setImages(
+                    restaurant.getProductImages().stream()
+                            .map(img -> "/upload/restaurant/" + img.getFileName())
+                            .toList()
+            );
+            return dto;
+        }).toList();
+    }
+
 }

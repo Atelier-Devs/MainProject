@@ -2,20 +2,17 @@ package com.example.atelier.controller;
 
 import com.example.atelier.dto.*;
 import com.example.atelier.service.MyPageService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 //@RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/atelier/mypage")
 @Slf4j
-public class MypageController {
+public class MyPageController {
 
     @Autowired
     public  MyPageService myPageService;

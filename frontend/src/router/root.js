@@ -8,6 +8,7 @@ import roomserviceRouter from "./roomserviceRouter";
 import reviewRouter from "./reviewRouter";
 import reservationRouter from "./reservationRouter";
 import mypageRouter from "./mypageRouter";
+import kakaomapRouter from "./kakaomapRouter";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -64,6 +65,10 @@ const root = createBrowserRouter([
   {
     path: "mypage",
     children: mypageRouter(),
+  },
+  {
+    path: "map",
+    children: kakaomapRouter(),
   },
 ]);
 

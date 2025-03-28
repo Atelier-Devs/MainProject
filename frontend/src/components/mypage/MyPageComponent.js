@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { getProfile } from "../../api/mypageApi";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
+import logo from "../../image/logo1.png";
 
 const MyPageComponent = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showReservation, setShowReservation] = useState(false);
+  const [showReview, setShowReview] = useState(false);
+
+  useEffect(() => {
+    getProfile().then((data) => {
+      setProfile(data);
+      setLoading(false);
+    });
+  }, []);
 
   const formatDate = (dateString) =>
     dateString ? dateString.split("T")[0] : "날짜 없음";
@@ -27,114 +37,116 @@ const MyPageComponent = () => {
     return stars;
   };
 
-  useEffect(() => {
-    getProfile().then((data) => {
-      console.log("마이페이지 프로필 데이터:", data);
-      setProfile(data);
-      setLoading(false);
-    });
-  }, []);
+  const getGradeColorClass = (grade) => {
+    switch (grade) {
+      case "GOLD":
+        return "text-yellow-500 font-bold";
+      case "DIAMOND":
+        return "text-sky-500 font-bold";
+      case "TRINITY":
+        return "text-pink-400 font-bold";
+      default:
+        return "text-gray-700 font-semibold";
+    }
+  };
 
   if (loading || !profile)
-    return <div className="text-center mt-20">불러오는 중...</div>;
+    return <div className="text-center mt-20 text-lg">불러오는 중...</div>;
 
   return (
-    <div className="max-w-6xl mx-auto p-4 pb-32">
-      <h2 className="text-3xl font-bold mb-6">마이페이지</h2>
+    <div className="min-h-screen bg-[#f9f6f1] flex flex-col items-center py-16 px-4">
+      <div className="bg-white shadow-lg rounded-xl p-10 max-w-6xl w-full space-y-10">
 
-      {/* 회원 정보 */}
-      <section className="mb-8">
-        <h3 className="text-xl font-semibold mb-2">회원 정보</h3>
-        <div className="bg-white shadow rounded p-4">
-          <p><strong>이름:</strong> {profile.name}</p>
-          <p><strong>이메일:</strong> {profile.email}</p>
-          <p><strong>가입일:</strong> {formatDate(profile.joinedAt)}</p>
-          <p><strong>총 사용 금액:</strong> {Number(profile.totalSpent).toLocaleString()} 원</p>
+        {/* 프로필 */}
+        <div className="flex flex-col items-center space-y-2 text-base text-gray-800">
+          <img src={logo} alt="로고" className="w-20 h-20 object-contain mb-2" />
+          <p className="font-semibold"><strong>이름:</strong> {profile.name}</p>
+          <p className="font-semibold"><strong>이메일:</strong> {profile.email}</p>
+          <p className="font-semibold"><strong>가입일:</strong> {formatDate(profile.joinedAt)}</p>
         </div>
-      </section>
 
-      {/* 멤버십 */}
-      {profile.membershipDTO && (
-        <section className="mb-8">
-          <h3 className="text-xl font-semibold mb-2">멤버십</h3>
-          <div className="bg-white shadow rounded p-4">
-            <p><strong>등급:</strong> {profile.membershipDTO.category}</p>
-            <p><strong>할인율:</strong> {profile.membershipDTO.discount * 100}%</p>
-            <p><strong>상태:</strong> {profile.membershipDTO.status}</p>
-            <p><strong>유효기간:</strong> {profile.membershipDTO.validUntil ? formatDate(profile.membershipDTO.validUntil) : "없음"}</p>
-          </div>
-        </section>
-      )}
+        <div className="border-t border-gray-200" />
 
-      {/* 예약 내역 */}
-      {profile.reservationDTOS && profile.reservationDTOS.length > 0 && (
-        <section className="mb-8">
-          <h3 className="text-xl font-semibold mb-2">예약 내역</h3>
+        {/* 카드 3분할 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-base text-gray-800 text-center">
+          {/* 멤버십 */}
           <div className="space-y-2">
-            {profile.reservationDTOS.map((r) => (
-              <div key={r.id} className="bg-white shadow rounded p-4">
-                <p><strong>숙소 이름:</strong> {r.residenceName}</p>
-                <p><strong>상태:</strong> {r.status}</p>
-                <p><strong>예약일:</strong> {formatDate(r.reservationDate)}</p>
-              </div>
-            ))}
+            <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">멤버십</h3>
+            {profile.membershipDTO ? (
+              <>
+                <p className="font-medium">등급: <span className={getGradeColorClass(profile.membershipDTO.category)}>{profile.membershipDTO.category}</span></p>
+                <p className="font-medium">할인율: {profile.membershipDTO.discount * 100}%</p>
+                <p className="font-medium">상태: {profile.membershipDTO.status}</p>
+                <p className="font-medium">유효기간: {formatDate(profile.membershipDTO.validUntil)}</p>
+              </>
+            ) : (
+              <p className="text-gray-500 text-sm">회원 등급 정보 없음</p>
+            )}
           </div>
-        </section>
-      )}
 
-      {/* 주문 내역 */}
-      {profile.orderDTOS && profile.orderDTOS.length > 0 && (
-        <section className="mb-8">
-          <h3 className="text-xl font-semibold mb-2">주문 내역</h3>
+          {/* 예약 버튼 */}
           <div className="space-y-2">
-            {profile.orderDTOS.map((o) => (
-              <div key={o.id} className="bg-white shadow rounded p-4">
-                <p><strong>주문번호:</strong> #{o.id}</p>
-                <p><strong>결제 상태:</strong> {o.paymentStatus}</p>
-                <p><strong>환불 상태:</strong> {o.refundStatus}</p>
-                <p><strong>총 금액:</strong> {Number(o.totalPrice).toLocaleString()}원</p>
-              </div>
-            ))}
+            <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">예약 내역</h3>
+            <button
+              className="bg-[#a07c5b] text-white px-4 py-2 rounded-md hover:bg-[#8b6847] transition text-base font-semibold"
+              onClick={() => setShowReservation((prev) => !prev)}
+            >
+              {showReservation ? "숨기기" : "자세히 보기"}
+            </button>
           </div>
-        </section>
-      )}
 
-      {/* 결제 내역 */}
-      {profile.paymentDTOS && profile.paymentDTOS.length > 0 && (
-        <section className="mb-8">
-          <h3 className="text-xl font-semibold mb-2">결제 내역</h3>
+          {/* 리뷰 버튼 */}
           <div className="space-y-2">
-            {profile.paymentDTOS.map((p) => (
-              <div key={p.id} className="bg-white shadow rounded p-4">
-                <p><strong>결제일:</strong> {formatDate(p.createdAt)}</p>
-                <p><strong>결제 금액:</strong> {Number(p.amount).toLocaleString()}원</p>
-                <p><strong>결제 수단:</strong> {p.paymentMethod}</p>
-                <p><strong>결제 상태:</strong> {p.paymentStatus}</p>
-              </div>
-            ))}
+            <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">내가 쓴 리뷰</h3>
+            <button
+              className="bg-[#a07c5b] text-white px-4 py-2 rounded-md hover:bg-[#8b6847] transition text-base font-semibold"
+              onClick={() => setShowReview((prev) => !prev)}
+            >
+              {showReview ? "숨기기" : "자세히 보기"}
+            </button>
           </div>
-        </section>
-      )}
+        </div>
 
-      {/* 내가 쓴 리뷰 */}
-      {profile.reviewDTOS && profile.reviewDTOS.length > 0 && (
-        <section className="mb-8">
-          <h3 className="text-xl font-semibold mb-2">내가 쓴 리뷰</h3>
-          <div className="space-y-2">
-            {profile.reviewDTOS.map((rv) => (
-              <div key={rv.id} className="bg-white shadow rounded p-4">
-                <div className="flex items-center mb-2">
-                  <strong className="mr-2">별점:</strong>
-                  <div className="flex">{renderStars(rv.rating)}</div>
+        {/* 예약 상세 */}
+        {showReservation && (
+          <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
+            <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">예약 상세 정보</h3>
+            {profile.reservationDTOS?.length > 0 ? (
+              profile.reservationDTOS.map((r) => (
+                <div key={r.id} className="border-t pt-4 first:border-0 text-base space-y-1">
+                  <p><strong>숙소 이름:</strong> {r.residenceName}</p>
+                  <p><strong>상태:</strong> {r.status}</p>
+                  <p><strong>예약일:</strong> {formatDate(r.reservationDate)}</p>
                 </div>
-                <p><strong>제목:</strong> {rv.title}</p>
-                <p><strong>내용:</strong> {rv.comment}</p>
-                <p><strong>작성일:</strong> {formatDate(rv.createdAt)}</p>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-base text-gray-500">예약 정보가 없습니다.</p>
+            )}
           </div>
-        </section>
-      )}
+        )}
+
+        {/* 리뷰 상세 */}
+        {showReview && (
+          <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
+            <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">리뷰 상세 정보</h3>
+            {profile.reviewDTOS?.length > 0 ? (
+              profile.reviewDTOS.map((rv) => (
+                <div key={rv.id} className="border-t pt-4 first:border-0 text-base space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">별점:</span>
+                    {renderStars(rv.rating)}
+                  </div>
+                  <p><strong>제목:</strong> {rv.title}</p>
+                  <p><strong>내용:</strong> {rv.comment}</p>
+                  <p className="text-sm text-gray-500"><strong>작성일:</strong> {formatDate(rv.createdAt)}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-base text-gray-500">작성한 리뷰가 없습니다.</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
