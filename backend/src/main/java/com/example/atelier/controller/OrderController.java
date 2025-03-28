@@ -23,9 +23,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class OrderController {
 
-    private OrderService orderService;
-    private OrderRepository orderRepository;
-    private ModelMapper modelMapper;
+    private final OrderService orderService;
 
     //     주문 생성
     @PostMapping("/register")
