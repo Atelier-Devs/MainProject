@@ -22,5 +22,4 @@ public class ResidenceDTO {
     private Integer capacity;            // 수용 인원
     private Residence.Status status;     // 숙소 상태 (문자열로 표현)
     private List<String> images;         // 객실 이미지
-
 }
