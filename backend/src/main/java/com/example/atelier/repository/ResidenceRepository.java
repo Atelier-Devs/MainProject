@@ -1,5 +1,6 @@
 package com.example.atelier.repository;
 
+import com.example.atelier.domain.Product;
 import com.example.atelier.domain.Residence;
 import com.example.atelier.dto.ResidenceDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,9 +13,13 @@ import java.util.stream.Collectors;
 public interface ResidenceRepository extends JpaRepository<Residence,Integer> {
     List<Residence> findAllByType(Residence.Type type);
 
-    default public ResidenceDTO toDTO(Residence residence) {
+    default ResidenceDTO toDTO(Residence residence) {
+        String key = "room" + residence.getId(); // ID 기반 키 생성
         List<String> imageUrls = residence.getProductImages().stream()
-                .map(i->i.getFilePath()) // Product 엔티티에 getImagePath() 메서드가 있다고 가정
+                .map(Product::getFilePath)
+                .filter(path -> path.contains(key)) // roomN 과 일치
+                .sorted()
+                .limit(3)
                 .collect(Collectors.toList());
 
         return new ResidenceDTO(
@@ -28,4 +33,5 @@ public interface ResidenceRepository extends JpaRepository<Residence,Integer> {
                 imageUrls
         );
     }
+
 }

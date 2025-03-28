@@ -84,9 +84,9 @@ const MyPageComponent = () => {
             )}
           </div>
 
-          {/* 예약 버튼 */}
+
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">예약 내역</h3>
+            <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">결제 내역</h3>
             <button
               className="bg-[#a07c5b] text-white px-4 py-2 rounded-md hover:bg-[#8b6847] transition text-base font-semibold"
               onClick={() => setShowReservation((prev) => !prev)}
@@ -107,20 +107,20 @@ const MyPageComponent = () => {
           </div>
         </div>
 
-        {/* 예약 상세 */}
+
         {showReservation && (
           <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
-            <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">예약 상세 정보</h3>
+            <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">결제 상세 정보</h3>
             {profile.reservationDTOS?.length > 0 ? (
               profile.reservationDTOS.map((r) => (
                 <div key={r.id} className="border-t pt-4 first:border-0 text-base space-y-1">
                   <p><strong>숙소 이름:</strong> {r.residenceName}</p>
                   <p><strong>상태:</strong> {r.status}</p>
-                  <p><strong>예약일:</strong> {formatDate(r.reservationDate)}</p>
+                  <p><strong>결제 완료일:</strong> {formatDate(r.reservationDate)}</p>
                 </div>
               ))
             ) : (
-              <p className="text-base text-gray-500">예약 정보가 없습니다.</p>
+              <p className="text-base text-gray-500">결제 정보가 없습니다.</p>
             )}
           </div>
         )}

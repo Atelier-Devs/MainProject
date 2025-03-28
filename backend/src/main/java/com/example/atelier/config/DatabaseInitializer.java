@@ -5,6 +5,7 @@ import com.example.atelier.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -79,65 +80,70 @@ public class DatabaseInitializer {
             }
 
             // Bakery 이미지 등록
-            List<String> bakeryFiles = List.of("bakery1.jpg", "bakery2.jpg", "bakery3.jpg", "bakery4.jpg", "bakery5.jpg", "bakery6.jpg");
-            List<Bakery> bakeries = bakeryRepo.findAll();
+            List<Bakery> bakeries = bakeryRepo.findAll(Sort.by("id")); // ID순 정렬
 
-            for (int i = 0; i < bakeryFiles.size(); i++) {
+            for (int i = 0; i < bakeries.size(); i++) {
+                Bakery bakery = bakeries.get(i);
+                String fileName = "bakery" + (i + 1) + ".jpg";
+
                 Product p = new Product();
-                p.setFileName(bakeryFiles.get(i));
-                p.setFilePath("/upload/bakery/" + bakeryFiles.get(i));
+                p.setFileName(fileName);
+                p.setFilePath("upload/bakery/" + fileName);
                 p.setFileType("image/jpeg");
                 p.setDelFlag(false);
-                p.setBakery(bakeries.get(i)); // bakery와 매핑
+                p.setBakery(bakery);
                 productRepo.save(p);
             }
 
             // Residence 이미지 등록
-            List<String> residenceFiles = List.of(
-                    "room0.jpg", "room1.jpg", "room1_1.jpg", "room1_2.jpg",
-                    "room2.jpg", "room2_1.jpg", "room2_2.jpg",
-                    "room3.jpg", "room3_1.jpg", "room3_2.jpg",
-                    "room4.jpg", "room4_1.jpg", "room4_2.jpg",
-                    "room5.jpg", "room5_1.jpg", "room5_2.jpg",
-                    "room6.jpg", "room6_1.jpg", "room6_2.jpg"
-            );
-            List<Residence> residences = residenceRepo.findAll();
+            List<Residence> residences = residenceRepo.findAll(Sort.by("id")); // id 기준 정렬
 
-            for (int i = 0; i < residenceFiles.size(); i++) {
-                Product p = new Product();
-                p.setFileName(residenceFiles.get(i));
-                p.setFilePath(residenceFiles.get(i));
-                p.setFileType("image/jpeg");
-                p.setDelFlag(false);
-                p.setResidence(residences.get(i % residences.size())); // 순환 매핑
-                productRepo.save(p);
+            for (int i = 0; i < residences.size(); i++) {
+                Residence residence = residences.get(i);
+                String roomKey = "room" + (i + 1); // room1 ~ room6
+
+                for (int j = 0; j < 3; j++) {
+                    String fileName = roomKey + (j == 0 ? ".jpg" : "_" + j + ".jpg"); // room1.jpg, room1_1.jpg, ...
+
+                    Product p = new Product();
+                    p.setFileName(fileName);
+                    p.setFilePath(fileName); // 또는 "upload/residence/" + fileName
+                    p.setFileType("image/jpeg");
+                    p.setDelFlag(false);
+                    p.setResidence(residence);
+                    productRepo.save(p);
+                }
             }
 
             // Restaurant 이미지 등록
-            List<String> restaurantFiles = List.of("restaurant1.jpg", "restaurant2.jpg", "restaurant3.jpg", "restaurant4.jpg", "restaurant5.jpg", "restaurant6.jpg");
-            List<Restaurant> restaurants = restaurantRepo.findAll();
+            List<Restaurant> restaurants = restaurantRepo.findAll(Sort.by("id")); // ID순 정렬
 
-            for (int i = 0; i < restaurantFiles.size(); i++) {
+            for (int i = 0; i < restaurants.size(); i++) {
+                Restaurant restaurant = restaurants.get(i);
+                String fileName = "restaurant" + (i + 1) + ".jpg";
+
                 Product p = new Product();
-                p.setFileName(restaurantFiles.get(i));
-                p.setFilePath("/upload/restaurant/" + restaurantFiles.get(i));
+                p.setFileName(fileName);
+                p.setFilePath("upload/restaurant/" + fileName);
                 p.setFileType("image/jpeg");
                 p.setDelFlag(false);
-                p.setRestaurant(restaurants.get(i));
+                p.setRestaurant(restaurant);
                 productRepo.save(p);
             }
 
             // RoomService 이미지 등록
-            List<String> roomServiceFiles = List.of("roomservice1.jpg", "roomservice2.jpg", "roomservice3.jpg", "roomservice4.jpg", "roomservice5.jpg", "roomservice6.jpg");
-            List<RoomService> roomServices = roomServiceRepo.findAll();
+            List<RoomService> roomServices = roomServiceRepo.findAll(Sort.by("id")); // ID순 정렬
 
-            for (int i = 0; i < roomServiceFiles.size(); i++) {
+            for (int i = 0; i < roomServices.size(); i++) {
+                RoomService rs = roomServices.get(i);
+                String fileName = "roomservice" + (i + 1) + ".jpg";
+
                 Product p = new Product();
-                p.setFileName(roomServiceFiles.get(i));
-                p.setFilePath("/upload/roomservice/" + roomServiceFiles.get(i));
+                p.setFileName(fileName);
+                p.setFilePath("upload/roomservice/" + fileName);
                 p.setFileType("image/jpeg");
                 p.setDelFlag(false);
-                p.setRoomService(roomServices.get(i));
+                p.setRoomService(rs);
                 productRepo.save(p);
             }
         };

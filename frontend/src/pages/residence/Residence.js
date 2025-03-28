@@ -16,16 +16,31 @@ const renderStars = (rating) => {
 
   return (
     <div className="flex items-center gap-1">
-      {[...Array(full)].map((_, i) => (
-        <FaStar key={`f-${i}`} color="#facc15" />
-      ))}
+      {[...Array(full)].map((_, i) => <FaStar key={`f-${i}`} color="#facc15" />)}
       {half && <FaStarHalfAlt color="#facc15" />}
-      {[...Array(empty)].map((_, i) => (
-        <FaRegStar key={`e-${i}`} color="#e5e7eb" />
-      ))}
+      {[...Array(empty)].map((_, i) => <FaRegStar key={`e-${i}`} color="#e5e7eb" />)}
     </div>
   );
 };
+
+// 커스텀 화살표: 텍스트 ‹ › 스타일
+const NextArrow = ({ onClick }) => (
+  <div
+    className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 text-white text-4xl font-bold cursor-pointer hover:text-yellow-300"
+    onClick={onClick}
+  >
+    ›
+  </div>
+);
+
+const PrevArrow = ({ onClick }) => (
+  <div
+    className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 text-white text-4xl font-bold cursor-pointer hover:text-yellow-300"
+    onClick={onClick}
+  >
+    ‹
+  </div>
+);
 
 const RoomCard = ({ room, onClick, avgRating, onReviewClick }) => {
   const sliderSettings = {
@@ -35,23 +50,22 @@ const RoomCard = ({ room, onClick, avgRating, onReviewClick }) => {
     arrows: true,
     slidesToShow: 1,
     slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
   };
 
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="relative h-64">
+      <div className="relative h-96">
         <Slider {...sliderSettings}>
-          {room.images.map((img, index) => {
+          {room.images.slice(0, 3).map((img, index) => {
             const url = `http://localhost:8080/api/atelier/view/${img}`;
-            // console.log("url: ", url);
-            const cleanedUrl = url.replace(/\/upload\/residence\//, "");
-            // console.log("cleaned url : ", cleanedUrl);
             return (
               <img
                 key={index}
-                src={cleanedUrl}
+                src={url}
                 alt={room.name}
-                className="w-full h-64 object-cover"
+                className="w-full h-96 object-cover"
               />
             );
           })}
@@ -92,15 +106,7 @@ const Residence = () => {
     const fetchResidences = async () => {
       try {
         const data = await getAllResidences();
-        console.log("data:", data);
-        const formatted = data.map((res) => ({
-          id: res.id,
-          name: res.name,
-          description: res.description,
-          price: res.price,
-          images: res.images,
-        }));
-        setRooms(formatted);
+        setRooms(data);
       } catch (e) {
         console.error("객실 로딩 실패", e);
       }
@@ -131,9 +137,7 @@ const Residence = () => {
   }, []);
 
   const goToRoomDetail = (room) => {
-    navigate(`/residence/${room.id}`, {
-      state: room,
-    });
+    navigate(`/residence/${room.id}`, { state: room });
   };
 
   const goToReview = (residenceId) => {
