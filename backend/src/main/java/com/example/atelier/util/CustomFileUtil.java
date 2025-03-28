@@ -109,10 +109,10 @@ public class CustomFileUtil {
         String fullPath = uploadPath + File.separator + fileName;
         File file = new File(fullPath);
 
-        log.info("📂 파일 조회 시도: {}", fullPath);
+        log.info("파일 조회 시도: {}", fullPath);
 
         if (!file.exists()) {
-            log.error("🚨 파일이 존재하지 않음: {}", fullPath);
+            log.error("파일이 존재하지 않음: {}", fullPath);
             return ResponseEntity.notFound().build();
         }
 
@@ -120,7 +120,7 @@ public class CustomFileUtil {
         try {
             headers.add("Content-Type", Files.probeContentType(file.toPath()));
         } catch (IOException e) {
-            log.error("🚨 파일 타입 확인 중 오류 발생", e);
+            log.error("파일 타입 확인 중 오류 발생", e);
             return ResponseEntity.internalServerError().build();
         }
 

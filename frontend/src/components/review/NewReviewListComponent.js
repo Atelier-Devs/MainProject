@@ -52,7 +52,7 @@ const NewReviewListComponent = () => {
 
     return (
         <div className="max-w-2xl mx-auto mt-10 space-y-6">
-            <h2 className="text-2xl font-bold text-center mb-6">한줄평</h2>
+            <h2 className="text-2xl font-bold text-center mb-6">객실 평가</h2>
             {reviews.length === 0 ? (
                 <p className="text-center text-gray-500">등록된 리뷰가 없습니다.</p>
             ) : (

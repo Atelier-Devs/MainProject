@@ -37,6 +37,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (path.startsWith("/api/atelier/register")) return true; // 회원가입 경로 제외
         if (path.startsWith("/api/atelier/login")) return true;
         if (path.startsWith("/api/atelier/view/")) return true;
+//        if (path.startsWith("/api/atelier/residence/a")) return true;
 
         return false;
     }

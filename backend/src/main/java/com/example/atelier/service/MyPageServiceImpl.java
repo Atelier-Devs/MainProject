@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MyPageServiceImpl implements MyPageService{
-    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;

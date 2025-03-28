@@ -22,8 +22,8 @@ import java.util.NoSuchElementException;
 public class BakeryController {
     private final BakeryService bakeryService;
 
-    // 모든 베이커리 조회
-    @GetMapping("/all")
+    // 모든 베이커리 조회(프론트에서 출력)
+    @GetMapping("/list")
     public ResponseEntity<List<BakeryDTO>> getAllBakeries() {
         try {
             List<BakeryDTO> restaurants = bakeryService.getAllBakeries();
@@ -58,4 +58,11 @@ public class BakeryController {
         bakeryService.deleteBakery(id);
         return ResponseEntity.noContent().build();
     }
+
+    // GET(이미지 조회)
+    @GetMapping("/with-images")
+    public ResponseEntity<List<BakeryDTO>> getAllBakeriesWithImages() {
+        return ResponseEntity.ok(bakeryService.getAllBakeriesWithImages());
+    }
+
 }

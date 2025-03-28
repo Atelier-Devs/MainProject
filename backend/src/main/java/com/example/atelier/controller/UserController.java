@@ -67,7 +67,7 @@ public class UserController {
         // 2) 비밀번호 비교
         if (user.getPassword().equals(password)) { // ❗보안적으로는 BCrypt 권장
 
-            // ✅ JWT 토큰 생성
+            // JWT 토큰 생성
             Map<String, Object> valueMap = new HashMap<>();
             valueMap.put("userId", user.getId());
             valueMap.put("email", user.getEmail());
@@ -77,7 +77,7 @@ public class UserController {
 
             String token = JWTUtil.generateToken(valueMap, 60); // 60분 유효
 
-            // ✅ 응답 DTO에 토큰 포함
+            // 응답 DTO에 토큰 포함
             return ResponseEntity.ok(new LoginResponseDTO("성공",token));
 
         } else {
@@ -93,7 +93,7 @@ public class UserController {
         System.out.println(
                 "controller logout 들어왔어요 " 
         );
-        session.invalidate(); // ✅ 세션 종료
+        session.invalidate(); // 세션 종료
         return ResponseEntity.ok("로그아웃 완료");
     }
 }

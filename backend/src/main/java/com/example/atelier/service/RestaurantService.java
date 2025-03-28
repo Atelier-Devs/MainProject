@@ -17,4 +17,7 @@ public interface RestaurantService {
 
     // 레스토랑 삭제(관리자모드)
     void deleteRestaurant(Integer id);
+
+    // 레스토랑 이미지 전체 조회(서버시작 시)
+    List<RestaurantDTO> getAllRestaurantsWithImages();
 }

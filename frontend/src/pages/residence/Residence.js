@@ -1,72 +1,143 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Slider from "react-slick";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import room1 from "../../image/room1.jpg";
-import room2 from "../../image/room2.jpg";
-import room3 from "../../image/room3.jpg";
-import room4 from "../../image/room4.jpg";
-import room5 from "../../image/room5.jpg";
-import room6 from "../../image/room6.jpg";
+import { getAllReviews } from "../../api/reviewApi";
+import { getAllResidences } from "../../api/residenceApi";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-const rooms = [
-  {
-    id: 1,
-    title: "디럭스 파크 뷰 룸",
-    description: "싱그러운 자연을 배경으로 즐기는 조용한 휴식 공간",
-    image: room1,
-  },
-  {
-    id: 2,
-    title: "그랜드 디럭스 룸",
-    description: "상쾌한 아침과 함께하는 품격 있는 휴식",
-    image: room2,
-  },
-  {
-    id: 3,
-    title: "프리미어 룸",
-    description: "최고급 침대에서 누리는 편안함과 여유로운 휴식",
-    image: room3,
-  },
-  {
-    id: 4,
-    title: "프리미어 스위트",
-    description: "특별한 사람과 함께하는 우아한 추억의 한조각",
-    image: room4,
-  },
-  {
-    id: 5,
-    title: "디럭스 스위트",
-    description: "넓은 거실과 정교한 인테리어가 선사하는 품격 높은 경험",
-    image: room5,
-  },
-  {
-    id: 6,
-    title: "코너 스위트",
-    description: "한강 뷰와 함께하는 프라이빗하고 특별한 공간",
-    image: room6,
-  },
-];
+const renderStars = (rating) => {
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5;
+  const empty = 5 - full - (half ? 1 : 0);
 
-const residencePriceMap = {
-  "디럭스 파크 뷰 룸": "250000",
-  "그랜드 디럭스 룸": "180000",
-  "프리미어 룸": "90000",
-  "프리미어 스위트": "50000",
-  "디럭스 스위트": "150000",
-  "코너 스위트": "200000",
+  return (
+    <div className="flex items-center gap-1">
+      {[...Array(full)].map((_, i) => (
+        <FaStar key={`f-${i}`} color="#facc15" />
+      ))}
+      {half && <FaStarHalfAlt color="#facc15" />}
+      {[...Array(empty)].map((_, i) => (
+        <FaRegStar key={`e-${i}`} color="#e5e7eb" />
+      ))}
+    </div>
+  );
+};
+
+const RoomCard = ({ room, onClick, avgRating, onReviewClick }) => {
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    arrows: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
+  return (
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="relative h-64">
+        <Slider {...sliderSettings}>
+          {room.images.map((img, index) => {
+            const url = `http://localhost:8080/api/atelier/view/${img}`;
+            // console.log("url: ", url);
+            const cleanedUrl = url.replace(/\/upload\/residence\//, "");
+            // console.log("cleaned url : ", cleanedUrl);
+            return (
+              <img
+                key={index}
+                src={cleanedUrl}
+                alt={room.name}
+                className="w-full h-64 object-cover"
+              />
+            );
+          })}
+        </Slider>
+        <div className="absolute bottom-0 w-full bg-black bg-opacity-40 text-white py-2 text-center text-lg font-semibold">
+          {room.name}
+        </div>
+      </div>
+      <div className="p-4">
+        <p className="text-gray-600 text-sm mb-2">{room.description}</p>
+        <div className="flex items-center justify-between mb-2">
+          <div className="cursor-pointer" onClick={onReviewClick}>
+            {renderStars(avgRating || 0)}
+            <span className="text-xs text-gray-500 hover:underline ml-1">
+              (리뷰 보기)
+            </span>
+          </div>
+        </div>
+        <div className="mt-2 flex justify-end">
+          <button
+            className="text-blue-600 text-sm font-semibold hover:underline"
+            onClick={onClick}
+          >
+            {Number(room.price).toLocaleString()} KRW &gt;
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const Residence = () => {
   const navigate = useNavigate();
+  const [rooms, setRooms] = useState([]);
+  const [avgRatings, setAvgRatings] = useState({});
 
-  const handleClick = (room) => {
+  useEffect(() => {
+    const fetchResidences = async () => {
+      try {
+        const data = await getAllResidences();
+        console.log("data:", data);
+        const formatted = data.map((res) => ({
+          id: res.id,
+          name: res.name,
+          description: res.description,
+          price: res.price,
+          images: res.images,
+        }));
+        setRooms(formatted);
+      } catch (e) {
+        console.error("객실 로딩 실패", e);
+      }
+    };
+
+    const fetchRatings = async () => {
+      try {
+        const reviews = await getAllReviews();
+        const ratingMap = {};
+        reviews.forEach(({ residenceId, rating }) => {
+          if (!ratingMap[residenceId]) ratingMap[residenceId] = [];
+          ratingMap[residenceId].push(rating);
+        });
+
+        const avg = {};
+        for (const id in ratingMap) {
+          const list = ratingMap[id];
+          avg[id] = list.reduce((a, b) => a + b, 0) / list.length;
+        }
+        setAvgRatings(avg);
+      } catch (e) {
+        console.error("리뷰 로딩 실패", e);
+      }
+    };
+
+    fetchResidences();
+    fetchRatings();
+  }, []);
+
+  const goToRoomDetail = (room) => {
     navigate(`/residence/${room.id}`, {
-      state: {
-        ...room,
-        price: residencePriceMap[room.title],
-      },
+      state: room,
     });
+  };
+
+  const goToReview = (residenceId) => {
+    navigate(`/review?residenceId=${residenceId}`);
   };
 
   return (
@@ -74,30 +145,13 @@ const Residence = () => {
       <Header />
       <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-6">
         {rooms.map((room) => (
-          <div
+          <RoomCard
             key={room.id}
-            className="bg-white shadow-lg rounded-lg overflow-hidden"
-          >
-            <div className="relative">
-              <img
-                src={room.image}
-                alt={room.title}
-                className="w-full h-64 object-cover"
-              />
-            </div>
-            <div className="p-4">
-              <h3 className="text-lg font-semibold">{room.title}</h3>
-              <p className="text-gray-600 text-sm mt-2">{room.description}</p>
-              <div className="mt-4 flex justify-end">
-                <button
-                  className="text-blue-600 text-sm font-semibold hover:underline"
-                  onClick={() => handleClick(room)}
-                >
-                  {Number(residencePriceMap[room.title]).toLocaleString()} KRW &gt;
-                </button>
-              </div>
-            </div>
-          </div>
+            room={room}
+            avgRating={avgRatings[room.id]}
+            onClick={() => goToRoomDetail(room)}
+            onReviewClick={() => goToReview(room.id)}
+          />
         ))}
       </div>
       <Footer />

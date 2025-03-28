@@ -26,34 +26,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
-@RequestMapping("/api/atelier/products")
+@RequestMapping("/api/atelier/")
 public class ProductController {
 
     private final ProductService productService;
     private final CustomFileUtil fileUtil;
 
     // 파일 등록
-    @PostMapping("/add")
-    public ResponseEntity<?> register(ProductDTO productDTO) {
-        try {
-            log.info("register() 컨트롤러 실행됨 - productDTO: {}", productDTO);
+//    @PostMapping("/add")
+//    public ResponseEntity<?> register(ProductDTO productDTO) {
+//        try {
+//            log.info("register() 컨트롤러 실행됨 - productDTO: {}", productDTO);
+//
+//            // 컨트롤러에서는 파일을 저장하지 않고, DTO를 그대로 서비스로 전달
+//            Integer id = productService.register(productDTO);
+//
+//            // 정상 처리 응답
+//            return ResponseEntity.ok(id);
+//
+//        } catch (NoSuchElementException e) {
+//            log.error("해당 데이터가 존재하지 않습니다: {}", e.getMessage());
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 데이터를 찾을 수 없습니다.");
+//        } catch (Exception e) {
+//            log.error("상품 등록 중 오류 발생: {}", e.getMessage(), e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상품 등록 중 오류가 발생했습니다.");
+//        }
+//    }
 
-            // 컨트롤러에서는 파일을 저장하지 않고, DTO를 그대로 서비스로 전달
-            Integer id = productService.register(productDTO);
-
-            // 정상 처리 응답
-            return ResponseEntity.ok(id);
-
-        } catch (NoSuchElementException e) {
-            log.error("해당 데이터가 존재하지 않습니다: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 데이터를 찾을 수 없습니다.");
-        } catch (Exception e) {
-            log.error("상품 등록 중 오류 발생: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상품 등록 중 오류가 발생했습니다.");
-        }
-    }
-
-    // 파일 보여주기(browser)
+    // 파일 보여주기(프론트에서 객실 출력)
     @GetMapping("/view/{fileName}") // img src = "/view/1234_송준항.jpg"
     public ResponseEntity<Resource> viewFileGET(@PathVariable String fileName) {
         try {

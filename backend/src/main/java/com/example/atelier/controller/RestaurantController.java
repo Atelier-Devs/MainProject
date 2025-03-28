@@ -20,11 +20,13 @@ import java.util.NoSuchElementException;
 public class RestaurantController {
     private final RestaurantService restaurantService;
 
-    // 모든 레스토랑 조회(관리자모드)
-    @GetMapping("/all")
-    public ResponseEntity<List<RestaurantDTO>> getAllRoomServices() {
+    // 모든 레스토랑 조회(프론트에서 출력)
+    @GetMapping("/list")
+    public ResponseEntity<List<RestaurantDTO>> getAllRestaurants() {
         try {
+            System.out.println("restaurant controller start");
             List<RestaurantDTO> restaurants = restaurantService.getAllRestaurants();
+            System.out.println("restaurant list" + restaurants);
             return ResponseEntity.ok(restaurants);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
@@ -56,4 +58,11 @@ public class RestaurantController {
         restaurantService.deleteRestaurant(id);
         return ResponseEntity.noContent().build();
     }
+
+    // GET(이미지 조회)
+    @GetMapping("/with-images")
+    public ResponseEntity<List<RestaurantDTO>> getAllRestaurantsWithImages() {
+        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithImages());
+    }
+
 }

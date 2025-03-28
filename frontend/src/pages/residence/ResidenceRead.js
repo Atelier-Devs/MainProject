@@ -5,14 +5,18 @@ import Footer from "../../components/Footer";
 
 const ResidenceRead = () => {
   const location = useLocation();
-  const { title, description, image, price } = location.state || {};
+  const { title, description, images = [], price } = location.state || {};
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <div className="flex-grow flex items-center justify-center py-16">
         <div className="max-w-5xl w-full bg-white shadow-lg rounded-lg overflow-hidden flex">
-          <img src={image} alt={title} className="w-3/5 object-cover" />
+          <img
+            src={images[0]}
+            alt={title}
+            className="w-3/5 object-cover"
+          />
           <div className="p-8 w-2/5">
             <h2 className="text-3xl font-semibold">{title}</h2>
             <p className="text-gray-700 mt-3">{description}</p>

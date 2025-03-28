@@ -17,4 +17,7 @@ public interface RoomServiceService {
 
     // 룸서비스 삭제(관리자모드)
     void deleteRoomService(Integer id);
+
+    // 룸서비스 이미지 전체 조회(서버시작 시)
+    List<RoomServiceDTO> getAllRoomServicesWithImages();
 }
