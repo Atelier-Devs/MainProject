@@ -9,6 +9,7 @@ import reviewRouter from "./reviewRouter";
 import reservationRouter from "./reservationRouter";
 import mypageRouter from "./mypageRouter";
 import kakaomapRouter from "./kakaomapRouter";
+import membershipRouter from "./membershipRouter";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -69,6 +70,10 @@ const root = createBrowserRouter([
   {
     path: "map",
     children: kakaomapRouter(),
+  },
+  {
+    path: "membership",
+    children: membershipRouter(),
   },
 ]);
 

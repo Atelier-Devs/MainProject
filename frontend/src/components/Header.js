@@ -40,6 +40,7 @@ const Header = () => {
         <Link to="/reservation/list">예약 관리</Link>
         <Link to="/member/Facilities">시설 안내</Link>
         {/* <Link to="/review">리뷰</Link> */}
+        <Link to="/membership">멤버십</Link>
         <Link to="/mypage">마이 페이지</Link>
         <button onClick={handleLogout} className="logout-button">로그아웃</button>
       </nav>

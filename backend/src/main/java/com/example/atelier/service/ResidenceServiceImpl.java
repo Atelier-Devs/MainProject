@@ -39,7 +39,7 @@ public class ResidenceServiceImpl implements ResidenceService{
         List<Residence> result = residenceRepository.findAll(); // 엔티티 타입 전부 찾아오기
         List<ResidenceDTO> resultDtoList = new ArrayList<>(); // DTO타입으로 새로 담을 리스트 생성
         result.forEach(i -> {
-            ResidenceDTO data = residenceRepository.toDTO( i); // 엔티티를 DTO타입으로 변환
+            ResidenceDTO data = residenceRepository.toDTO(i); // 엔티티를 DTO타입으로 변환
             resultDtoList.add(data); // DTO타입을 DTO리스트에 저장
         });
         return resultDtoList;

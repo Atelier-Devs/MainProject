@@ -96,6 +96,7 @@ public class DatabaseInitializer {
             }
 
             // Residence 이미지 등록
+            // Residence는 room*_*도 있기 때문에 room*로 나눈 후 room*_*작업 진행
             List<Residence> residences = residenceRepo.findAll(Sort.by("id")); // id 기준 정렬
 
             for (int i = 0; i < residences.size(); i++) {

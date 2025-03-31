@@ -50,7 +50,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
         String authHeaderStr = request.getHeader("Authorization");
-        log.info("🔑 Authorization Header: {}", authHeaderStr);
+        log.info("Authorization Header: {}", authHeaderStr);
         if (uri.equals("/api/atelier/logout")) {
             filterChain.doFilter(request, response);
             return;
@@ -140,5 +140,4 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             printWriter.close();
         }
     }
-
 }

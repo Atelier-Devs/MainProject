@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getProfile } from "../../api/mypageApi";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
-import logo from "../../image/logo1.png";
 
 const MyPageComponent = () => {
   const [profile, setProfile] = useState(null);
@@ -59,7 +58,6 @@ const MyPageComponent = () => {
 
         {/* 프로필 */}
         <div className="flex flex-col items-center space-y-2 text-base text-gray-800">
-          <img src={logo} alt="로고" className="w-20 h-20 object-contain mb-2" />
           <p className="font-semibold"><strong>이름:</strong> {profile.name}</p>
           <p className="font-semibold"><strong>이메일:</strong> {profile.email}</p>
           <p className="font-semibold"><strong>가입일:</strong> {formatDate(profile.joinedAt)}</p>
