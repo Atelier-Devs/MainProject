@@ -26,18 +26,29 @@ const renderStars = (rating) => {
 const BakeryCard = ({ bakery, onClick }) => {
   const imageFile = bakery.images?.[0] || "";
   const imageUrl = imageFile
-    ? `http://localhost:8080/api/atelier/view/${imageFile.replace(/^upload\/bakery\//, "")}`
+    ? `http://localhost:8080/api/atelier/view/${imageFile.replace(
+        /^upload\/bakery\//,
+        ""
+      )}`
     : "";
 
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
       {imageUrl && (
-        <img src={imageUrl} alt={bakery.name} className="w-full h-64 object-cover" />
+        <img
+          src={imageUrl}
+          alt={bakery.name}
+          className="w-full h-64 object-cover"
+        />
       )}
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-1">{bakery.name}</h3>
-        <p className="text-gray-600 text-sm mb-2">{bakery.description || "-"}</p>
-        <div className="flex items-center justify-between mb-2">{renderStars(0)}</div>
+        <p className="text-gray-600 text-sm mb-2">
+          {bakery.description || "-"}
+        </p>
+        <div className="flex items-center justify-between mb-2">
+          {renderStars(0)}
+        </div>
         <div className="mt-2 flex justify-end">
           <button
             className="text-blue-600 text-sm font-semibold hover:underline"

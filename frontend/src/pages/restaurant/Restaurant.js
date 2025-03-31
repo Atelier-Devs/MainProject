@@ -12,9 +12,13 @@ const renderStars = (rating) => {
 
   return (
     <div className="flex items-center gap-1">
-      {[...Array(full)].map((_, i) => <FaStar key={`f-${i}`} color="#facc15" />)}
+      {[...Array(full)].map((_, i) => (
+        <FaStar key={`f-${i}`} color="#facc15" />
+      ))}
       {half && <FaStarHalfAlt color="#facc15" />}
-      {[...Array(empty)].map((_, i) => <FaRegStar key={`e-${i}`} color="#e5e7eb" />)}
+      {[...Array(empty)].map((_, i) => (
+        <FaRegStar key={`e-${i}`} color="#e5e7eb" />
+      ))}
     </div>
   );
 };
@@ -22,18 +26,34 @@ const renderStars = (rating) => {
 const RestaurantCard = ({ restaurant, onClick }) => {
   const imageFile = restaurant.images?.[0] || "";
   const imageUrl = imageFile
-    ? `http://localhost:8080/api/atelier/view/${imageFile.replace(/^upload\/restaurant\//, "")}`
+    ? `http://localhost:8080/api/atelier/view/${imageFile.replace(
+        /^upload\/restaurant\//,
+        ""
+      )}`
     : "";
 
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-      {imageUrl && <img src={imageUrl} alt={restaurant.name} className="w-full h-64 object-cover" />}
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt={restaurant.name}
+          className="w-full h-64 object-cover"
+        />
+      )}
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-1">{restaurant.name}</h3>
-        <p className="text-gray-600 text-sm mb-2">{restaurant.description || "-"}</p>
-        <div className="flex items-center justify-between mb-2">{renderStars(0)}</div>
+        <p className="text-gray-600 text-sm mb-2">
+          {restaurant.description || "-"}
+        </p>
+        <div className="flex items-center justify-between mb-2">
+          {renderStars(0)}
+        </div>
         <div className="mt-2 flex justify-end">
-          <button className="text-blue-600 text-sm font-semibold hover:underline" onClick={onClick}>
+          <button
+            className="text-blue-600 text-sm font-semibold hover:underline"
+            onClick={onClick}
+          >
             {Number(restaurant.price).toLocaleString()} KRW &gt;
           </button>
         </div>
@@ -67,7 +87,11 @@ const Restaurant = () => {
       <Header />
       <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-6">
         {restaurants.map((r) => (
-          <RestaurantCard key={r.id} restaurant={r} onClick={() => goToDetail(r)} />
+          <RestaurantCard
+            key={r.id}
+            restaurant={r}
+            onClick={() => goToDetail(r)}
+          />
         ))}
       </div>
       <Footer />

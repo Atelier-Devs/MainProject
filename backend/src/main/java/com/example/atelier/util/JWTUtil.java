@@ -15,7 +15,7 @@ import java.util.Map;
 public class JWTUtil {
     private static String key = "1234567890123456789012345678901234567890"; // 최소 256bit
 
-    // ✅ 토큰 생성
+    // 토큰 생성
     public static String generateToken(Map<String, Object> valueMap, int min) {
         SecretKey key = null;
 
@@ -34,7 +34,7 @@ public class JWTUtil {
                 .compact();
     }
 
-    // ✅ 토큰 검증
+    // 토큰 검증
     public static Map<String, Object> validateToken(String token) {
         Map<String, Object> claim = null;
 
@@ -59,7 +59,7 @@ public class JWTUtil {
         return claim;
     }
 
-    // ✅ 로그인 성공 후 토큰 생성용 메서드
+    // 로그인 성공 후 토큰 생성용 메서드
     public static String createToken(User user) {
         Map<String, Object> valueMap = new HashMap<>();
         valueMap.put("userId", user.getId());

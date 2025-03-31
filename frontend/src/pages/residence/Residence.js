@@ -16,9 +16,13 @@ const renderStars = (rating) => {
 
   return (
     <div className="flex items-center gap-1">
-      {[...Array(full)].map((_, i) => <FaStar key={`f-${i}`} color="#facc15" />)}
+      {[...Array(full)].map((_, i) => (
+        <FaStar key={`f-${i}`} color="#facc15" />
+      ))}
       {half && <FaStarHalfAlt color="#facc15" />}
-      {[...Array(empty)].map((_, i) => <FaRegStar key={`e-${i}`} color="#e5e7eb" />)}
+      {[...Array(empty)].map((_, i) => (
+        <FaRegStar key={`e-${i}`} color="#e5e7eb" />
+      ))}
     </div>
   );
 };
@@ -57,6 +61,7 @@ const RoomCard = ({ room, onClick, avgRating, onReviewClick }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="relative h-96">
+        {/* 객실은 여러장이므로 슬라이더 사용 */}
         <Slider {...sliderSettings}>
           {room.images.slice(0, 3).map((img, index) => {
             const url = `http://localhost:8080/api/atelier/view/${img}`;

@@ -4,7 +4,6 @@ import {
   getReservationsByUserId,
 } from "../../api/reservationApi";
 import { Link } from "react-router-dom";
-import logo from "../../image/logo1.png";
 import "../../css/reservation.css";
 
 const ReservationListComponent = () => {
@@ -49,10 +48,6 @@ const ReservationListComponent = () => {
 
   return (
     <>
-      {/* 로고 */}
-      <div className="reservation-logo-box">
-        <img src={logo} alt="ATELIER 로고" className="reservation-logo" />
-      </div>
 
       {/* 타이틀 */}
       <h1 className="reservation-title">예약 목록</h1>

@@ -49,7 +49,7 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         Map<String, Object> claims = dto.getClaims();
 
         // 토큰 생성 (예: access token 10분, refresh token 24시간)
-        String accessToken = JWTUtil.generateToken(claims, 10); // 10분
+        String accessToken = JWTUtil.generateToken(claims, 540); // 540분(9시간)
         String refreshToken = JWTUtil.generateToken(claims, 60 * 24); // 24시간
         claims.put("accessToken", accessToken);
         claims.put("refreshToken", refreshToken);
