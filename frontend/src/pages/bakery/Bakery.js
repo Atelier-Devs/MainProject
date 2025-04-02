@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { getAllBakeries } from "../../api/bakeryApi";
@@ -23,39 +22,25 @@ const renderStars = (rating) => {
   );
 };
 
-const BakeryCard = ({ bakery, onClick }) => {
+const BakeryCard = ({ bakery }) => {
   const imageFile = bakery.images?.[0] || "";
   const imageUrl = imageFile
-    ? `http://localhost:8080/api/atelier/view/${imageFile.replace(
-        /^upload\/bakery\//,
-        ""
-      )}`
+    ? `http://localhost:8080/api/atelier/view/${imageFile.replace(/^upload\/bakery\//, "")}`
     : "";
 
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition duration-200">
       {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={bakery.name}
-          className="w-full h-64 object-cover"
-        />
+        <img src={imageUrl} alt={bakery.name} className="w-full h-60 object-cover" />
       )}
       <div className="p-4">
-        <h3 className="text-lg font-semibold mb-1">{bakery.name}</h3>
-        <p className="text-gray-600 text-sm mb-2">
-          {bakery.description || "-"}
-        </p>
-        <div className="flex items-center justify-between mb-2">
-          {renderStars(0)}
-        </div>
-        <div className="mt-2 flex justify-end">
-          <button
-            className="text-blue-600 text-sm font-semibold hover:underline"
-            onClick={onClick}
-          >
-            {Number(bakery.price).toLocaleString()} KRW &gt;
-          </button>
+        <h3 className="text-lg font-bold text-gray-900 mb-1">{bakery.name}</h3>
+        <p className="text-gray-600 text-sm mb-3">{bakery.description || "-"}</p>
+        <div className="flex justify-between items-center">
+          <div>{renderStars(0)}</div>
+          <div className="bg-yellow-300 px-2 py-1 rounded text-sm font-semibold">
+            {Number(bakery.price).toLocaleString()} KRW
+          </div>
         </div>
       </div>
     </div>
@@ -64,7 +49,6 @@ const BakeryCard = ({ bakery, onClick }) => {
 
 const Bakery = () => {
   const [bakeries, setBakeries] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBakeries = async () => {
@@ -79,22 +63,16 @@ const Bakery = () => {
     fetchBakeries();
   }, []);
 
-  const goToBakeryDetail = (bakery) => {
-    navigate(`/bakery/${bakery.id}`, { state: bakery });
-  };
-
   return (
-    <div className="max-w-7xl mx-auto p-4 pb-32">
+    <div className="bg-gray-50 min-h-screen flex flex-col">
       <Header />
-      <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {bakeries.map((bakery) => (
-          <BakeryCard
-            key={bakery.id}
-            bakery={bakery}
-            onClick={() => goToBakeryDetail(bakery)}
-          />
-        ))}
-      </div>
+      <main className="flex-grow max-w-7xl mx-auto p-6 pt-24 pb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {bakeries.map((bakery) => (
+            <BakeryCard key={bakery.id} bakery={bakery} />
+          ))}
+        </div>
+      </main>
       <Footer />
     </div>
   );

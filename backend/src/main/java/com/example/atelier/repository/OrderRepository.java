@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order,Integer> {
@@ -21,6 +22,8 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
     @Query("SELECT o FROM Order o WHERE o.user.email = :email and o.reservation.id = :id")
     List<Order> findByUserEmailAndResidenceId(@Param("email") String email, @Param("id") Integer id);
 
+    @Query("SELECT o FROM Order o WHERE o.reservation.id = :reservationId")
+    Optional<Order> findByReservationId(@Param("reservationId") Integer reservationId);
 
 
 

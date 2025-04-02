@@ -80,4 +80,13 @@ public class ResidenceServiceImpl implements ResidenceService{
                 }).toList();
     }
 
+    // ResidenceServiceImpl.java
+    @Override
+    public ResidenceDTO getById(Integer id) {
+        Residence entity = residenceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Residence ID: " + id));
+        return residenceRepository.toDTO(entity);
+    }
+
+
 }

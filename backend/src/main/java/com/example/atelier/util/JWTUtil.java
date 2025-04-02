@@ -68,6 +68,6 @@ public class JWTUtil {
         valueMap.put("phone", user.getPhone());
         valueMap.put("roleNames", user.getRoleNames().name()); // enum
 
-        return generateToken(valueMap, 60); // 60분 유효
+        return generateToken(valueMap, 300); // 300분 유효
     }
 }

@@ -27,10 +27,10 @@ const renderStars = (rating) => {
   );
 };
 
-// 커스텀 화살표: 텍스트 ‹ › 스타일
+// 커스텀 화살표
 const NextArrow = ({ onClick }) => (
   <div
-    className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 text-white text-4xl font-bold cursor-pointer hover:text-yellow-300"
+    className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 text-white text-4xl font-bold cursor-pointer"
     onClick={onClick}
   >
     ›
@@ -39,7 +39,7 @@ const NextArrow = ({ onClick }) => (
 
 const PrevArrow = ({ onClick }) => (
   <div
-    className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 text-white text-4xl font-bold cursor-pointer hover:text-yellow-300"
+    className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 text-white text-4xl font-bold cursor-pointer"
     onClick={onClick}
   >
     ‹
@@ -61,7 +61,6 @@ const RoomCard = ({ room, onClick, avgRating, onReviewClick }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="relative h-96">
-        {/* 객실은 여러장이므로 슬라이더 사용 */}
         <Slider {...sliderSettings}>
           {room.images.slice(0, 3).map((img, index) => {
             const url = `http://localhost:8080/api/atelier/view/${img}`;
@@ -79,8 +78,11 @@ const RoomCard = ({ room, onClick, avgRating, onReviewClick }) => {
           {room.name}
         </div>
       </div>
-      <div className="p-4">
-        <p className="text-gray-600 text-sm mb-2">{room.description}</p>
+
+      {/* 소개문구에 간격 추가 */}
+      <div className="p-4 mt-4">
+        <p className="text-gray-600 text-sm mb-4">{room.description}</p>
+
         <div className="flex items-center justify-between mb-2">
           <div className="cursor-pointer" onClick={onReviewClick}>
             {renderStars(avgRating || 0)}
@@ -89,6 +91,7 @@ const RoomCard = ({ room, onClick, avgRating, onReviewClick }) => {
             </span>
           </div>
         </div>
+
         <div className="mt-2 flex justify-end">
           <button
             className="text-blue-600 text-sm font-semibold hover:underline"

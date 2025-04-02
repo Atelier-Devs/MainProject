@@ -54,10 +54,12 @@ public class ResidenceController {
         return "DELETE SUCCESS";
     }
 
-    // GET(이미지 조회)
-//    @GetMapping("/a")
-//    public ResponseEntity<List<ResidenceDTO>> getAllRooms() {
-//        System.out.println("여기는 분명 들어오는데 service에서 문제가 있은듯 ");
-//        return ResponseEntity.ok(residenceService.getAllRooms());
-//    }
+    // GET - 단일 Residence 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<ResidenceDTO> getById(@PathVariable Integer id) {
+        log.info("Residence read id: {}", id);
+        ResidenceDTO dto = residenceService.getById(id);
+        return ResponseEntity.ok(dto);
+    }
+
 }

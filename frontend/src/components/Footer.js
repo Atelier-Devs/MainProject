@@ -13,12 +13,18 @@ const Footer = () => {
             setShowFooter(scrollY + windowHeight >= documentHeight - 1);
         };
 
+
         window.addEventListener("scroll", handleScroll);
+        handleScroll();
+
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     return (
-        <footer className={`footer fixed bottom-0 left-0 w-full transition-transform duration-700 ease-in-out ${showFooter ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}>
+        <footer
+            className={`footer fixed bottom-0 left-0 w-full transition-transform duration-700 ease-in-out ${showFooter ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+                }`}
+        >
             <div className="footer-container">
                 <div className="footer-logo">
                     <img src={logo} alt="Atelier Logo" className="footer-logo-img" />

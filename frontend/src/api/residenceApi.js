@@ -16,3 +16,13 @@ export const getAllResidences = async () => {
   console.log("response:", res);
   return res.data;
 };
+
+// 특정 ID로 객실 정보 가져오기
+export const getResidenceById = async (id) => {
+  console.log("id:")
+  const token = getAuthToken();
+  const res = await axios.get(`${prefix}/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};

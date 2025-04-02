@@ -47,78 +47,65 @@ const ReservationListComponent = () => {
   };
 
   return (
-    <>
+    <div className="reservation-page-container">
+      <div className="reservation-wrapper">
+        <h1 className="reservation-title">예약 목록</h1>
 
-      {/* 타이틀 */}
-      <h1 className="reservation-title">예약 목록</h1>
+        <div className="reservation-form">
+          <input
+            type="text"
+            placeholder="유저 ID 입력"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            className="reservation-input"
+          />
+          <div className="button-row">
+            <button onClick={handleSearch} className="reservation-button">조회</button>
+            {searchMode && (
+              <button onClick={handleReset} className="reservation-button">전체 보기</button>
+            )}
+          </div>
+        </div>
 
-      {/* 검색창 + 버튼 */}
-      <div className="reservation-form">
-        <input
-          type="text"
-          placeholder="유저 ID 입력"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          className="reservation-input"
-        />
-        <div className="button-row">
-          <button onClick={handleSearch} className="reservation-button">
-            조회
-          </button>
-          {searchMode && (
-            <button onClick={handleReset} className="reservation-button">
-              전체 보기
-            </button>
-          )}
+        <div className="reservation-status-box">
+          <span className="reservation-status-text">
+            {searchMode ? `유저 ID ${userId} 결과` : "전체 예약 목록"}
+          </span>
+        </div>
+
+        <div className="reservation-table-container">
+          <table className="reservation-table">
+            <thead>
+              <tr>
+                <th>아이디</th>
+                <th>유저 아이디</th>
+                <th>예약 객실</th>
+                <th>예약 날짜</th>
+                <th>예약 상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reservations.length > 0 ? (
+                reservations.map((r) => (
+                  <tr key={r.id}>
+                    <td>{r.id}</td>
+                    <td><Link to={`/reservation/read/${r.userId}`}>{r.userId}</Link></td>
+                    <td>{r.residenceId}</td>
+                    <td>{new Date(r.reservationDate).toLocaleString()}</td>
+                    <td>{r.status}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr><td colSpan="5">예약 정보가 없습니다.</td></tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
-
-      {/* 상태 문구 */}
-      <div className="reservation-status-box">
-        <span className="reservation-status-text">
-          {searchMode ? `유저 ID ${userId} 결과` : "전체 예약 목록"}
-        </span>
-      </div>
-
-      {/* 예약 테이블 */}
-      <div className="reservation-table-container">
-        <table className="reservation-table">
-          <thead>
-            <tr>
-              <th>아이디</th>
-              <th>유저 아이디</th>
-              <th>예약 객실</th>
-              <th>예약 날짜</th>
-              <th>예약 상태</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reservations.length > 0 ? (
-              reservations.map((reservation) => (
-                <tr key={reservation.id}>
-                  <td>{reservation.id}</td>
-                  <td>
-                    <Link to={`/reservation/read/${reservation.userId}`}>
-                      {reservation.userId}
-                    </Link>
-                  </td>
-                  <td>{reservation.residenceId}</td>
-                  <td>
-                    {new Date(reservation.reservationDate).toLocaleString()}
-                  </td>
-                  <td>{reservation.status}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5">예약 정보가 없습니다.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </>
+    </div>
   );
+
+
 };
 
 export default ReservationListComponent;

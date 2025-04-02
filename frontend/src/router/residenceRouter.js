@@ -7,7 +7,6 @@ const ResidenceRead = lazy(() => import("../pages/residence/ResidenceRead"));
 
 const residenceRouter = () => {
   return [
-
     {
       path: "",
       element: (
@@ -17,14 +16,13 @@ const residenceRouter = () => {
       ),
     },
     {
-      path: ":roomId",
+      path: ":id",
       element: (
         <Suspense fallback={Loading}>
           <ResidenceRead />
         </Suspense>
       ),
     },
-   
   ];
 };
 

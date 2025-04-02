@@ -16,6 +16,7 @@ public class MyPageDTO {
     // 그러므로 Entity는 필요없고 기존 Entity를 조합한 DTO만 필요
 
     // 마이페이지를 위한 DTO
+    private Integer id;
     private String name;
     private String email;
     private BigDecimal totalSpent;

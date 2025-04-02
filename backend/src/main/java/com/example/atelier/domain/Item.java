@@ -18,8 +18,12 @@ public class Item {
     private Integer id;
 
     @ManyToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment; // 이 아이템이 속한 결제
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user; // 이 아이템이 속한 사용자
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "order_id")

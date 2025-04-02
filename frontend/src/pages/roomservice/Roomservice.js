@@ -27,32 +27,28 @@ const RoomServiceCard = ({ service }) => {
   const imageFile = service.images?.[0] || "";
   const imageUrl = imageFile
     ? `http://localhost:8080/api/atelier/view/${imageFile.replace(
-        /^upload\/roomservice\//,
-        ""
-      )}`
+      /^upload\/roomservice\//,
+      ""
+    )}`
     : "";
 
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition duration-200">
       {imageUrl && (
         <img
           src={imageUrl}
           alt={service.name}
-          className="w-full h-64 object-cover"
+          className="w-full h-60 object-cover"
         />
       )}
       <div className="p-4">
-        <h3 className="text-lg font-semibold mb-1">{service.name}</h3>
-        <p className="text-gray-600 text-sm mb-2">
-          {service.description || "-"}
-        </p>
-        <div className="flex items-center justify-between mb-2">
-          {renderStars(0)}
-        </div>
-        <div className="mt-2 flex justify-end">
-          <span className="text-blue-600 text-sm font-semibold">
-            {Number(service.price).toLocaleString()} KRW &gt;
-          </span>
+        <h3 className="text-lg font-bold text-gray-900 mb-1">{service.name}</h3>
+        <p className="text-gray-600 text-sm mb-3">{service.description || "-"}</p>
+        <div className="flex justify-between items-center">
+          <div>{renderStars(0)}</div>
+          <div className="bg-yellow-300 px-2 py-1 rounded text-sm font-semibold">
+            {Number(service.price).toLocaleString()} KRW
+          </div>
         </div>
       </div>
     </div>
@@ -61,7 +57,6 @@ const RoomServiceCard = ({ service }) => {
 
 const RoomService = () => {
   const [services, setServices] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRoomServices = async () => {
@@ -75,22 +70,19 @@ const RoomService = () => {
     fetchRoomServices();
   }, []);
 
-  const goToRoomserviceDetail = (roomservice) => {
-    navigate(`/roomservice/${roomservice.id}`, { state: roomservice });
-  };
-
   return (
-    <div className="max-w-7xl mx-auto p-4 pb-32">
+    <div className="bg-gray-50 min-h-screen">
       <Header />
-      <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {services.map((s) => (
-          <RoomServiceCard
-            key={s.id}
-            service={s}
-            onClick={() => goToRoomserviceDetail(roomservice)}
-          />
-        ))}
-      </div>
+      <main className="max-w-7xl mx-auto p-6 pt-32 pb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service) => (
+            <RoomServiceCard
+              key={service.id}
+              service={service}
+            />
+          ))}
+        </div>
+      </main>
       <Footer />
     </div>
   );

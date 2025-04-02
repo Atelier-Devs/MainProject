@@ -3,16 +3,15 @@ package com.example.atelier.service;
 import com.example.atelier.domain.*;
 import com.example.atelier.dto.OrderDTO;
 import com.example.atelier.dto.PaymentDTO;
-import com.example.atelier.repository.MembershipRepository;
-import com.example.atelier.repository.PaymentRepository;
-import com.example.atelier.repository.ReservationRepository;
-import com.example.atelier.repository.UserRepository;
+import com.example.atelier.dto.PaymentSummaryDTO;
+import com.example.atelier.repository.*;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +28,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -43,6 +44,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final ModelMapper modelMapper;
     private final MembershipRepository membershipRepository;
     private final MembershipServiceImpl membershipServiceImpl;
+    private final OrderRepository orderRepository;
+    private final ItemRepository itemRepository;
 
     private OrderService orderService;
 
@@ -285,5 +288,76 @@ public class PaymentServiceImpl implements PaymentService {
             log.error("❌ 결제 승인 실패: {}", e.getMessage());
             throw new RuntimeException("결제 승인 중 오류 발생");
         }
+    }
+
+    //summary
+    @Override
+    public PaymentSummaryDTO getSummaryForReservation(Integer reservationId) {
+//        PaymentSummaryDTO paymentSummaryDTO =new PaymentSummaryDTO();
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+
+        User user = reservation.getUser();
+        Residence residence = reservation.getResidence(); // 객실 정보
+
+        // 주문 내역 조회 (옵션 포함)
+        Order order = orderRepository.findByReservationId(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("예약에 해당하는 주문이 없습니다."));
+
+        Membership membership = membershipRepository
+                .findActiveMembershipByUser(user)
+                .orElse(null);
+
+        // 🔹 옵션 항목들을 Map<String, BigDecimal>으로 구성
+        List<Item> items = itemRepository.findByPaymentId(reservationId);
+
+        Map<String, BigDecimal> itemBreakdown = new LinkedHashMap<>();
+        BigDecimal total = BigDecimal.ZERO;
+
+        //부가서비스 데이터 paymentsummarydto에 담기. 키값으로 value가져옴
+        for (Item item : items) {
+            if (item.getBakery() != null && !item.getBakery().isEmpty()) {
+                for (Bakery b : item.getBakery()) {
+                    itemBreakdown.put(b.getName(), new BigDecimal(b.getPrice()));
+                    total = total.add(new BigDecimal(b.getPrice()));
+                }
+            }
+
+            if (item.getRestaurant() != null && !item.getRestaurant().isEmpty()) {
+                for (Restaurant r : item.getRestaurant()) {
+                    itemBreakdown.put(r.getName(), new BigDecimal(r.getPrice()));
+                    total = total.add(new BigDecimal(r.getPrice()));
+                }
+            }
+
+            if (item.getRoomService() != null && !item.getRoomService().isEmpty()) {
+                for (RoomService rs : item.getRoomService()) {
+                    itemBreakdown.put(rs.getName(), new BigDecimal(rs.getPrice()));
+                    total = total.add(new BigDecimal(rs.getPrice()));
+                }
+            }
+        }
+
+
+        // 🔹 할인율 적용
+        BigDecimal discountRate = membership != null
+                ? membershipServiceImpl.getDiscountByMembershipCategory(membership.getCategory())
+                : BigDecimal.ZERO;
+
+        BigDecimal finalAmount = total.multiply(BigDecimal.ONE.subtract(discountRate));
+
+        // 🔹 DTO 생성하고 바론 리턴
+        return PaymentSummaryDTO.builder()
+                .userName(user.getName())
+                .userEmail(user.getEmail())
+                .reservationDate(reservation.getCreatedAt().toString())
+                .roomSummary(residence.getName())
+                .itemBreakdown(itemBreakdown)
+                .originalAmount(total)
+                .discountRate(discountRate)
+                .finalAmount(finalAmount)
+                .membershipCategory(membership != null ? membership.getCategory().name() : null)
+                .reservationId(reservationId)
+                .build();
     }
 }

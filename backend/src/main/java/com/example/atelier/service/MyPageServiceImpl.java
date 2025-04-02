@@ -70,6 +70,7 @@ public class MyPageServiceImpl implements MyPageService{
 
         // 새로운 DTO생성 후 반환
         return new MyPageDTO(
+                user.getId(),
                 user.getName(),
                 user.getEmail(),
                 totalSpent,

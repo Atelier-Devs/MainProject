@@ -22,6 +22,7 @@ public interface ResidenceService {
 
     // 객실 전체 조회(서버시작 시)
     List<ResidenceDTO> getAllRooms();
+    ResidenceDTO getById(Integer id);
 
 
 }

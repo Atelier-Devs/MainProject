@@ -2,6 +2,7 @@ package com.example.atelier.controller;
 
 import com.example.atelier.domain.Payment;
 import com.example.atelier.dto.PaymentDTO;
+import com.example.atelier.dto.PaymentSummaryDTO;
 import com.example.atelier.repository.OrderRepository;
 import com.example.atelier.repository.PaymentRepository;
 import com.example.atelier.repository.ReservationRepository;
@@ -44,9 +45,15 @@ public class PaymentController {
         return ResponseEntity.ok(approvedPayment);
     }
 
-// 1️⃣ 결제 요청 (결제 생성)
+
+
+
+
+    // 1️⃣ 결제 요청 (결제 생성)
 @PostMapping("/create")
 public ResponseEntity<Map<String, Object>> createPayment(@RequestBody PaymentDTO paymentDTO) {
+        log.info("📥 결제 생성 요청 도착: {}", paymentDTO); // 로그 추가
+
     int paymentId = paymentService.createPayment(paymentDTO);
 
     // JSON 형식의 응답을 위한 Map 생성
@@ -72,6 +79,12 @@ public ResponseEntity<String> confirmPayment(@PathVariable Integer paymentId) {
     return ResponseEntity.ok("결제가 확정되었습니다. paymentId: " + paymentId);
 }
 
+    @GetMapping("/summary/{reservationId}")
+    public ResponseEntity<PaymentSummaryDTO> getPaymentSummary(
+            @PathVariable Integer reservationId) {
+        PaymentSummaryDTO summary = paymentService.getSummaryForReservation(reservationId);
+        return ResponseEntity.ok(summary);
+    }
 
 
 

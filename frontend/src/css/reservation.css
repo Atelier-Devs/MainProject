@@ -1,118 +1,96 @@
-/* 로고 영역 */
-.reservation-logo-box {
+
+.reservation-page-container {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    margin-top: 30px;
-    margin-bottom: 10px;
+    align-items: center;
+    background-color: #fefefe;
 }
 
-.reservation-logo {
-    width: 140px;
-    height: auto;
-}
-
-/* 제목 */
-.reservation-title {
+.reservation-wrapper {
+    width: 100%;
+    max-width: 900px;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     text-align: center;
-    font-size: 28px;
-    font-weight: bold;
-    color: #5a3e2b;
+}
+
+.reservation-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #5c3d1b;
     margin-bottom: 24px;
 }
 
-/* 검색 폼 */
 .reservation-form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 24px;
 }
 
 .reservation-input {
-    width: 250px;
-    padding: 12px;
-    font-size: 16px;
-    text-align: center;
-    border: 2px solid #c9b9a2;
-    border-radius: 10px;
-    background-color: #fff;
-    transition: all 0.3s ease;
+    width: 240px;
+    padding: 10px;
+    border: 1px solid #d2b48c;
+    border-radius: 6px;
+    font-size: 14px;
 }
 
 .button-row {
     display: flex;
-    justify-content: center;
     gap: 10px;
 }
 
 .reservation-button {
-    background: #a07c5b;
+    background-color: #a67c52;
     color: white;
-    font-size: 15px;
-    font-weight: bold;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    font-weight: 600;
 }
 
 .reservation-button:hover {
-    background: #8b6847;
-    transform: scale(1.05);
+    background-color: #916b45;
 }
 
-/* 상태 텍스트 */
 .reservation-status-box {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
+    margin-bottom: 20px;
 }
 
 .reservation-status-text {
-    font-size: 18px;
-    font-weight: 600;
-    color: #5a3e2b;
+    font-weight: 500;
+    color: #333;
 }
 
 .reservation-table-container {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 40px;
+    overflow-x: auto;
 }
 
-/* 테이블 너비를 줄임 (예: 90% → 70%) */
 .reservation-table {
-    width: 70%;
-    max-width: 1000px;
+    width: 100%;
     border-collapse: collapse;
-    background-color: white;
-    border-radius: 15px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    font-size: 15px;
-    /* 폰트도 살짝 줄임 */
-}
-
-.reservation-table th,
-.reservation-table td {
-    border: 1px solid #e8dbc9;
-    padding: 14px;
-    text-align: center;
 }
 
 .reservation-table th {
-    background-color: #f8eddf;
-    color: #5a3e2b;
-    font-weight: bold;
+    background-color: #f7e9d7;
+    padding: 12px;
+    color: #5c3d1b;
+    font-weight: 600;
 }
 
-.reservation-table tr:nth-child(even) {
-    background-color: #fdfbf9;
+.reservation-table td {
+    padding: 12px;
+    border-top: 1px solid #eee;
 }
 
-.reservation-container {
-    margin-top: 80px;
-    /* header 높이 + 여유 공간 */
+.reservation-table tr:last-child td {
+    border-bottom: 1px solid #eee;
 }
