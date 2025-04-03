@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
 @Table(name = "reservations")
 @ToString
 public class Reservation {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
@@ -26,8 +28,18 @@ public class Reservation {
     @JoinColumn(name = "residence_id")
     private Residence residence;
 
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
+
     @Column(name = "reservation_date")
     private LocalDateTime reservationDate;
+
+    @Column(name = "check_out_date")
+    private LocalDateTime checkOutDate;
+
+    @Column(name = "guest_count")
+    private Integer guestCount;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -39,8 +51,8 @@ public class Reservation {
         PENDING, CONFIRMED, CANCELLED
     }
 
-    public void changeStatus(Reservation.Status status){
-        this.status=status;
+    public void changeStatus(Status status) {
+        this.status = status;
     }
 }
 

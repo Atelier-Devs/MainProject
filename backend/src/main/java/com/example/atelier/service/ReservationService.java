@@ -4,13 +4,14 @@ import com.example.atelier.domain.Reservation;
 import com.example.atelier.domain.Residence;
 import com.example.atelier.domain.User;
 import com.example.atelier.dto.ReservationDTO;
+import com.example.atelier.dto.ReservationRegisterDTO;
 import com.example.atelier.dto.ResidenceDTO;
 
 import java.util.List;
 
 public interface ReservationService {
     // 등록
-    Integer register(ReservationDTO reservationDTO);
+    ReservationDTO register(ReservationRegisterDTO reservationRegisterDTO);
 
     // 특정 ID 예약 조회
     public List<ReservationDTO> get(Integer userId);

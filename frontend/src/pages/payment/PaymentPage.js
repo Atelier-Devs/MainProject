@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getProfile } from "../../api/mypageApi";
+import { getAllRestaurants } from "../../api/restaurantApi";
+import { getAllBakeries } from "../../api/bakeryApi";
+import { getAllRoomservices } from "../../api/roomserviceApi";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -10,12 +13,14 @@ const PaymentPage = () => {
   const checkIn = state?.checkIn;
   const checkOut = state?.checkOut;
   const guestCount = state?.guestCount;
-  const restaurant = state?.restaurant || "X";
-  const bakery = state?.bakery || "X";
-  const roomService = state?.roomService || "X";
+  const restaurantId = state?.restaurantId;
+  const bakeryId = state?.bakeryId;
+  const roomServiceId = state?.roomServiceId;
 
   const [userInfo, setUserInfo] = useState(null);
-  const [reservationId, setReservationId] = useState(null);
+  const [restaurantList, setRestaurantList] = useState([]);
+  const [bakeryList, setBakeryList] = useState([]);
+  const [roomServiceList, setRoomServiceList] = useState([]);
 
   useEffect(() => {
     const loginData = JSON.parse(localStorage.getItem("login"));
@@ -25,11 +30,54 @@ const PaymentPage = () => {
     getProfile()
       .then((data) => setUserInfo(data))
       .catch((err) => console.error("마이페이지 정보 로딩 실패", err));
+  }, []);
 
-    if (residence?.id) {
-      setReservationId(residence.id);
+  useEffect(() => {
+    const fetchExtras = async () => {
+      try {
+        const [restaurantRes, bakeryRes, roomServiceRes] = await Promise.all([
+          getAllRestaurants(),
+          getAllBakeries(),
+          getAllRoomservices(),
+        ]);
+        setRestaurantList(restaurantRes);
+        setBakeryList(bakeryRes);
+        setRoomServiceList(roomServiceRes);
+      } catch (err) {
+        console.error("옵션 목록 불러오기 실패", err);
+      }
+    };
+
+    fetchExtras();
+  }, []);
+
+  const parsePrice = (priceStr) => {
+    if (typeof priceStr === "number") return priceStr;
+    if (typeof priceStr === "string") {
+      const numberOnly = priceStr.replace(/[^\d]/g, "");
+      return Number(numberOnly || 0);
     }
-  }, [residence]);
+    return 0;
+  };
+
+  const findPriceById = (list, id) => {
+    if (!id) return 0;
+    const found = list.find((item) => item.id === id);
+    return found ? parsePrice(found.price) : 0;
+  };
+
+  const findNameById = (list, id) => {
+    if (!id) return "선택 안 함";
+    const found = list.find((item) => item.id === id);
+    return found ? found.name : "선택 안 함";
+  };
+
+  const roomPrice = parsePrice(residence?.price);
+  const restaurantPrice = findPriceById(restaurantList, restaurantId);
+  const bakeryPrice = findPriceById(bakeryList, bakeryId);
+  const roomServicePrice = findPriceById(roomServiceList, roomServiceId);
+
+  const totalPrice = roomPrice + restaurantPrice + bakeryPrice + roomServicePrice;
 
   const handlePayment = () => {
     if (!window.IMP || !residence || !userInfo) {
@@ -46,7 +94,7 @@ const PaymentPage = () => {
         pay_method: "card",
         merchant_uid: `mid_${new Date().getTime()}`,
         name: residence.name,
-        amount: residence.price,
+        amount: totalPrice,
         buyer_email: userInfo.email,
         buyer_name: userInfo.name,
         buyer_tel: "010-1234-5678",
@@ -96,25 +144,27 @@ const PaymentPage = () => {
                 <span className="font-bold">객실명:</span> {residence.name}
               </li>
               <li>
-                <span className="font-bold">투숙 기간:</span> {new Date(checkIn).toLocaleDateString()} ~ {new Date(checkOut).toLocaleDateString()}
+                <span className="font-bold">투숙 기간:</span>{" "}
+                {new Date(checkIn).toLocaleDateString()} ~{" "}
+                {new Date(checkOut).toLocaleDateString()}
               </li>
               <li>
                 <span className="font-bold">인원:</span> {guestCount}명
               </li>
               <li>
-                <span className="font-bold">레스토랑 선택:</span> {restaurant}
+                <span className="font-bold">레스토랑 선택:</span> {findNameById(restaurantList, restaurantId)}
               </li>
               <li>
-                <span className="font-bold">베이커리 선택:</span> {bakery}
+                <span className="font-bold">베이커리 선택:</span> {findNameById(bakeryList, bakeryId)}
               </li>
               <li>
-                <span className="font-bold">룸서비스 선택:</span> {roomService}
+                <span className="font-bold">룸서비스 선택:</span> {findNameById(roomServiceList, roomServiceId)}
               </li>
             </ul>
 
             <div className="mt-10 flex justify-between items-center">
               <p className="text-green-700 font-bold text-base">
-                최종 결제 금액: <span className="text-lg">{Number(residence.price).toLocaleString()} KRW</span>
+                최종 결제 금액: <span className="text-lg">{totalPrice.toLocaleString()} KRW</span>
               </p>
               <button
                 onClick={handlePayment}

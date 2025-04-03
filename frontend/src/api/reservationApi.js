@@ -5,8 +5,8 @@ const prefix = `${API_SERVER_HOST}/api/atelier/reservations`;
 
 // 토큰을 가져와 인증 헤더를 구성하는 헬퍼 함수
 const getAuthHeader = () => {
-  const token = localStorage.getItem("accessToken");
-  console.log('token:', token)
+  const token = JSON.parse(localStorage.getItem("login"))?.accessToken;
+  console.log("token:", token);
   if (!token) {
     throw new Error("Access token not found. 로그인 상태가 아닙니다.");
   }
@@ -29,6 +29,18 @@ export const getAllReservations = async () => {
   }
 };
 
+// 예약 등록
+export const registerReservation = async (reservationData) => {
+  try {
+    const url = `${prefix}/add`;
+    const res = await axios.post(url, reservationData, getAuthHeader());
+    return res.data; // 예약 ID 또는 전체 객체 리턴
+  } catch (error) {
+    console.error("예약 등록 실패:", error);
+    throw error;
+  }
+};
+
 // 특정 사용자 ID로 예약 목록 가져오기
 export const getReservationsByUserId = async (userId) => {
   try {
@@ -43,7 +55,7 @@ export const getReservationsByUserId = async (userId) => {
 
 // 특정 예약 ID로 예약 정보 가져오기
 export const reservationGetById = async (rno) => {
-  console.log('rno:', rno)
+  console.log("rno:", rno);
   try {
     const url = `${prefix}/${rno}`;
     console.log("Fetching reservation by ID:", url);

@@ -3,6 +3,7 @@ package com.example.atelier.controller;
 import com.example.atelier.domain.Reservation;
 import com.example.atelier.dto.MembershipDTO;
 import com.example.atelier.dto.ReservationDTO;
+import com.example.atelier.dto.ReservationRegisterDTO;
 import com.example.atelier.dto.ResidenceDTO;
 import com.example.atelier.repository.ReservationRepository;
 import com.example.atelier.service.ReservationService;
@@ -30,9 +31,10 @@ public class ReservationController {
 
     // POST
     @PostMapping("/add")
-    public String addData(@RequestBody ReservationDTO reservationDTO){
-        System.out.println("reservation controller data : " + reservationDTO);
-        return ""+reservationService.register(reservationDTO);
+    public ResponseEntity<ReservationDTO> addData(@RequestBody ReservationRegisterDTO reservationRegisterDTO){
+        System.out.println("여기 controller: " + reservationRegisterDTO);
+        ReservationDTO saved = reservationService.register(reservationRegisterDTO);
+        return ResponseEntity.ok(saved);
     }
 
     // GET (조회)

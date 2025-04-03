@@ -1,12 +1,9 @@
 package com.example.atelier.service;
 
-import com.example.atelier.domain.Reservation;
-import com.example.atelier.domain.Residence;
-import com.example.atelier.domain.User;
+import com.example.atelier.domain.*;
 import com.example.atelier.dto.ReservationDTO;
-import com.example.atelier.repository.ReservationRepository;
-import com.example.atelier.repository.ResidenceRepository;
-import com.example.atelier.repository.UserRepository;
+import com.example.atelier.dto.ReservationRegisterDTO;
+import com.example.atelier.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,14 +22,14 @@ import java.util.Optional;
 @Slf4j
 public class ReservationServiceImpl implements ReservationService{
 
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private ReservationRepository reservationRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ResidenceRepository residenceRepository;
+    private final ModelMapper modelMapper;
+    private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
+    private final ResidenceRepository residenceRepository;
+    private final BakeryRepository bakeryRepository;
+    private final RoomServiceRepository roomServiceRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final ItemRepository itemRepository;
 
     // GET
     @Override
@@ -96,26 +94,71 @@ public class ReservationServiceImpl implements ReservationService{
 //        reservationRepository.refundPayment(reservation.getId());
     }
 
-    // POST
     @Override
-    public Integer register(ReservationDTO reservationDTO) {
-        log.info("Registering new reservation: {}", reservationDTO);
+    @Transactional
+    public ReservationDTO register(ReservationRegisterDTO dto) {
+        log.info("Registering new reservation: {}", dto);
 
-        // 사용자 & 숙소 조회
-        User user = userRepository.findById(reservationDTO.getUserId())
+        // 연관 엔티티 조회
+        User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        Residence residence = residenceRepository.findById(reservationDTO.getResidenceId())
+        Residence residence = residenceRepository.findById(dto.getResidenceId())
                 .orElseThrow(() -> new IllegalArgumentException("Residence not found"));
 
-        // DTO → Entity 변환
-//            Reservation reservation = toEntity(reservationDTO, user, residence);
-        Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
-        System.out.println("reservation: " +reservation);
-        // DB 저장
-        return reservationRepository.save(reservation).getId();
-    }
+        Restaurant restaurant = null;
+        if (dto.getRestaurantId() != null) {
+            restaurant = restaurantRepository.findById(dto.getRestaurantId())
+                    .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+        }
 
+        Bakery bakery = null;
+        if (dto.getBakeryId() != null) {
+            bakery = bakeryRepository.findById(dto.getBakeryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Bakery not found"));
+        }
+
+        RoomService roomService = null;
+        if (dto.getRoomServiceId() != null) {
+            roomService = roomServiceRepository.findById(dto.getRoomServiceId())
+                    .orElseThrow(() -> new IllegalArgumentException("RoomService not found"));
+        }
+
+        // Item 생성 및 서비스 연결
+        Item item = new Item();
+        item.setUser(user);
+
+        if (restaurant != null) {
+            restaurant.setItem(item); // 양방향 연관 설정
+            item.setRestaurant(List.of(restaurant));
+        }
+
+        if (bakery != null) {
+            bakery.setItem(item);
+            item.setBakery(List.of(bakery));
+        }
+
+        if (roomService != null) {
+            roomService.setItem(item);
+            item.setRoomService(List.of(roomService));
+        }
+
+        itemRepository.save(item); // 반드시 먼저 저장
+
+        // Reservation 생성
+        Reservation reservation = new Reservation();
+        reservation.setUser(user);
+        reservation.setResidence(residence);
+        reservation.setItem(item); // 핵심 연결
+        reservation.setReservationDate(dto.getReservationDate());
+        reservation.setCheckOutDate(dto.getCheckOutDate());
+        reservation.setGuestCount(dto.getGuestCount());
+        reservation.setStatus(Reservation.Status.PENDING);
+        reservation.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+        Reservation saved = reservationRepository.save(reservation);
+        return ReservationDTO.fromEntity(saved);
+    }
 
 //    // 특정 예약 삭제 (수동 삭제)
 //    @Override
