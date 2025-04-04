@@ -24,10 +24,9 @@ import java.util.Map;
 @Slf4j
 public class ReservationController {
 
-    @Autowired
-    private ReservationService reservationService;
-    @Autowired
-    private ReservationRepository reservationRepository;
+
+    private final ReservationService reservationService;
+    private final ReservationRepository reservationRepository;
 
     // POST
     @PostMapping("/add")

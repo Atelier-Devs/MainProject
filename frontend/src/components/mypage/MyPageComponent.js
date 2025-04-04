@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { getProfile } from "../../api/mypageApi";
+import { deleteReview } from "../../api/reviewApi";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const MyPageComponent = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showReservation, setShowReservation] = useState(false);
   const [showReview, setShowReview] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getProfile().then((data) => {
@@ -49,13 +52,23 @@ const MyPageComponent = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (window.confirm("이 리뷰를 삭제하시겠습니까?")) {
+      await deleteReview(id);
+      alert("삭제되었습니다.");
+      setProfile((prev) => ({
+        ...prev,
+        reviewDTOS: prev.reviewDTOS.filter((r) => r.id !== id),
+      }));
+    }
+  };
+
   if (loading || !profile)
     return <div className="text-center mt-20 text-lg">불러오는 중...</div>;
 
   return (
     <div className="min-h-screen bg-[#f9f6f1] flex flex-col items-center py-16 px-4">
       <div className="bg-white shadow-lg rounded-xl p-10 max-w-6xl w-full space-y-10">
-
         {/* 프로필 */}
         <div className="flex flex-col items-center space-y-2 text-base text-gray-800">
           <p className="font-semibold"><strong>이름:</strong> {profile.name}</p>
@@ -82,7 +95,6 @@ const MyPageComponent = () => {
             )}
           </div>
 
-
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">결제 내역</h3>
             <button
@@ -105,7 +117,6 @@ const MyPageComponent = () => {
           </div>
         </div>
 
-
         {showReservation && (
           <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
             <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">결제 상세 정보</h3>
@@ -123,7 +134,6 @@ const MyPageComponent = () => {
           </div>
         )}
 
-        {/* 리뷰 상세 */}
         {showReview && (
           <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
             <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">리뷰 상세 정보</h3>
@@ -137,6 +147,16 @@ const MyPageComponent = () => {
                   <p><strong>제목:</strong> {rv.title}</p>
                   <p><strong>내용:</strong> {rv.comment}</p>
                   <p className="text-sm text-gray-500"><strong>작성일:</strong> {formatDate(rv.createdAt)}</p>
+
+                  <div className="flex justify-end gap-2 mt-2">
+                   
+                    <button
+                      onClick={() => handleDelete(rv.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+                    >
+                      삭제
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (

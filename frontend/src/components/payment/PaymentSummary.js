@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import CreditCardCheckout from "./CreditCardCheckout";
 import axios from "axios";
 
+
+
 const PaymentSummary = ({ reservationId }) => {
   const [summary, setSummary] = useState(null);
   const [startPayment, setStartPayment] = useState(false);
@@ -12,8 +14,7 @@ const PaymentSummary = ({ reservationId }) => {
     const fetchSummary = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/atelier/payment/summary/${reservationId}`,
-          
+          `http://localhost:8080/api/atelier/payment/summary/${reservationId}`
         );
         setSummary(res.data);
       } catch (err) {
@@ -34,8 +35,8 @@ const PaymentSummary = ({ reservationId }) => {
 
       <p className="mb-1">이름: {summary.userName}</p>
       <p className="mb-1">이메일: {summary.userEmail}</p>
-      <p className="mb-1">예약일: {summary.date}</p>
-      <p className="mb-1">객실 정보: {summary.roomInfo}</p>
+      <p className="mb-1">예약일: {summary.reservationDate}</p>
+      <p className="mb-1">객실 정보: {summary.roomSummary}</p>
 
       <hr className="my-4" />
 
@@ -61,7 +62,15 @@ const PaymentSummary = ({ reservationId }) => {
           결제하기
         </button>
       ) : (
-        <CreditCardCheckout summary={summary} />
+        <CreditCardCheckout
+          userId={userId.id}
+          name={summary.roomSummary}
+          reservationId={summary.reservationId}
+          membershipId={summary.membershipId}
+          orderId={summary.orderId}
+          amount={summary.finalAmount}
+          paymentMethod="PHONE"
+        />
       )}
     </div>
   );

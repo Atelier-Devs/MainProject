@@ -47,3 +47,12 @@ export const deleteReview = async (reviewId) => {
   });
   return true;
 };
+
+export const getMyReviews = async () => {
+  const token = getAuthToken();
+  const res = await axios.get(`${prefix}/`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+

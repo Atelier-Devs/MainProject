@@ -13,15 +13,17 @@ import java.util.Map;
 @AllArgsConstructor
 public class PaymentSummaryDTO {
     private Integer reservationId;
+
     private String userName;
     private String userEmail;
     private String reservationDate;        // ← 기존 date
     private String roomSummary;            // ← 기존 roomInfo
 
     private BigDecimal originalAmount;
-    private BigDecimal discountRate;
     private String membershipCategory;
+
     private BigDecimal finalAmount;
+    private BigDecimal discountRate;
 
     private Map<String, BigDecimal> itemBreakdown;   // ← 기존 itemSummary
 }

@@ -1,106 +1,90 @@
-import React, { useState } from "react";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import { createReview } from "../../api/reviewApi";
-import { useNavigate } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { createReview, updateReview, getReviewById } from "../../api/reviewApi";
 
 const ReviewWriteComponent = () => {
-  const [title, setTitle] = useState("");
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(null);
-  const [comment, setComment] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const reviewId = searchParams.get("reviewId");
+  const isEdit = !!reviewId;
+  const userId = JSON.parse(localStorage.getItem("login"))?.user?.id;
 
-  const userId = useSelector((state) => state.login?.userId);
+  const [form, setForm] = useState({
+    userId: userId,
+    residenceId: 1,
+    rating: 5,
+    title: "",
+    comment: ""
+  });
 
-  const handleSubmit = async () => {
-    if (!title || !comment || rating === 0) {
-      alert("제목, 평점, 내용을 모두 입력해주세요.");
-      return;
-    }
-
-    const loginData = JSON.parse(localStorage.getItem("login"));
-    console.log("loginData:", loginData);
-    //localStorage.setItem("login", JSON.stringify(payload));
-    // const { userId } = loginData;
-    const fallbackUserId = loginData?.userId;
-    const finalUserId = userId || fallbackUserId;
-    console.log(fallbackUserId);
-    if (!fallbackUserId) {
-      alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
-      return;
-    }
-
-    try {
-      await createReview({
-        userId: finalUserId,
-        residenceId: 1, // 실제 숙소 ID로 교체
-        rating,
-        comment,
-        title,
+  useEffect(() => {
+    if (isEdit) {
+      getReviewById(reviewId).then((data) => {
+        setForm({
+          userId: data.userId,
+          residenceId: data.residenceId,
+          rating: data.rating,
+          title: data.title,
+          comment: data.comment
+        });
       });
-      alert("리뷰가 등록되었습니다.");
-      navigate("/review");
-    } catch (error) {
-      console.error("리뷰 등록 오류:", error.response?.data || error.message);
-      alert("리뷰 등록에 실패했습니다.");
     }
+  }, [isEdit, reviewId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (isEdit) {
+      await updateReview(reviewId, form);
+    } else {
+      await createReview(form);
+    }
+    navigate("/review");
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh]">
-      <Header />
-      <div className="p-8 max-w-xl w-full bg-white rounded shadow-md">
-        <h1 className="text-3xl font-bold mb-4 text-center">리뷰 작성</h1>
-
+    <div className="max-w-3xl mx-auto bg-white p-8 shadow-md rounded-xl">
+      <h2 className="text-2xl font-bold mb-6">{isEdit ? "리뷰 수정" : "리뷰 작성"}</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
-          placeholder="제목을 입력하세요"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="input mb-4"
+          name="title"
+          value={form.title}
+          onChange={handleChange}
+          placeholder="제목"
+          className="w-full border px-4 py-2 rounded"
+          required
         />
-
-        <div className="flex items-center justify-center mb-4">
-          {[...Array(5)].map((_, index) => {
-            const current = index + 1;
-            return (
-              <label key={current}>
-                <input
-                  type="radio"
-                  name="rating"
-                  value={current}
-                  onClick={() => setRating(current)}
-                  className="hidden"
-                />
-                <FaStar
-                  size={30}
-                  className="cursor-pointer transition-colors duration-200"
-                  color={current <= (hover || rating) ? "#ffc107" : "#e4e5e9"}
-                  onMouseEnter={() => setHover(current)}
-                  onMouseLeave={() => setHover(null)}
-                />
-              </label>
-            );
-          })}
-        </div>
-
         <textarea
-          placeholder="리뷰 내용을 입력하세요"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          className="textarea"
+          name="comment"
+          value={form.comment}
+          onChange={handleChange}
+          placeholder="내용"
+          className="w-full border px-4 py-2 rounded"
+          rows={5}
+          required
         />
-
-        <div className="flex justify-center">
-          <button onClick={handleSubmit} className="btn-success mt-6">
-            리뷰 등록
-          </button>
-        </div>
-      </div>
-      <Footer />
+        <input
+          type="number"
+          name="rating"
+          value={form.rating}
+          onChange={handleChange}
+          min="1"
+          max="5"
+          className="w-full border px-4 py-2 rounded"
+          required
+        />
+        <button
+          type="submit"
+          className="bg-black text-white px-6 py-2 rounded hover:opacity-90"
+        >
+          {isEdit ? "수정 완료" : "작성 완료"}
+        </button>
+      </form>
     </div>
   );
 };

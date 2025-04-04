@@ -56,10 +56,10 @@ const KakaoMap = () => {
     <div
       id="map"
       style={{
-        width: "100%", // 가로 전체
-        height: "400px", // 높이 고정
-        borderRadius: "10px", // 모서리 둥글게
-        border: "1px solid #ccc", // 회색 테두리
+        width: "100%",
+        height: "100%",
+        borderRadius: "10px",
+        border: "1px solid #ccc",
       }}
     ></div>
   );

@@ -290,6 +290,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
+
     //summary
     @Override
     public PaymentSummaryDTO getSummaryForReservation(Integer reservationId) {
@@ -299,44 +300,56 @@ public class PaymentServiceImpl implements PaymentService {
 
         User user = reservation.getUser();
         Residence residence = reservation.getResidence(); // 객실 정보
+        BigDecimal roomPrice = residence.getPrice(); //가격가져오기
+//        // 주문 내역 조회 (옵션 포함)
+//        Order order = orderRepository.findByReservationId(reservationId)
+//                .orElseThrow(() -> new IllegalArgumentException("예약에 해당하는 주문이 없습니다."));
 
-        // 주문 내역 조회 (옵션 포함)
-        Order order = orderRepository.findByReservationId(reservationId)
-                .orElseThrow(() -> new IllegalArgumentException("예약에 해당하는 주문이 없습니다."));
-
+        //멤버십확인. 쿼리문으로 active상태인 멤버십 가죠옴
         Membership membership = membershipRepository
                 .findActiveMembershipByUser(user)
                 .orElse(null);
 
         // 🔹 옵션 항목들을 Map<String, BigDecimal>으로 구성
         List<Item> items = itemRepository.findByPaymentId(reservationId);
-
         Map<String, BigDecimal> itemBreakdown = new LinkedHashMap<>();
-        BigDecimal total = BigDecimal.ZERO;
+//        BigDecimal total = BigDecimal.ZERO;
+
+
+        BigDecimal bakeryPrice = BigDecimal.ZERO;
+        BigDecimal restaurantPrice = BigDecimal.ZERO;
+        BigDecimal roomServicePrice = BigDecimal.ZERO;
 
         //부가서비스 데이터 paymentsummarydto에 담기. 키값으로 value가져옴
         for (Item item : items) {
             if (item.getBakery() != null && !item.getBakery().isEmpty()) {
                 for (Bakery b : item.getBakery()) {
-                    itemBreakdown.put(b.getName(), new BigDecimal(b.getPrice()));
-                    total = total.add(new BigDecimal(b.getPrice()));
+                    BigDecimal price = new BigDecimal(b.getPrice());
+                    itemBreakdown.put(b.getName(), price);
+                    bakeryPrice = bakeryPrice.add(price);
                 }
             }
 
             if (item.getRestaurant() != null && !item.getRestaurant().isEmpty()) {
                 for (Restaurant r : item.getRestaurant()) {
-                    itemBreakdown.put(r.getName(), new BigDecimal(r.getPrice()));
-                    total = total.add(new BigDecimal(r.getPrice()));
+                    BigDecimal price = new BigDecimal(r.getPrice());
+                    itemBreakdown.put(r.getName(), price);
+                    restaurantPrice = restaurantPrice.add(price);
                 }
             }
 
             if (item.getRoomService() != null && !item.getRoomService().isEmpty()) {
                 for (RoomService rs : item.getRoomService()) {
-                    itemBreakdown.put(rs.getName(), new BigDecimal(rs.getPrice()));
-                    total = total.add(new BigDecimal(rs.getPrice()));
+                    BigDecimal price = new BigDecimal(rs.getPrice());
+                    itemBreakdown.put(rs.getName(), price);
+                    roomServicePrice = roomServicePrice.add(price);
                 }
             }
         }
+
+        //총 옵션 가격 + 총합 계산
+        BigDecimal optionalTotal = bakeryPrice.add(restaurantPrice).add(roomServicePrice);
+        BigDecimal totalBeforeDiscount = roomPrice.add(optionalTotal);
 
 
         // 🔹 할인율 적용
@@ -344,7 +357,8 @@ public class PaymentServiceImpl implements PaymentService {
                 ? membershipServiceImpl.getDiscountByMembershipCategory(membership.getCategory())
                 : BigDecimal.ZERO;
 
-        BigDecimal finalAmount = total.multiply(BigDecimal.ONE.subtract(discountRate));
+        //할인율 계산
+        BigDecimal finalAmount = totalBeforeDiscount.multiply(BigDecimal.ONE.subtract(discountRate));
 
         // 🔹 DTO 생성하고 바론 리턴
         return PaymentSummaryDTO.builder()
@@ -353,7 +367,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .reservationDate(reservation.getCreatedAt().toString())
                 .roomSummary(residence.getName())
                 .itemBreakdown(itemBreakdown)
-                .originalAmount(total)
+                .originalAmount(totalBeforeDiscount)
                 .discountRate(discountRate)
                 .finalAmount(finalAmount)
                 .membershipCategory(membership != null ? membership.getCategory().name() : null)
