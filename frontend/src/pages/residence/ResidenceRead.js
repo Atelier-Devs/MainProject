@@ -98,13 +98,11 @@ const ResidenceRead = () => {
             <p className="text-base font-bold text-gray-800 mb-2">
               객실: <span className="font-bold text-gray-700">{name}</span>
             </p>
-            
+
             <p className="text-sm font-bold text-gray-700 mb-1">
               예약자: a (a@a.com)
             </p>
-            <p className="text-sm font-bold text-gray-700 mb-6">
-              멤버십: GOLD
-            </p>
+            <p className="text-sm font-bold text-gray-700 mb-6">멤버십: GOLD</p>
 
             <form
               onSubmit={handleSubmit}
@@ -159,8 +157,10 @@ const ResidenceRead = () => {
                       value={guestCount}
                       onChange={(e) => {
                         const value = Number(e.target.value);
-                        if (value > 10) return alert("최대 10명까지 예약 가능합니다.");
-                        if (value < 1) return alert("최소 1명 이상이어야 합니다.");
+                        if (value > 10)
+                          return alert("최대 10명까지 예약 가능합니다.");
+                        if (value < 1)
+                          return alert("최소 1명 이상이어야 합니다.");
                         setGuestCount(value);
                       }}
                       className="w-full px-4 py-2 border border-gray-300 rounded-md"

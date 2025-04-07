@@ -1,10 +1,7 @@
 package com.example.atelier.dto;
 
 import com.example.atelier.domain.Reservation;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ReservationDTO {
     private Integer id;                      // 예약 ID
     private Integer userId;                  // 사용자 ID

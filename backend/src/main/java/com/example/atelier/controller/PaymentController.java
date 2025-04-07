@@ -49,35 +49,35 @@ public class PaymentController {
 
 
 
-    // 1️⃣ 결제 요청 (결제 생성)
-@PostMapping("/create")
-public ResponseEntity<Map<String, Object>> createPayment(@RequestBody PaymentDTO paymentDTO) {
-        log.info("📥 결제 생성 요청 도착: {}", paymentDTO); // 로그 추가
+        // 1️⃣ 결제 요청 (결제 생성)
+    @PostMapping("/create")
+    public ResponseEntity<Map<String, Object>> createPayment(@RequestBody PaymentDTO paymentDTO) {
+            log.info("📥 결제 생성 요청 도착: {}", paymentDTO); // 로그 추가
 
-    int paymentId = paymentService.createPayment(paymentDTO);
+        int paymentId = paymentService.createPayment(paymentDTO);
 
-    // JSON 형식의 응답을 위한 Map 생성
-    Map<String, Object> response = new HashMap<>();
-    response.put("message", "결제 성공!");
-    response.put("paymentId", paymentId);
+        // JSON 형식의 응답을 위한 Map 생성
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "결제 성공!");
+        response.put("paymentId", paymentId);
 
-    return ResponseEntity.ok(response);
-}
+        return ResponseEntity.ok(response);
+    }
 
-// 2️⃣ 결제 상태 조회
-@GetMapping("/status/{paymentId}")
-public ResponseEntity<String> getPaymentStatus(@PathVariable Integer paymentId) {
-    Payment.PaymentStatus status = paymentService.getPaymentStatus(paymentId);
-    return ResponseEntity.ok("결제 상태: " + status);
-}
+    // 2️⃣ 결제 상태 조회
+    @GetMapping("/status/{paymentId}")
+    public ResponseEntity<String> getPaymentStatus(@PathVariable Integer paymentId) {
+        Payment.PaymentStatus status = paymentService.getPaymentStatus(paymentId);
+        return ResponseEntity.ok("결제 상태: " + status);
+    }
 
-// 3) 결제 완료(승인) 처리
-@PostMapping("/confirm/{paymentId}")
-public ResponseEntity<String> confirmPayment(@PathVariable Integer paymentId) {
-    // 여기서 PaymentService의 confirmPayment 호출
-    paymentServiceImpl.confirmPayment(paymentId);
-    return ResponseEntity.ok("결제가 확정되었습니다. paymentId: " + paymentId);
-}
+    // 3) 결제 완료(승인) 처리
+    @PostMapping("/confirm/{paymentId}")
+    public ResponseEntity<String> confirmPayment(@PathVariable Integer paymentId) {
+        // 여기서 PaymentService의 confirmPayment 호출
+        paymentServiceImpl.confirmPayment(paymentId);
+        return ResponseEntity.ok("결제가 확정되었습니다. paymentId: " + paymentId);
+    }
 
     @GetMapping("/summary/{reservationId}")
     public ResponseEntity<PaymentSummaryDTO> getPaymentSummary(
@@ -85,8 +85,4 @@ public ResponseEntity<String> confirmPayment(@PathVariable Integer paymentId) {
         PaymentSummaryDTO summary = paymentService.getSummaryForReservation(reservationId);
         return ResponseEntity.ok(summary);
     }
-
-
-
-
 }
