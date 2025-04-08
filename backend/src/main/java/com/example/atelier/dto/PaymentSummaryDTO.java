@@ -11,7 +11,6 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class PaymentSummaryDTO {
     private Integer reservationId;
 

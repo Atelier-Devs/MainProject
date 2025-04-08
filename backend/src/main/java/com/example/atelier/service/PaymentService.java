@@ -12,6 +12,8 @@ public interface PaymentService {
     //결제생성
     public int createPayment(PaymentDTO paymentDTO);
 
+    PaymentDTO getPaymentDTO(Integer id);
+
     //결제상태 조회
     Payment.PaymentStatus getPaymentStatus(Integer paymentId);
 

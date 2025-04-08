@@ -26,7 +26,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
                 restaurant.getId(),
                 restaurant.getName(),
                 restaurant.getPrice(),
-                restaurant.getItem() != null ? restaurant.getItem().getId() : null,
+//                restaurant.getItems(),
                 restaurant.getUser() != null ? restaurant.getUser().getId() : null,
                 imageUrls
         );

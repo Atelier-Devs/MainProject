@@ -29,12 +29,19 @@ public class Item {
     @JoinColumn(name = "order_id")
     private Order order; // 이 아이템이 속한 주문
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<Restaurant> restaurant;
+    @ManyToOne
+    @JoinColumn(name = "reservation_id")
+    private Reservation reservation;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<RoomService> roomService;
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<Bakery> bakery;
+    @ManyToOne
+    @JoinColumn(name = "bakery_id")
+    private Bakery bakery;
+
+    @ManyToOne
+    @JoinColumn(name = "room_service_id")
+    private RoomService roomService;
 }

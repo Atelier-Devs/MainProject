@@ -4,7 +4,7 @@ const Loading = <div>Loading...</div>;
 
 // 페이지 컴포넌트 동적 로드
 const ReviewPage = lazy(() => import("../pages/review/Review"));
-const ReviewWriteComponent = lazy(() => import("../components/review/ReviewWriteComponent"));
+const ReviewWrite = lazy(() => import("../pages/review/ReviewWrite"));
 const ReviewReadComponent = lazy(() => import("../components/review/ReviewReadComponent"));
 
 const reviewRouter = () => {
@@ -21,7 +21,7 @@ const reviewRouter = () => {
             path: "write",  // /review/write - 리뷰 작성 페이지
             element: (
                 <Suspense fallback={Loading}>
-                    <ReviewWriteComponent />
+                    <ReviewWrite /> 
                 </Suspense>
             ),
         },

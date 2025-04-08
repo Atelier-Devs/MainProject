@@ -24,21 +24,29 @@ export const getReviewById = async (reviewId) => {
 };
 
 export const createReview = async (reviewData) => {
-  const token = getAuthToken();
-  console.log("보내는 토큰:", token);
+  const token = localStorage.getItem("accessToken");
+
   const res = await axios.post(`${prefix}/register`, reviewData, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
   });
+
   return res.data;
 };
 
 export const updateReview = async (reviewId, updateData) => {
   const token = getAuthToken();
-  const res = await axios.put(`${prefix}/${reviewId}`, updateData, {
-    headers: { Authorization: `Bearer ${token}` },
+  const res = await axios.put(`${prefix}/modify/${reviewId}`, updateData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json', // 👈 명시적으로 추가 권장
+    },
   });
   return res.data;
 };
+
 
 export const deleteReview = async (reviewId) => {
   const token = getAuthToken();

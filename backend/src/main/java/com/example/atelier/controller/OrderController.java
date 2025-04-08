@@ -1,5 +1,6 @@
 package com.example.atelier.controller;
 
+import com.example.atelier.domain.Payment;
 import com.example.atelier.domain.User;
 import com.example.atelier.dto.OrderDTO;
 import com.example.atelier.repository.OrderRepository;
@@ -27,8 +28,8 @@ public class OrderController {
 
     //     주문 생성
     @PostMapping("/register")
-    public ResponseEntity<Integer> createOrder(@RequestBody OrderDTO orderDTO) {
-        int orderId = orderService.createOrder(orderDTO);
+    public ResponseEntity<Integer> createOrder(@RequestBody Payment payment) {
+        int orderId = orderService.createOrder(payment);
         return ResponseEntity.ok(orderId);
     }                    // 결제 후 자동 생성되므로 생성할 필요없음.
 

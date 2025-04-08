@@ -95,6 +95,7 @@ const MyPageComponent = () => {
             )}
           </div>
 
+          {/* 결제 내역 */}
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">결제 내역</h3>
             <button
@@ -117,6 +118,7 @@ const MyPageComponent = () => {
           </div>
         </div>
 
+        {/* 결제 상세 */}
         {showReservation && (
           <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
             <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">결제 상세 정보</h3>
@@ -126,6 +128,13 @@ const MyPageComponent = () => {
                   <p><strong>숙소 이름:</strong> {r.residenceName}</p>
                   <p><strong>상태:</strong> {r.status}</p>
                   <p><strong>결제 완료일:</strong> {formatDate(r.reservationDate)}</p>
+                  <button
+                    onClick={() => navigate(`/review/write?residenceId=${r.residenceId}`)}
+                    className="mt-2 bg-[#a07c5b] text-white px-4 py-2 rounded-md hover:bg-[#8b6847] transition text-sm font-semibold"
+                  >
+                    리뷰 작성하기
+                  </button>
+
                 </div>
               ))
             ) : (
@@ -134,6 +143,7 @@ const MyPageComponent = () => {
           </div>
         )}
 
+        {/* 리뷰 상세 */}
         {showReview && (
           <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
             <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">리뷰 상세 정보</h3>
@@ -149,7 +159,13 @@ const MyPageComponent = () => {
                   <p className="text-sm text-gray-500"><strong>작성일:</strong> {formatDate(rv.createdAt)}</p>
 
                   <div className="flex justify-end gap-2 mt-2">
-                   
+                    {/* 🔧 수정 버튼 추가 */}
+                    <button
+                      onClick={() => navigate(`/review/write?reviewId=${rv.id}`)}
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-1 rounded"
+                    >
+                      수정
+                    </button>
                     <button
                       onClick={() => handleDelete(rv.id)}
                       className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"

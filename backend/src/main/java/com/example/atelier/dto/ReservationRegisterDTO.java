@@ -1,6 +1,9 @@
 package com.example.atelier.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -8,12 +11,12 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class ReservationRegisterDTO {
     private Integer userId;
     private Integer residenceId;
     private LocalDateTime reservationDate;
     private LocalDateTime checkOutDate;
+    private LocalDateTime checkInDate;
     private Integer guestCount;
     private Integer restaurantId;
     private Integer bakeryId;

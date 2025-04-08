@@ -96,7 +96,6 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
-    @Transactional
     public ReservationDTO register(ReservationRegisterDTO dto) {
         log.info("Registering new reservation: {}", dto);
 
@@ -125,37 +124,42 @@ public class ReservationServiceImpl implements ReservationService{
                     .orElseThrow(() -> new IllegalArgumentException("RoomService not found"));
         }
 
+        Reservation reservation = Reservation.builder()
+                .user(user)
+                .residence(residence)
+                .reservationDate(dto.getReservationDate())
+                .checkOutDate(dto.getCheckOutDate())
+                .guestCount(dto.getGuestCount())
+                .status(Reservation.Status.PENDING)
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .items(new ArrayList<>()) // ✅ 꼭 초기화해줘야 add() 가능
+                .build();
+        // 먼저 저장해서 reservation.id 생성
+        Reservation savedReservation = reservationRepository.save(reservation);
+
         // Item 생성 및 서비스 연결
         Item item = new Item();
         item.setUser(user);
+        item.setReservation(savedReservation); // 핵심 연결! ->단방향 연결하는 거
 
         if (restaurant != null) {
-            restaurant.setItem(item); // 양방향 연관 설정
-            item.setRestaurant(List.of(restaurant));
+//            restaurant.setItems(item); // 양방향 연관 설정
+            item.setRestaurant(restaurant);
         }
 
         if (bakery != null) {
-            bakery.setItem(item);
-            item.setBakery(List.of(bakery));
+//            bakery.setItems(item);
+            item.setBakery(bakery);
         }
 
         if (roomService != null) {
-            roomService.setItem(item);
-            item.setRoomService(List.of(roomService));
+//            roomService.setItems(item);
+            item.setRoomService(roomService);
         }
-
         itemRepository.save(item); // 반드시 먼저 저장
 
-        // Reservation 생성
-        Reservation reservation = new Reservation();
-        reservation.setUser(user);
-        reservation.setResidence(residence);
-        reservation.setItem(item); // 핵심 연결
-        reservation.setReservationDate(dto.getReservationDate());
-        reservation.setCheckOutDate(dto.getCheckOutDate());
-        reservation.setGuestCount(dto.getGuestCount());
-        reservation.setStatus(Reservation.Status.PENDING);
-        reservation.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        // 3. Reservation → Item 리스트 연결 (양방향 연결 유지)
+        savedReservation.getItems().add(item);
 
         Reservation saved = reservationRepository.save(reservation);
         return ReservationDTO.fromEntity(saved);

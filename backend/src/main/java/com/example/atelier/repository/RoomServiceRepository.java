@@ -27,7 +27,7 @@ public interface RoomServiceRepository extends JpaRepository<RoomService, Intege
                 roomService.getId(),
                 roomService.getName(),
                 roomService.getPrice(),
-                roomService.getItem() != null ? roomService.getItem().getId() : null,
+//                roomService.getItems(),
                 roomService.getUser() != null ? roomService.getUser().getId() : null,
                 imageUrls
         );

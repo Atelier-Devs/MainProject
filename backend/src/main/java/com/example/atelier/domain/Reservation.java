@@ -5,7 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,9 +31,8 @@ public class Reservation {
     @JoinColumn(name = "residence_id")
     private Residence residence;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private List<Item> items = new ArrayList<>();
 
     @Column(name = "reservation_date")
     private LocalDateTime reservationDate;

@@ -24,9 +24,8 @@ public class Bakery {
     private String name;
     private String price;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @OneToMany(mappedBy = "bakery")
+    private List<Item> items = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")

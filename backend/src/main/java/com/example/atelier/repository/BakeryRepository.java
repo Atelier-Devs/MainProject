@@ -27,7 +27,7 @@ public interface BakeryRepository extends JpaRepository<Bakery, Integer> {
                 bakery.getId(),
                 bakery.getName(),
                 bakery.getPrice(),
-                bakery.getItem() != null ? bakery.getItem().getId() : null,
+//                bakery.getItems(),
                 bakery.getUser() != null ? bakery.getUser().getId() : null,
                 imageUrls
         );

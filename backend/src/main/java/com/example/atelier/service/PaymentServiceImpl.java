@@ -74,6 +74,13 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
+    public PaymentDTO getPaymentDTO(Integer id) {
+        Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
+        return modelMapper.map(payment, PaymentDTO.class);
+    }
+
+    @Override
     public int createPayment(PaymentDTO paymentDTO) {
         // userId를 직접 Integer로 받도록 수정
         Integer userId = paymentDTO.getUserId();
@@ -110,7 +117,7 @@ public class PaymentServiceImpl implements PaymentService {
             // 활성 멤버십인 경우 할인 적용
             if (membership == null || membership.getStatus() != Membership.Status.ACTIVE) {
                 log.warn("User ID {} has no active membership. Skipping discount.", user.getId());
-            }else {
+            } else {
                 // 멤버십 등급별 할인율 적용
                 discountRate = membershipServiceImpl.getDiscountByMembershipCategory(membership.getCategory());
                 //할인율을 결제 금액에 반영하는 과정
@@ -136,7 +143,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         // **자동 승급 로직 실행**
         if (membership != null && membership.getStatus() == Membership.Status.ACTIVE) {
-            membershipServiceImpl.upgradeMembershipIfEligible(membership,user);
+            membershipServiceImpl.upgradeMembershipIfEligible(membership, user);
         }
 
         //  **저장된 결제 ID 반환**
@@ -203,10 +210,11 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         // OrderService를 호출하여 주문 생성
-        orderService.createOrder(orderDTO);
+        orderService.createOrder(payment);
         log.info("Payment ID {} - 결제 정보가 OrderService로 전달됨", paymentId);
 
     }
+
     public void confirmPayment(Integer paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
@@ -311,7 +319,11 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElse(null);
 
         // 🔹 옵션 항목들을 Map<String, BigDecimal>으로 구성
-        List<Item> items = itemRepository.findByPaymentId(reservationId);
+//        List<Item> items = itemRepository.findByReservationId(reservationId);
+//        Reservation reservation = reservationRepository.findById(reservationId)
+//                .orElseThrow(...);
+
+        List<Item> items = reservation.getItems();
         Map<String, BigDecimal> itemBreakdown = new LinkedHashMap<>();
 //        BigDecimal total = BigDecimal.ZERO;
 
@@ -322,28 +334,28 @@ public class PaymentServiceImpl implements PaymentService {
 
         //부가서비스 데이터 paymentsummarydto에 담기. 키값으로 value가져옴
         for (Item item : items) {
-            if (item.getBakery() != null && !item.getBakery().isEmpty()) {
-                for (Bakery b : item.getBakery()) {
-                    BigDecimal price = new BigDecimal(b.getPrice());
-                    itemBreakdown.put(b.getName(), price);
-                    bakeryPrice = bakeryPrice.add(price);
-                }
+            if (item.getBakery() != null) {
+
+                BigDecimal price = new BigDecimal(item.getBakery().getPrice());
+                itemBreakdown.put(item.getBakery().getName(), price);
+                bakeryPrice = bakeryPrice.add(price);
+
             }
 
-            if (item.getRestaurant() != null && !item.getRestaurant().isEmpty()) {
-                for (Restaurant r : item.getRestaurant()) {
-                    BigDecimal price = new BigDecimal(r.getPrice());
-                    itemBreakdown.put(r.getName(), price);
-                    restaurantPrice = restaurantPrice.add(price);
-                }
+            if (item.getRestaurant() != null) {
+
+                BigDecimal price = new BigDecimal(item.getRestaurant().getPrice());
+                itemBreakdown.put(item.getRestaurant().getName(), price);
+                restaurantPrice = restaurantPrice.add(price);
+
             }
 
-            if (item.getRoomService() != null && !item.getRoomService().isEmpty()) {
-                for (RoomService rs : item.getRoomService()) {
-                    BigDecimal price = new BigDecimal(rs.getPrice());
-                    itemBreakdown.put(rs.getName(), price);
+            if (item.getRoomService() != null) {
+
+                    BigDecimal price = new BigDecimal(item.getRoomService().getPrice());
+                    itemBreakdown.put(item.getRoomService().getName(), price);
                     roomServicePrice = roomServicePrice.add(price);
-                }
+
             }
         }
 

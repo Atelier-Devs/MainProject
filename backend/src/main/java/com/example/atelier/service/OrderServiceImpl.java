@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class OrderServiceImpl implements OrderService{
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
     private IamportClient iamportClient;
-    private final RestTemplate restTemplate;
+//    private  final Payment payment;
 
     @Value("${iamport.api_key}")
     private String apiKey;
@@ -50,9 +51,20 @@ public class OrderServiceImpl implements OrderService{
     }
     // 주문 생성
     @Override
-    public int createOrder(OrderDTO orderDTO) {
-        log.info("createOrder ------------------");
-        Order order = modelMapper.map(orderDTO, Order.class);
+    public int createOrder(Payment payment) {
+        User user = payment.getUser();
+        Reservation reservation = payment.getReservation();
+
+        Order order = Order.builder()
+                .payment(payment)
+                .user(user)
+                .reservation(reservation)
+                .totalPrice(payment.getAmount())
+                .paymentStatus(Order.PaymentStatus.COMPLETED)
+                .refundStatus(Order.RefundStatus.NONE)
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .build();
+
         return orderRepository.save(order).getId();
     }
 

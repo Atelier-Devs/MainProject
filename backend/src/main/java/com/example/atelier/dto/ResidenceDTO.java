@@ -1,7 +1,10 @@
 package com.example.atelier.dto;
 
 import com.example.atelier.domain.Residence;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -10,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
-@ToString
 public class ResidenceDTO {
     private Integer id;                 // 숙소 ID
     private Residence.Type type;        // 숙소 유형 (문자열로 표현)

@@ -16,8 +16,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     //이 로직은 item 자체가 목적이 아니라,
     //item이 가지고 있는 자식 테이블(Restaurant, Bakery, RoomService)의 정보 중 이름과 가격만 뽑는 것이 목적
-    @Query("SELECT i FROM Item i WHERE i.payment.id = :paymentId")
-    List<Item> findByPaymentId(@Param("paymentId") Integer paymentId);
+    @Query("SELECT i FROM Item i WHERE i.reservation.id = :reservationId")
+    List<Item> findByReservationId(@Param("reservationId") Integer reservationId);
 
 
 }

@@ -1,13 +1,14 @@
 package com.example.atelier.service;
 
 import com.example.atelier.domain.Order;
+import com.example.atelier.domain.Payment;
 import com.example.atelier.dto.OrderDTO;
 
 import java.util.List;
 
 public interface OrderService {
     // 주문 생성
-    public int createOrder(OrderDTO orderDTO);
+    public int createOrder(Payment payment);
 
 
     // 주문조회(직원,관리자모드)

@@ -7,9 +7,12 @@ const ReviewWrite = () => {
     return (
         <>
             <Header />
-            <div className="container mx-auto px-4 py-20">
+
+            {/* 💡 헤더-카드 사이 여백 넉넉히: pt-40 */}
+            <div className="min-h-screen bg-gray-100 flex items-start justify-center pt-40 pb-32">
                 <ReviewWriteComponent />
             </div>
+
             <Footer />
         </>
     );
