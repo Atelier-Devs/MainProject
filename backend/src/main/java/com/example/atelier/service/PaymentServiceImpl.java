@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Lazy
     @Autowired
     public void setOrderService(OrderService orderService) {
-        this.orderService = orderService; // ✅ 순환 참조 방지
+        this.orderService = orderService; // 순환 참조 방지
     }
 
 
@@ -69,7 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
     @PostConstruct //생성자초기화
     public void init() {
         this.iamportClient = new IamportClient(apiKey, apiSecret);
-        log.info("✅ IamportClient initialized with API Key: {}", apiKey);
+        log.info("IamportClient initialized with API Key: {}", apiKey);
     }
 
 
@@ -268,7 +268,7 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("결제 승인 요청 시작: impUid = {}", impUid);
 
         try {
-            // 1️⃣ PortOne API에서 결제 정보 조회
+            // PortOne API에서 결제 정보 조회
             IamportResponse<com.siot.IamportRestClient.response.Payment> response = iamportClient.paymentByImpUid(impUid);
             com.siot.IamportRestClient.response.Payment paymentResponse = response.getResponse();
 
@@ -276,24 +276,24 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new IllegalArgumentException("유효하지 않은 결제 정보입니다.");
             }
 
-            // 2️⃣ 결제 상태가 "paid"인지 확인 (PortOne API 기준)
+            // 결제 상태가 "paid"인지 확인 (PortOne API 기준)
             if (!"paid".equals(paymentResponse.getStatus())) {
                 throw new IllegalArgumentException("결제가 완료되지 않았습니다.");
             }
 
-            // 3️⃣ 결제 정보를 우리 DB에서 찾아 업데이트
+            // 결제 정보를 우리 DB에서 찾아 업데이트
             Payment payment = paymentRepository.findById(paymentDTO.getId())
                     .orElseThrow(() -> new IllegalArgumentException("결제 내역을 찾을 수 없습니다."));
-            payment.setPaymentStatus(Payment.PaymentStatus.COMPLETED); // ✅ 우리 DB에서는 COMPLETED
+            payment.setPaymentStatus(Payment.PaymentStatus.COMPLETED); // 우리 DB에서는 COMPLETED
             paymentRepository.save(payment);
 
-            // 4️⃣ 주문 서비스에 결제 정보 전달
+            // 주문 서비스에 결제 정보 전달
             sendPaymentInfoToOrder(payment.getId());
 
-            log.info("✅ 결제 승인 완료: impUid = {}", impUid);
+            log.info("결제 승인 완료: impUid = {}", impUid);
             return modelMapper.map(payment, PaymentDTO.class);
         } catch (IamportResponseException | IOException e) {
-            log.error("❌ 결제 승인 실패: {}", e.getMessage());
+            log.error("결제 승인 실패: {}", e.getMessage());
             throw new RuntimeException("결제 승인 중 오류 발생");
         }
     }
@@ -318,7 +318,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .findActiveMembershipByUser(user)
                 .orElse(null);
 
-        // 🔹 옵션 항목들을 Map<String, BigDecimal>으로 구성
+        // 옵션 항목들을 Map<String, BigDecimal>으로 구성
 //        List<Item> items = itemRepository.findByReservationId(reservationId);
 //        Reservation reservation = reservationRepository.findById(reservationId)
 //                .orElseThrow(...);
@@ -364,7 +364,7 @@ public class PaymentServiceImpl implements PaymentService {
         BigDecimal totalBeforeDiscount = roomPrice.add(optionalTotal);
 
 
-        // 🔹 할인율 적용
+        // 할인율 적용
         BigDecimal discountRate = membership != null
                 ? membershipServiceImpl.getDiscountByMembershipCategory(membership.getCategory())
                 : BigDecimal.ZERO;
@@ -372,7 +372,7 @@ public class PaymentServiceImpl implements PaymentService {
         //할인율 계산
         BigDecimal finalAmount = totalBeforeDiscount.multiply(BigDecimal.ONE.subtract(discountRate));
 
-        // 🔹 DTO 생성하고 바론 리턴
+        // DTO 생성하고 바론 리턴
         return PaymentSummaryDTO.builder()
                 .userName(user.getName())
                 .userEmail(user.getEmail())

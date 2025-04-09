@@ -20,21 +20,21 @@ api.interceptors.request.use(
   }
 );
 
-// // 예약 생성 요청 추가
-// export const createReservation = async (reservationDTO) => {
-//   console.log("dto:", reservationDTO);
-//   const res = await axios.post(
-//     "http://localhost:8080/api/atelier/reservations/add",
-//     reservationDTO,
-//     {
-//       withCredentials: true,
-//       headers: {
-//         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-//       },
-//     }
-//   );
-//   return res.data;
-// };
+// 예약 생성 요청 (예약은 결제와 별도 URL에서 관리됨)
+export const createReservation = async (reservationDTO) => {
+  console.log("dto:", reservationDTO);
+  const res = await axios.post(
+    "http://localhost:8080/api/atelier/reservations/add",
+    reservationDTO,
+    {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    }
+  );
+  return res.data;
+};
 
 // 3. 결제 생성 요청
 export const registerPayment = async (paymentDTO) => {

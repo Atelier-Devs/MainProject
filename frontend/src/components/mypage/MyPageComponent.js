@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const MyPageComponent = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showReservation, setShowReservation] = useState(false);
+  const [showPayments, setShowPayments] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const navigate = useNavigate();
 
@@ -67,9 +67,10 @@ const MyPageComponent = () => {
     return <div className="text-center mt-20 text-lg">불러오는 중...</div>;
 
   return (
-    <div className="min-h-screen bg-[#f9f6f1] flex flex-col items-center py-16 px-4">
-      <div className="bg-white shadow-lg rounded-xl p-10 max-w-6xl w-full space-y-10">
-        {/* 프로필 */}
+    <div className="min-h-screen bg-[#f9f6f1] flex items-center justify-center px-4 py-12">
+      <div className="bg-white shadow-lg rounded-xl px-8 py-10 w-full max-w-4xl space-y-10">
+
+        {/* 프로필 정보 */}
         <div className="flex flex-col items-center space-y-2 text-base text-gray-800">
           <p className="font-semibold"><strong>이름:</strong> {profile.name}</p>
           <p className="font-semibold"><strong>이메일:</strong> {profile.email}</p>
@@ -78,14 +79,17 @@ const MyPageComponent = () => {
 
         <div className="border-t border-gray-200" />
 
-        {/* 카드 3분할 */}
+        {/* 상단 버튼 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-base text-gray-800 text-center">
-          {/* 멤버십 */}
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">멤버십</h3>
             {profile.membershipDTO ? (
               <>
-                <p className="font-medium">등급: <span className={getGradeColorClass(profile.membershipDTO.category)}>{profile.membershipDTO.category}</span></p>
+                <p className="font-medium">
+                  등급: <span className={getGradeColorClass(profile.membershipDTO.category)}>
+                    {profile.membershipDTO.category}
+                  </span>
+                </p>
                 <p className="font-medium">할인율: {profile.membershipDTO.discount * 100}%</p>
                 <p className="font-medium">상태: {profile.membershipDTO.status}</p>
                 <p className="font-medium">유효기간: {formatDate(profile.membershipDTO.validUntil)}</p>
@@ -95,18 +99,16 @@ const MyPageComponent = () => {
             )}
           </div>
 
-          {/* 결제 내역 */}
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">결제 내역</h3>
             <button
               className="bg-[#a07c5b] text-white px-4 py-2 rounded-md hover:bg-[#8b6847] transition text-base font-semibold"
-              onClick={() => setShowReservation((prev) => !prev)}
+              onClick={() => setShowPayments((prev) => !prev)}
             >
-              {showReservation ? "숨기기" : "자세히 보기"}
+              {showPayments ? "숨기기" : "결제 내역"}
             </button>
           </div>
 
-          {/* 리뷰 버튼 */}
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-[#5a3e2b] mb-2">내가 쓴 리뷰</h3>
             <button
@@ -118,60 +120,71 @@ const MyPageComponent = () => {
           </div>
         </div>
 
-        {/* 결제 상세 */}
-        {showReservation && (
+        {/* 결제 상세 정보 */}
+        {showPayments && (
           <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
-            <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">결제 상세 정보</h3>
-            {profile.reservationDTOS?.length > 0 ? (
-              profile.reservationDTOS.map((r) => (
-                <div key={r.id} className="border-t pt-4 first:border-0 text-base space-y-1">
-                  <p><strong>숙소 이름:</strong> {r.residenceName}</p>
-                  <p><strong>상태:</strong> {r.status}</p>
-                  <p><strong>결제 완료일:</strong> {formatDate(r.reservationDate)}</p>
-                  <button
-                    onClick={() => navigate(`/review/write?residenceId=${r.residenceId}`)}
-                    className="mt-2 bg-[#a07c5b] text-white px-4 py-2 rounded-md hover:bg-[#8b6847] transition text-sm font-semibold"
-                  >
-                    리뷰 작성하기
-                  </button>
-
+            <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">결제 내역</h3>
+            {profile.paymentDTOS?.length > 0 ? (
+              profile.paymentDTOS.map((p, index) => (
+                <div
+                  key={p.id}
+                  className="bg-[#fafafa] border rounded-lg shadow-sm p-4 mb-4"
+                >
+                  <p><strong>객실 이름:</strong> {p.residenceName ?? "정보 없음"}</p>
+                  <p><strong>결제 금액:</strong> {p.amount?.toLocaleString()}원</p>
+                  <p><strong>결제 수단:</strong> {p.paymentMethod ?? "수단 없음"}</p>
+                  <div className="flex justify-between items-end mt-4">
+                    <p className="text-sm text-gray-500"><strong>결제일:</strong> {formatDate(p.createdAt)}</p>
+                    {p.residenceId && (
+                      <button
+                        onClick={() => navigate(`/review/write?residenceId=${p.residenceId}`)}
+                        className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition text-sm font-semibold"
+                      >
+                        리뷰 작성하기
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))
             ) : (
-              <p className="text-base text-gray-500">결제 정보가 없습니다.</p>
+              <p className="text-base text-gray-500">결제 내역이 없습니다.</p>
             )}
           </div>
         )}
 
-        {/* 리뷰 상세 */}
+
+        {/* 리뷰 상세 정보 */}
         {showReview && (
           <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
             <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">리뷰 상세 정보</h3>
             {profile.reviewDTOS?.length > 0 ? (
-              profile.reviewDTOS.map((rv) => (
-                <div key={rv.id} className="border-t pt-4 first:border-0 text-base space-y-2">
-                  <div className="flex items-center gap-2">
+              profile.reviewDTOS.map((rv, idx) => (
+                <div
+                  key={rv.id}
+                  className="bg-[#fafafa] border rounded-lg shadow-sm p-4 mb-4"
+                >
+                  <div className="flex items-center gap-2 mb-2">
                     <span className="font-semibold">별점:</span>
                     {renderStars(rv.rating)}
                   </div>
                   <p><strong>제목:</strong> {rv.title}</p>
                   <p><strong>내용:</strong> {rv.comment}</p>
-                  <p className="text-sm text-gray-500"><strong>작성일:</strong> {formatDate(rv.createdAt)}</p>
-
-                  <div className="flex justify-end gap-2 mt-2">
-                    {/* 🔧 수정 버튼 추가 */}
-                    <button
-                      onClick={() => navigate(`/review/write?reviewId=${rv.id}`)}
-                      className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-1 rounded"
-                    >
-                      수정
-                    </button>
-                    <button
-                      onClick={() => handleDelete(rv.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
-                    >
-                      삭제
-                    </button>
+                  <div className="flex justify-between items-end mt-4">
+                    <p className="text-sm text-gray-500"><strong>작성일:</strong> {formatDate(rv.createdAt)}</p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => navigate(`/review/write?reviewId=${rv.id}`)}
+                        className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-1 rounded"
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={() => handleDelete(rv.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+                      >
+                        삭제
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))

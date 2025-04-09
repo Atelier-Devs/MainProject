@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getProfile } from "../../api/mypageApi";
 import {
   registerPayment,
   getPaymentSummary,
+  createReservation,
 } from "../../api/paymentApi";
 import { getAllRestaurants } from "../../api/restaurantApi";
 import { getAllBakeries } from "../../api/bakeryApi";
@@ -16,22 +17,25 @@ const PaymentPage = () => {
   const navigate = useNavigate();
 
   const residence = state?.residence;
-  const reservationId = state?.reservationId;
   const checkIn = state?.checkIn;
   const checkOut = state?.checkOut;
   const restaurantId = state?.restaurantId;
   const bakeryId = state?.bakeryId;
   const roomServiceId = state?.roomServiceId;
+  const preloadedReservationId = state?.reservationId || null;
 
   const login = JSON.parse(localStorage.getItem("login"));
   const [userInfo, setUserInfo] = useState(null);
   const [summary, setSummary] = useState(null);
+  const [reservationId, setReservationId] = useState(preloadedReservationId);
 
   const [restaurantList, setRestaurantList] = useState([]);
   const [bakeryList, setBakeryList] = useState([]);
   const [roomServiceList, setRoomServiceList] = useState([]);
 
-  // 사용자 정보 불러오기
+  const reservationCreatedRef = useRef(false);
+
+  // 사용자 정보
   useEffect(() => {
     getProfile().then((data) => {
       if (data?.error) {
@@ -42,21 +46,45 @@ const PaymentPage = () => {
     });
   }, []);
 
-  // 결제 요약 정보 가져오기
+  // 예약 생성
+  useEffect(() => {
+    const createReservationFunc = async () => {
+      if (!login || !residence || reservationCreatedRef.current) return;
+      reservationCreatedRef.current = true;
+
+      try {
+        const res = await createReservation({
+          userId: login.userId,
+          residenceId: residence.id,
+          reservationDate: new Date(checkIn).toISOString(),
+          checkOutDate: new Date(checkOut).toISOString(),
+          guestCount: 2,
+          restaurantId,
+          bakeryId,
+          roomServiceId,
+        });
+        setReservationId(res.id);
+      } catch (error) {
+        console.error("예약 생성 실패", error);
+        alert("예약 생성에 실패했습니다.");
+      }
+    };
+
+    if (!reservationId) createReservationFunc();
+  }, [login, residence, reservationId, restaurantId, bakeryId, roomServiceId, checkIn, checkOut]);
+
+  // 결제 요약
   useEffect(() => {
     if (!reservationId) return;
     getPaymentSummary(reservationId)
-      .then((data) => {
-        console.log("🧾 받아온 결제 요약 정보:", data);
-        setSummary(data);
-      })
+      .then(setSummary)
       .catch((err) => {
         console.error("요약 정보 불러오기 실패", err);
         alert("결제 요약 정보를 가져오지 못했습니다.");
       });
   }, [reservationId]);
 
-  // 옵션 목록 불러오기
+  // 옵션 목록
   useEffect(() => {
     Promise.all([getAllRestaurants(), getAllBakeries(), getAllRoomservices()])
       .then(([restaurants, bakeries, roomservices]) => {
@@ -113,7 +141,7 @@ const PaymentPage = () => {
           try {
             await registerPayment(paymentDTO);
             alert("결제 완료!");
-            navigate("/mypage/payments");
+            navigate("/mypage");
           } catch (err) {
             alert("결제 정보 서버 등록 실패!");
           }
@@ -130,9 +158,7 @@ const PaymentPage = () => {
 
   if (!residence || !userInfo || !summary || !reservationId) {
     return (
-      <div className="text-center mt-10 text-red-500">
-        결제 정보가 없습니다.
-      </div>
+      <div className="text-center mt-10 text-red-500">결제 정보가 없습니다.</div>
     );
   }
 
@@ -156,7 +182,9 @@ const PaymentPage = () => {
               <h2 className="text-xl font-bold text-gray-800 border-b pb-4">
                 결제 정보
               </h2>
-              <p>예약자: {summary.userName} ({summary.userEmail})</p>
+              <p>
+                예약자: {summary.userName} ({summary.userEmail})
+              </p>
               <p>멤버십: {summary.membershipCategory || "없음"}</p>
 
               <div className="border-t pt-4">
@@ -164,17 +192,20 @@ const PaymentPage = () => {
                 <p>원금액: {summary.originalAmount.toLocaleString()} KRW</p>
                 <p>
                   숙박 기간:{" "}
-                  {checkIn ? new Date(checkIn).toLocaleDateString("ko-KR") : "미지정"}{" "}
-                  ~{" "}
-                  {checkOut ? new Date(checkOut).toLocaleDateString("ko-KR") : "미지정"}
+                  {new Date(checkIn).toLocaleDateString("ko-KR")} ~{" "}
+                  {new Date(checkOut).toLocaleDateString("ko-KR")}
                 </p>
                 <p>할인율: {(summary.discountRate * 100).toFixed(0)}%</p>
               </div>
 
               <div className="border-t pt-4 space-y-2">
-                <p>레스토랑 선택: {findNameById(restaurantList, restaurantId)}</p>
+                <p>
+                  레스토랑 선택: {findNameById(restaurantList, restaurantId)}
+                </p>
                 <p>베이커리 선택: {findNameById(bakeryList, bakeryId)}</p>
-                <p>룸서비스 선택: {findNameById(roomServiceList, roomServiceId)}</p>
+                <p>
+                  룸서비스 선택: {findNameById(roomServiceList, roomServiceId)}
+                </p>
               </div>
 
               <div className="border-t pt-4">
@@ -191,7 +222,6 @@ const PaymentPage = () => {
               >
                 이전 페이지
               </button>
-
               <button
                 onClick={handlePayment}
                 className="bg-black text-white px-6 py-2.5 text-sm font-semibold rounded-md hover:opacity-90 transition"

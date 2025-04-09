@@ -46,43 +46,24 @@ const ResidenceRead = () => {
     fetchData();
   }, [id]);
 
-  // handleSubmit 내부
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!checkIn || !checkOut) {
       alert("체크인/체크아웃 날짜를 선택해주세요.");
       return;
     }
 
-    try {
-      const login = JSON.parse(localStorage.getItem("login"));
-
-      const dto = {
-        userId: login.userId,
-        residenceId: Number(id),
-        reservationDate: checkIn.toISOString(),
-        checkOutDate: checkOut.toISOString(),
+    navigate(`/payment/${residence.id}`, {
+      state: {
+        residence,
+        checkIn,
+        checkOut,
         guestCount,
         restaurantId,
         bakeryId,
         roomServiceId,
-      };
-
-      const reservation = await registerReservation(dto);
-
-      navigate(`/payment/${reservation.id}`, {
-        state: {
-          residence,
-          reservationId: reservation.id,
-          restaurantId,
-          bakeryId,
-          roomServiceId,
-        },
-      });
-    } catch (err) {
-      console.error("예약 실패:", err);
-      alert("예약 생성 실패");
-    }
+      },
+    });
   };
 
   if (!residence) return <div className="text-center mt-20">Loading...</div>;
@@ -121,25 +102,16 @@ const ResidenceRead = () => {
               <p className="text-sm font-bold text-gray-700 mb-1">
                 예약자: a (a@a.com)
               </p>
-              <p className="text-sm font-bold text-gray-700 mb-6">
-                멤버십: GOLD
-              </p>
+              <p className="text-sm font-bold text-gray-700 mb-6">멤버십: GOLD</p>
 
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-col justify-between"
-              >
+              <form onSubmit={handleSubmit} className="flex flex-col justify-between">
                 <div>
                   {/* 날짜 선택 */}
                   <div className="mb-6 border-t border-gray-200 pt-6 mt-6">
-                    <h3 className="text-lg font-bold mb-3 text-[#5c4631]">
-                      날짜 선택
-                    </h3>
+                    <h3 className="text-lg font-bold mb-3 text-[#5c4631]">날짜 선택</h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          체크인
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">체크인</label>
                         <DatePicker
                           selected={checkIn}
                           onChange={(date) => setCheckIn(date)}
@@ -153,9 +125,7 @@ const ResidenceRead = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          체크아웃
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">체크아웃</label>
                         <DatePicker
                           selected={checkOut}
                           onChange={(date) => setCheckOut(date)}
@@ -169,9 +139,7 @@ const ResidenceRead = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          인원
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">인원</label>
                         <input
                           type="number"
                           min="1"
@@ -179,10 +147,8 @@ const ResidenceRead = () => {
                           value={guestCount}
                           onChange={(e) => {
                             const value = Number(e.target.value);
-                            if (value > 10)
-                              return alert("최대 10명까지 예약 가능합니다.");
-                            if (value < 1)
-                              return alert("최소 1명 이상이어야 합니다.");
+                            if (value > 10) return alert("최대 10명까지 예약 가능합니다.");
+                            if (value < 1) return alert("최소 1명 이상이어야 합니다.");
                             setGuestCount(value);
                           }}
                           className="w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -193,19 +159,13 @@ const ResidenceRead = () => {
 
                   {/* 옵션 선택 */}
                   <div className="mb-6 border-t border-gray-200 pt-6">
-                    <h3 className="text-lg font-bold mb-3 text-[#5c4631]">
-                      옵션 선택
-                    </h3>
+                    <h3 className="text-lg font-bold mb-3 text-[#5c4631]">옵션 선택</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          레스토랑
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">레스토랑</label>
                         <select
                           value={restaurantId}
-                          onChange={(e) =>
-                            setRestaurantId(Number(e.target.value))
-                          }
+                          onChange={(e) => setRestaurantId(Number(e.target.value))}
                           className="w-full px-4 py-2 border border-gray-300 rounded-md"
                         >
                           <option value="">선택 안 함</option>
@@ -217,9 +177,7 @@ const ResidenceRead = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          베이커리
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">베이커리</label>
                         <select
                           value={bakeryId}
                           onChange={(e) => setBakeryId(Number(e.target.value))}
@@ -234,14 +192,10 @@ const ResidenceRead = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          룸서비스
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">룸서비스</label>
                         <select
                           value={roomServiceId}
-                          onChange={(e) =>
-                            setRoomServiceId(Number(e.target.value))
-                          }
+                          onChange={(e) => setRoomServiceId(Number(e.target.value))}
                           className="w-full px-4 py-2 border border-gray-300 rounded-md"
                         >
                           <option value="">선택 안 함</option>

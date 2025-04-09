@@ -20,10 +20,9 @@ public class PaymentDTO {
     private BigDecimal amount; // 결제 금액
     private Payment.PaymentStatus paymentStatus; // 결제 상태
     private Payment.PaymentMethod paymentMethod; // 결제 방법
-    private Timestamp createdAt; // 생성된 시간
+    private Timestamp createdAt; // 결제일 (생성일)
     private String residenceName; // 객실 이름
     private Integer residenceId;  // 객실 ID
-
 
     public static PaymentDTO fromEntity(Payment payment) {
         if (payment == null) return null;
@@ -38,7 +37,6 @@ public class PaymentDTO {
                 payment.getPaymentStatus(),
                 payment.getPaymentMethod(),
                 payment.getCreatedAt(),
-
                 payment.getReservation() != null && payment.getReservation().getResidence() != null
                         ? payment.getReservation().getResidence().getName()
                         : null,
@@ -47,6 +45,4 @@ public class PaymentDTO {
                         : null
         );
     }
-
-
 }

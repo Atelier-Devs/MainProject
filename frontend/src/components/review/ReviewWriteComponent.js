@@ -59,10 +59,10 @@ const ReviewWriteComponent = () => {
     e.preventDefault();
     if (isEdit) {
       await updateReview(reviewId, form);
-      navigate("/mypage"); // ✅ 수정 후 마이페이지로 이동
+      navigate("/mypage");
     } else {
       await createReview(form);
-      navigate("/review");
+      navigate("/mypage");
     }
   };
 
