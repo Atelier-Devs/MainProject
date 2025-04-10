@@ -73,6 +73,17 @@ public class OrderController {
         return ResponseEntity.ok("환불 요청이 성공적으로 접수되었습니다.");
     }
 
+    // 관리자 환불 승인
+    @PostMapping("/{orderId}/approve-refund")
+    public ResponseEntity<String> approveRefund(
+            @PathVariable Integer orderId,
+            @RequestParam Integer staffId,
+            @RequestParam(defaultValue = "관리자 승인 환불") String reason
+    ) {
+        orderService.approveRefund(orderId, staffId, reason);
+        return ResponseEntity.ok("환불이 성공적으로 처리되었습니다.");
+    }
+
     // 여러 개의 주문 상태 및 아이템 수정
 //    @PutMapping("/modify/{userId}")
 //    public ResponseEntity<List<OrderDTO>> modifyOrders(@RequestBody List<OrderDTO> orderDTOList, @PathVariable Integer userId) {

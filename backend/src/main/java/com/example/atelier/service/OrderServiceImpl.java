@@ -100,6 +100,7 @@ public class OrderServiceImpl implements OrderService{
         return resultDtoList;
     }
 
+//   요청 관리자가 승인
     @Override
     public void approveRefund(Integer orderId, Integer staffId, String reason) {
         // Order 조회 및 상태 체크
@@ -110,22 +111,21 @@ public class OrderServiceImpl implements OrderService{
             throw new IllegalStateException("환불 요청 상태가 아닙니다.");
         }
 
-        // Order 환불 상태 변경
-        order.completeRefund();
 
-
-        // Payment 상태 변경 +결제취소로직
+        // Payment 상태 변경 +결제취소로직 호출
         Payment payment = order.getPayment();
-        if (payment.getPaymentStatus() == Payment.PaymentStatus.COMPLETED) {
-            log.info("✅ 결제 취소 처리 중: Payment ID = {}", payment.getId());
-
-
-
-            payment.setPaymentStatus(Payment.PaymentStatus.REFUNDED);
-            log.info("✅ 결제 취소 완료: Payment ID = {}", payment.getId());
-        } else {
-            throw new IllegalStateException("결제 상태가 완료된 경우에만 취소할 수 있습니다.");
+        if (payment.getPaymentStatus() != Payment.PaymentStatus.COMPLETED) {
+            throw new IllegalStateException("결제 상태가 완료된 경우에만 환불할 수 있습니다.");
         }
+
+        // 실제 아임포트 환불 호출 + 상태 업데이트
+        boolean refundSuccess = refundPayment(payment.getId());
+
+        if (!refundSuccess) {
+            log.error("❌ 환불 실패: paymentId = {}", payment.getId());
+            throw new RuntimeException("아임포트 환불 실패");
+        }
+
         // Reservation 상태 변경(취소처리)
         Reservation reservation = payment.getReservation();
         reservation.changeStatus(Reservation.Status.CANCELLED);
@@ -134,9 +134,12 @@ public class OrderServiceImpl implements OrderService{
         Residence residence = reservation.getResidence();
         residence.setStatus(Residence.Status.AVAILABLE);
 
+        // Order 환불 상태 변경
+        order.completeRefund();
 
     }
 
+    //1단계 환불요청
     @Override
     public void requestRefund(Integer orderId, Integer userId) {
         Order order = orderRepository.findById(orderId)
@@ -152,21 +155,18 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    @Transactional // ✅ 트랜잭션 처리 추가
     public boolean refundPayment(Integer paymentId) {
         log.info("🔄 결제 환불 요청 시작: paymentId = {}", paymentId);
 
 
         //paymentId로 DB에서 최신 Payment 데이터를 조회하는 방식
         // 이 방식은 데이터 무결성과 최신 상태를 보장한다는 점에서 안전
-        // 클라이언트나 다른 계층에서 전달된 Payment 객체의 데이터는 변조 가능성이 있거나 최신 상태가 아닐 수 있기 때문에, 항상 DB를 원본으로 조회하는 것이 바람직합니다.
-        //
+        // 클라이언트나 다른 계층에서 전달된 Payment 객체의 데이터는 변조 가능성이 있고, 최신 상태가 아닐 수 있기 때문에, 항상 DB를 원본으로 조회하는 것이 바람직함.
         //DB 조회를 통해 결제 상태, 환불 가능 여부 등 중요한 비즈니스 로직을 정확하게 수행할 수 있으며,
         // 트랜잭션 내에서 일관성을 유지. 성능 최적화를 위해 캐시 등을 고려할 수는 있으나,
-        //
-        // ✅보안과 데이터 신뢰성이 우선.
+        // 보안과 데이터 신뢰성이 우선.
 
-        // 1️⃣ 결제 정보 가져오기
+        //  결제 정보 가져오기
         // 1️⃣ Payment 정보 직접 조회
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));

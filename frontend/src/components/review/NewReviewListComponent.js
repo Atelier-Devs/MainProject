@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllReviews } from "../../api/reviewApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa"; // 반 별 아이콘 추가
 
 // 별점 렌더링 함수 (정수 + 반 별 + 빈 별 포함)
@@ -28,13 +28,24 @@ const renderStars = (rating) => {
 const NewReviewListComponent = () => {
     const [reviews, setReviews] = useState([]);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const searchParams = new URLSearchParams(location.search);
+    const residenceId = searchParams.get("residenceId");
 
     useEffect(() => {
         const fetchReviews = async () => {
             try {
                 const data = await getAllReviews();
                 if (Array.isArray(data)) {
-                    setReviews(data);
+                    if (residenceId) {
+                        const filtered = data.filter(
+                            (review) => review.residenceId === Number(residenceId)
+                        );
+                        setReviews(filtered);
+                    } else {
+                        setReviews(data);
+                    }
                 } else {
                     console.error("API 응답이 배열이 아닙니다:", data);
                     setReviews([]);
@@ -48,7 +59,7 @@ const NewReviewListComponent = () => {
             }
         };
         fetchReviews();
-    }, [navigate]);
+    }, [navigate, residenceId]);
 
     return (
         <div className="max-w-2xl mx-auto mt-10 space-y-6">
@@ -67,7 +78,7 @@ const NewReviewListComponent = () => {
                         </div>
                         {/* 작성자 */}
                         <div className="text-sm text-gray-500">
-                            작성자: {review.id ? `회원 ${review.id}` : "알 수 없음"}
+                            작성자: {review.userId ? `회원 ${review.userId}` : "알 수 없음"}
                         </div>
                     </div>
                 ))

@@ -1,3 +1,5 @@
+// src/pages/payment/PaymentPage.js
+
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getProfile } from "../../api/mypageApi";

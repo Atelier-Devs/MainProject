@@ -29,12 +29,10 @@ import java.util.Map;
 @Slf4j
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ModelMapper modelMapper;
+
+    private final UserRepository userRepository;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
 
     // 회원가입
     @PostMapping("/register")

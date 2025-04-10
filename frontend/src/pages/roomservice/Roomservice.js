@@ -2,26 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { getAllRoomservices } from "../../api/roomserviceApi";
-
-const renderStars = (rating) => {
-  const full = Math.floor(rating);
-  const half = rating % 1 >= 0.5;
-  const empty = 5 - full - (half ? 1 : 0);
-
-  return (
-    <div className="flex items-center gap-1">
-      {[...Array(full)].map((_, i) => (
-        <FaStar key={`f-${i}`} color="#facc15" />
-      ))}
-      {half && <FaStarHalfAlt color="#facc15" />}
-      {[...Array(empty)].map((_, i) => (
-        <FaRegStar key={`e-${i}`} color="#e5e7eb" />
-      ))}
-    </div>
-  );
-};
 
 const RoomServiceCard = ({ service }) => {
   const imageFile = service.images?.[0] || "";
@@ -32,23 +13,29 @@ const RoomServiceCard = ({ service }) => {
     )}`
     : "";
 
+  // 제목 - 설명 분리
+  const [title, description] = service.name?.split(" - ") || [service.name, ""];
+
   return (
     <div className="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition duration-200">
       {imageUrl && (
         <img
           src={imageUrl}
-          alt={service.name}
+          alt={title}
           className="w-full h-60 object-cover"
         />
       )}
-      <div className="p-4">
-        <h3 className="text-lg font-bold text-gray-900 mb-1">{service.name}</h3>
-        <p className="text-gray-600 text-sm mb-3">{service.description || "-"}</p>
-        <div className="flex justify-between items-center">
-          <div>{renderStars(0)}</div>
-          <div className="bg-yellow-300 px-2 py-1 rounded text-sm font-semibold">
+      <div className="p-4 flex flex-col justify-between h-36">
+        <div>
+          <h3 className="text-lg font-bold text-gray-900">{title}</h3>
+          {description && (
+            <p className="text-sm text-gray-700 mt-1">{description}</p>
+          )}
+        </div>
+        <div className="text-right mt-3">
+          <span className="bg-yellow-300 text-sm font-semibold px-3 py-1 rounded">
             {Number(service.price).toLocaleString()} KRW
-          </div>
+          </span>
         </div>
       </div>
     </div>

@@ -124,31 +124,44 @@ const MyPageComponent = () => {
         {showPayments && (
           <div className="mt-6 w-full bg-white rounded-xl shadow p-6">
             <h3 className="text-xl font-bold mb-4 text-[#5a3e2b]">결제 내역</h3>
-            {profile.paymentDTOS?.length > 0 ? (
-              profile.paymentDTOS.map((p, index) => (
-                <div
-                  key={p.id}
-                  className="bg-[#fafafa] border rounded-lg shadow-sm p-4 mb-4"
-                >
-                  <p><strong>객실 이름:</strong> {p.residenceName ?? "정보 없음"}</p>
-                  <p><strong>결제 금액:</strong> {p.amount?.toLocaleString()}원</p>
-                  <p><strong>결제 수단:</strong> {p.paymentMethod ?? "수단 없음"}</p>
-                  <div className="flex justify-between items-end mt-4">
-                    <p className="text-sm text-gray-500"><strong>결제일:</strong> {formatDate(p.createdAt)}</p>
-                    {p.residenceId && (
-                      <button
-                        onClick={() => navigate(`/review/write?residenceId=${p.residenceId}`)}
-                        className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition text-sm font-semibold"
-                      >
-                        리뷰 작성하기
-                      </button>
-                    )}
+            {profile.paymentDTOS?.filter(
+              (p) => p.paymentStatus !== "REFUNDED" && p.paymentStatus !== "CANCELLED"
+            ).length > 0 ? (
+              profile.paymentDTOS
+                .filter(p => p.paymentStatus !== "REFUNDED" && p.paymentStatus !== "CANCELLED")
+                .map((p, index) => (
+                  <div
+                    key={p.id}
+                    className="bg-[#fafafa] border rounded-lg shadow-sm p-4 mb-4"
+                  >
+                    <p><strong>객실 이름:</strong> {p.residenceName ?? "정보 없음"}</p>
+                    <p><strong>결제 금액:</strong> {p.amount?.toLocaleString()}원</p>
+                    <p><strong>결제 수단:</strong> {p.paymentMethod ?? "수단 없음"}</p>
+                    <div className="flex justify-between items-end mt-4">
+                      <p className="text-sm text-gray-500"><strong>결제일:</strong> {formatDate(p.createdAt)}</p>
+                      {p.residenceId && (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => navigate("/refund", { state: { orderId: p.orderId } })}
+                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition text-sm font-semibold"
+                          >
+                            결제 환불
+                          </button>
+                          <button
+                            onClick={() => navigate(`/review/write?residenceId=${p.residenceId}`)}
+                            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition text-sm font-semibold"
+                          >
+                            리뷰 작성하기
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))
+                ))
             ) : (
               <p className="text-base text-gray-500">결제 내역이 없습니다.</p>
             )}
+
           </div>
         )}
 

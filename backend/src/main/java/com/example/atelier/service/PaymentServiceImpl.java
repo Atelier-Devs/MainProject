@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Lazy
     @Autowired
     public void setOrderService(OrderService orderService) {
-        this.orderService = orderService; // 순환 참조 방지
+        this.orderService = orderService; //순환 참조 방지
     }
 
 
@@ -69,7 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
     @PostConstruct //생성자초기화
     public void init() {
         this.iamportClient = new IamportClient(apiKey, apiSecret);
-        log.info("IamportClient initialized with API Key: {}", apiKey);
+        log.info("✅ IamportClient initialized with API Key: {}", apiKey);
     }
 
 
@@ -133,6 +133,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setUser(user);
         payment.setReservation(reservation);  // 필드명을 정확히 일치시킴
         payment.setMembership(membership);
+        payment.setImpUid(paymentDTO.getImpUid());
         payment.setAmount(finalAmount);
         payment.setPaymentStatus(Payment.PaymentStatus.COMPLETED);
         payment.setPaymentMethod(paymentDTO.getPaymentMethod());
@@ -140,6 +141,12 @@ public class PaymentServiceImpl implements PaymentService {
         // **결제 정보 저장**
         payment = paymentRepository.save(payment);
         log.info("Payment saved: ID = {}, Amount = {}", payment.getId(), finalAmount);
+        paymentDTO.setId(payment.getId());
+        log.info("paymentdto에 id가 들어옵니까?!@#" + paymentDTO.getId());
+        if (paymentDTO.getImpUid() != null) {
+            sendPaymentInfoToOrder(paymentDTO.getId());
+        }
+
 
         // **자동 승급 로직 실행**
         if (membership != null && membership.getStatus() == Membership.Status.ACTIVE) {
@@ -190,6 +197,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     //환불페이지에 결제내역 보내기
+    @Override
     public void sendPaymentInfoToOrder(Integer paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 내역을 찾을 수 없습니다."));
@@ -198,8 +206,6 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalStateException("완료된 결제만 주문으로 전송할 수 있습니다.");
         }
 
-        // ModelMapper로 한 번에 변환
-//        OrderDTO orderDTO = modelMapper.map(payment, OrderDTO.class);
         OrderDTO orderDTO = OrderDTO.builder()
                 .paymentId(payment.getId())                   // Payment ID
                 .userId(payment.getUser().getId())            // User ID
@@ -272,30 +278,38 @@ public class PaymentServiceImpl implements PaymentService {
             IamportResponse<com.siot.IamportRestClient.response.Payment> response = iamportClient.paymentByImpUid(impUid);
             com.siot.IamportRestClient.response.Payment paymentResponse = response.getResponse();
 
+            log.info("✅ PortOne 응답 도착: {}", response);
             if (paymentResponse == null) {
+                log.error("❌ PortOne 응답에 결제 정보 없음: impUid = {}", impUid);
                 throw new IllegalArgumentException("유효하지 않은 결제 정보입니다.");
             }
 
             // 결제 상태가 "paid"인지 확인 (PortOne API 기준)
             if (!"paid".equals(paymentResponse.getStatus())) {
+
                 throw new IllegalArgumentException("결제가 완료되지 않았습니다.");
             }
-
-            // 결제 정보를 우리 DB에서 찾아 업데이트
+            log.info("✅ PortOne 결제 상태 확인 완료. 이제 DB에서 Payment 조회 시도");
+            //  결제 정보를 우리 DB에서 찾아 업데이트
             Payment payment = paymentRepository.findById(paymentDTO.getId())
                     .orElseThrow(() -> new IllegalArgumentException("결제 내역을 찾을 수 없습니다."));
-            payment.setPaymentStatus(Payment.PaymentStatus.COMPLETED); // 우리 DB에서는 COMPLETED
+
+            payment.setPaymentStatus(Payment.PaymentStatus.COMPLETED); // ✅ 우리 DB에서는 COMPLETED
+            log.info("여기는 진짜 돼야함");
+
             paymentRepository.save(payment);
 
+            log.info("여기까지는 옵니까?" + payment.getId());
             // 주문 서비스에 결제 정보 전달
             sendPaymentInfoToOrder(payment.getId());
 
-            log.info("결제 승인 완료: impUid = {}", impUid);
+            log.info("✅ 결제 승인 완료: impUid = {}", impUid);
             return modelMapper.map(payment, PaymentDTO.class);
         } catch (IamportResponseException | IOException e) {
-            log.error("결제 승인 실패: {}", e.getMessage());
+            log.error("❌ 결제 승인 실패: {}", e.getMessage()); //전체 예외캐치
             throw new RuntimeException("결제 승인 중 오류 발생");
         }
+
     }
 
 
@@ -318,7 +332,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .findActiveMembershipByUser(user)
                 .orElse(null);
 
-        // 옵션 항목들을 Map<String, BigDecimal>으로 구성
+        // 🔹 옵션 항목들을 Map<String, BigDecimal>으로 구성
 //        List<Item> items = itemRepository.findByReservationId(reservationId);
 //        Reservation reservation = reservationRepository.findById(reservationId)
 //                .orElseThrow(...);
@@ -352,9 +366,9 @@ public class PaymentServiceImpl implements PaymentService {
 
             if (item.getRoomService() != null) {
 
-                    BigDecimal price = new BigDecimal(item.getRoomService().getPrice());
-                    itemBreakdown.put(item.getRoomService().getName(), price);
-                    roomServicePrice = roomServicePrice.add(price);
+                BigDecimal price = new BigDecimal(item.getRoomService().getPrice());
+                itemBreakdown.put(item.getRoomService().getName(), price);
+                roomServicePrice = roomServicePrice.add(price);
 
             }
         }
@@ -364,7 +378,7 @@ public class PaymentServiceImpl implements PaymentService {
         BigDecimal totalBeforeDiscount = roomPrice.add(optionalTotal);
 
 
-        // 할인율 적용
+        // 🔹 할인율 적용
         BigDecimal discountRate = membership != null
                 ? membershipServiceImpl.getDiscountByMembershipCategory(membership.getCategory())
                 : BigDecimal.ZERO;
@@ -372,7 +386,7 @@ public class PaymentServiceImpl implements PaymentService {
         //할인율 계산
         BigDecimal finalAmount = totalBeforeDiscount.multiply(BigDecimal.ONE.subtract(discountRate));
 
-        // DTO 생성하고 바론 리턴
+        // 🔹 DTO 생성하고 바로 리턴
         return PaymentSummaryDTO.builder()
                 .userName(user.getName())
                 .userEmail(user.getEmail())

@@ -23,7 +23,7 @@ public interface PaymentService {
      PaymentDTO approvePayment(String impUid, PaymentDTO paymentDTO);
 
 //    IamportResponse<com.siot.IamportRestClient.response.Payment> validateIamport(String impUid);
-
+public void sendPaymentInfoToOrder(Integer paymentId);
     PaymentSummaryDTO getSummaryForReservation(Integer reservationId);
 
 
