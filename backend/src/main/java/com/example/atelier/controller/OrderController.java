@@ -27,11 +27,11 @@ public class OrderController {
     private final OrderService orderService;
 
     //     주문 생성
-    @PostMapping("/register")
-    public ResponseEntity<Integer> createOrder(@RequestBody Payment payment) {
-        int orderId = orderService.createOrder(payment);
-        return ResponseEntity.ok(orderId);
-    }                    // 결제 후 자동 생성되므로 생성할 필요없음.
+//    @PostMapping("/register")
+//    public ResponseEntity<Integer> createOrder(@RequestBody Payment payment) {
+//        int orderId = orderService.createOrder(payment);
+//        return ResponseEntity.ok(orderId);
+//    }                    // 결제 후 자동 생성되므로 생성할 필요없음.
 
 
     // 주문 조회(직원,관리자모드)

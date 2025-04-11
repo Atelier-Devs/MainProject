@@ -3,7 +3,6 @@ package com.example.atelier.controller;
 import com.example.atelier.domain.Review;
 import com.example.atelier.dto.ReviewDTO;
 import com.example.atelier.service.ReviewService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,14 +32,14 @@ public class ReviewController {
         return ResponseEntity.ok(review);
     }
 
-    // 특정 리뷰 조회
-    @GetMapping("/user")
+    // 특정 사용자 리뷰 목록 조회
+    @GetMapping("/user/{userId}")
     public ResponseEntity<?> search(@PathVariable Integer userId) {
         List<ReviewDTO> reviewDTO = reviewService.get(userId);
         return ResponseEntity.ok(reviewDTO);
     }
 
-    // 모든 리뷰 조회(관리자모드)
+    // 모든 리뷰 조회 (관리자용)
     @GetMapping("/")
     public ResponseEntity<List<ReviewDTO>> searchAll() {
         try {
@@ -51,15 +50,25 @@ public class ReviewController {
         }
     }
 
-    // 리뷰 수정
-    @PutMapping("/modify/{userId}")
+    // 리뷰 수정 (✅ URL 변수명을 id로 수정)
+    @PutMapping("/modify/{id}")
     public ResponseEntity<ReviewDTO> modifyReview(@RequestBody ReviewDTO reviewDTO, @PathVariable Integer id) {
         reviewDTO.setId(id);
         ReviewDTO modifiedReview = reviewService.modify(id, reviewDTO);
-        if (modifiedReview == null) { // null 체크
+        if (modifiedReview == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.ok(modifiedReview); // 수정된 리뷰 DTO 반환
+        return ResponseEntity.ok(modifiedReview);
+    }
+
+    // 리뷰 ID로 단일 리뷰 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Integer id) {
+        ReviewDTO reviewDTO = reviewService.getReviewById(id);
+        if (reviewDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(reviewDTO);
     }
 
     // 리뷰 삭제

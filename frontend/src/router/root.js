@@ -11,6 +11,7 @@ import mypageRouter from "./mypageRouter";
 import kakaomapRouter from "./kakaomapRouter";
 import paymentRouter from "./paymentRouter";
 import membershipRouter from "./membershipRouter";
+import refundRouter from "./refundRouter";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -79,6 +80,10 @@ const root = createBrowserRouter([
   {
     path: "membership",
     children: membershipRouter(),
+  },
+  {
+    path: "refund",
+    children: refundRouter(),
   },
 ]);
 

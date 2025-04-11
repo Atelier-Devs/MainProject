@@ -72,7 +72,7 @@ const NewReviewListComponent = () => {
                         {/* 한줄 리뷰 + 별점 수평 정렬 */}
                         <div className="flex justify-between items-center">
                             <span className="text-base font-semibold text-gray-800">
-                                제목 : {review.comment || "내용 없음"}
+                                한줄평 : {review.title || "내용 없음"}
                             </span>
                             <div className="flex items-center ml-4">{renderStars(review.rating)}</div>
                         </div>

@@ -138,6 +138,7 @@ const PaymentPage = () => {
             restaurantId,
             bakeryId,
             roomServiceId,
+            impUid: rsp.imp_uid,
           };
 
           try {

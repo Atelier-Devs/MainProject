@@ -12,5 +12,7 @@ public interface ReviewService {
     List<ReviewDTO> get(Integer userId);
     List<ReviewDTO> getAllReviews();
     ReviewDTO modify(Integer id, ReviewDTO reviewDTO);
+    ReviewDTO getReviewById(Integer id);
+
     void remove(Integer id);
 }
