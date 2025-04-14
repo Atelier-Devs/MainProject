@@ -109,7 +109,6 @@ const ReservationListComponent = () => {
           </table>
         </div>
 
-        {/* 검색 입력창 */}
         <div className="reservation-form">
           <input
             type="text"
@@ -126,7 +125,6 @@ const ReservationListComponent = () => {
           </div>
         </div>
 
-        {/* 페이지네이션 */}
         {reservations.length > itemsPerPage && (
           <div className="pagination-controls">
             <button
@@ -150,7 +148,6 @@ const ReservationListComponent = () => {
         )}
       </div>
     </div>
-
   );
 };
 
