@@ -5,9 +5,6 @@ import { Provider } from "react-redux";
 import store from "./store"; // Redux store 추가
 
 const App = () => {
-  // useEffect(() => {
-  //   localStorage.removeItem("accessToken");
-  // }, []);
   return (
     <Provider store={store}>
       <RouterProvider router={rootRouter} />

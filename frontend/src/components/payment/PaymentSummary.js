@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import CreditCardCheckout from "./CreditCardCheckout";
 import axios from "axios";
 
-
-
 const PaymentSummary = ({ reservationId }) => {
   const [summary, setSummary] = useState(null);
   const [startPayment, setStartPayment] = useState(false);

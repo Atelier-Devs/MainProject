@@ -1,4 +1,4 @@
-import { FaRegStar, FaStar } from "react-icons/fa";
+import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import Slider from "react-slick";
 
 const renderStars = (rating) => {

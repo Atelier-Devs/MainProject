@@ -12,6 +12,8 @@ import kakaomapRouter from "./kakaomapRouter";
 import paymentRouter from "./paymentRouter";
 import membershipRouter from "./membershipRouter";
 import refundRouter from "./refundRouter";
+import AdminComponent from "../components/admin/AdminComponent";
+import adminRouter from "./adminRouter";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -33,6 +35,14 @@ const root = createBrowserRouter([
     element: (
       <Suspense fallback={Loading}>
         <Dashboard />
+      </Suspense>
+    ),
+  },
+  {
+    path: "admin",
+    element: (
+      <Suspense fallback={Loading}>
+        <AdminComponent />
       </Suspense>
     ),
   },
@@ -84,6 +94,10 @@ const root = createBrowserRouter([
   {
     path: "refund",
     children: refundRouter(),
+  },
+  {
+    path: "admin",
+    children: adminRouter(),
   },
 ]);
 

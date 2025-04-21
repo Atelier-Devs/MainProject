@@ -33,6 +33,7 @@ public class User {
     private String phone;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Membership> memberships = new ArrayList<>();
 
     @Column(name = "total_spent", nullable = false)

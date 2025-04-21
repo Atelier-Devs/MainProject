@@ -151,7 +151,7 @@ const SignupForm = () => {
               required
             />
             <small className={isPasswordValid ? "green" : "red"}>
-              {isPasswordValid ? "✅ 조건 만족" : " 조건 미달"}
+              {isPasswordValid ? "✅ 조건 만족" : " 숫자(1~9)와 특수문자(!,@,$)를 포함하여, 최소 9자리 비밀번호를 입력하세요"}
             </small>
           </div>
 
@@ -184,7 +184,7 @@ const SignupForm = () => {
           </div>
 
           {/* 역할 (role) */}
-          <div className="input-group">
+          {/* <div className="input-group">
             <label>회원 역할</label>
             <select
               value={roleNames}
@@ -194,7 +194,7 @@ const SignupForm = () => {
               <option value="STAFF">직원</option>
               <option value="ADMIN">관리자</option>
             </select>
-          </div>
+          </div> */}
 
           {/* 약관 동의 */}
           <div className="terms-container">

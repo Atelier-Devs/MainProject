@@ -10,16 +10,15 @@ const ReviewWriteComponent = () => {
   const residenceId = searchParams.get("residenceId");
   const isEdit = !!reviewId;
 
-  // ✅ userId 안전하게 추출
   const loginData = JSON.parse(localStorage.getItem("login"));
-  const userId = loginData?.user?.id;
+  const { userId } = loginData;
 
   const [form, setForm] = useState({
     userId: userId,
     residenceId: residenceId ? parseInt(residenceId) : 1,
     rating: 5,
     title: "",
-    comment: ""
+    comment: "",
   });
 
   // 로그인 안 되어 있으면 로그인 페이지로 이동
@@ -36,7 +35,8 @@ const ReviewWriteComponent = () => {
     if (!isEdit && residenceId) {
       setForm((prev) => ({
         ...prev,
-        residenceId: parseInt(residenceId)
+        residenceId: parseInt(residenceId),
+        userId,
       }));
     }
   }, [residenceId, isEdit]);
@@ -50,7 +50,7 @@ const ReviewWriteComponent = () => {
           residenceId: data.residenceId,
           rating: data.rating,
           title: data.title,
-          comment: data.comment
+          comment: data.comment,
         });
       });
     }
@@ -81,7 +81,10 @@ const ReviewWriteComponent = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6 text-sm font-medium">
         <div>
-          <label htmlFor="title" className="block mb-1 text-gray-700 font-semibold">
+          <label
+            htmlFor="title"
+            className="block mb-1 text-gray-700 font-semibold"
+          >
             제목
           </label>
           <input
@@ -96,7 +99,10 @@ const ReviewWriteComponent = () => {
         </div>
 
         <div>
-          <label htmlFor="comment" className="block mb-1 text-gray-700 font-semibold">
+          <label
+            htmlFor="comment"
+            className="block mb-1 text-gray-700 font-semibold"
+          >
             내용
           </label>
           <textarea
@@ -110,7 +116,10 @@ const ReviewWriteComponent = () => {
         </div>
 
         <div>
-          <label htmlFor="rating" className="block mb-1 text-gray-700 font-semibold">
+          <label
+            htmlFor="rating"
+            className="block mb-1 text-gray-700 font-semibold"
+          >
             평점 (1~5)
           </label>
           <input

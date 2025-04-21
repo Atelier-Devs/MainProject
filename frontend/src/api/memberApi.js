@@ -4,6 +4,22 @@ import qs from "qs";
 export const API_SERVER_HOST = "http://localhost:8080";
 const prefix = `${API_SERVER_HOST}/api/atelier`;
 
+const api = axios.create({
+  baseURL: API_SERVER_HOST,
+  withCredentials: true,
+});
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export const loginPost = async (loginParam) => {
   console.log("loginPost:", loginParam);
   const header = {
@@ -34,4 +50,13 @@ export const signupPost = async (signupParam) => {
 
   const res = await axios.post(`${prefix}/register`, signupParam, header);
   return res.data;
+};
+
+export const verifyPassword = async ({ email, password }) => {
+  try {
+    const res = await api.post(`/api/atelier/member/verify-password`, { email, password });
+    return { success: true, data: res.data };
+  } catch (err) {
+    return { success: false };
+  }
 };

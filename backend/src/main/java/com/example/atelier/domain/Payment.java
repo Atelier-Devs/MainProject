@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 @Slf4j
 @Entity
 @Builder
+@ToString
 @Table(name = "payments")
 public class Payment {
     @Id

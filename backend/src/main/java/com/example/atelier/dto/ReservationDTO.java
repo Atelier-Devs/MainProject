@@ -3,6 +3,7 @@ package com.example.atelier.dto;
 import com.example.atelier.domain.Reservation;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -19,6 +20,7 @@ public class ReservationDTO {
     private LocalDateTime reservationDate;    // 예약 날짜
     private Reservation.Status status;        // 예약 상태 (문자열로 표현)
     private Timestamp createdAt;             // 생성된 시간
+    private BigDecimal residencePrice;
 
     public static ReservationDTO fromEntity(Reservation reservation) {
         if (reservation == null) return null;
@@ -30,7 +32,8 @@ public class ReservationDTO {
                 reservation.getResidence() != null ? reservation.getResidence().getName() : null,
                 reservation.getReservationDate(),
                 reservation.getStatus(),
-                reservation.getCreatedAt()
+                reservation.getCreatedAt(),
+                reservation.getResidence() != null ? reservation.getResidence().getPrice() : null
         );
     }
 

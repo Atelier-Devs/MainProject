@@ -4,10 +4,23 @@ import Header from "../../components/BeforeLoginHeader";
 import Footer from "../../components/Footer";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import { a } from "framer-motion/client";
+import { login } from "../../slices/loginSlice";
 
 const initState = { email: "", password: "" };
 
 const LoginPage = () => {
+  const token = localStorage.getItem("accessToken");
+
+  let isStaff = false;
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      isStaff = payload.roleNames === "STAFF";
+    } catch (e) {
+      console.error("JWT 디코딩 실패:", e);
+    }
+  }
+
   const navigate = useNavigate();
   const [loginParam, setLoginParam] = useState(initState);
   const { doLogin, moveToPath } = useCustomLogin();
@@ -29,10 +42,14 @@ const LoginPage = () => {
       localStorage.setItem("accessToken", payload.accessToken);
       if (!payload.accessToken) {
         alert("이메일과 암호를 재입력해주세요");
-        return
+        return;
       } else {
+        const { roleNames } = payload;
         alert("로그인 성공");
-        moveToPath("/dashboard"); // 로그인 성공 후 이동 경로 수정 가능
+        if (roleNames == "STAFF") {
+          console.log("여기는 어드민");
+          moveToPath("/admin");
+        } else moveToPath("/dashboard"); // 로그인 성공 후 이동 경로 수정 가능
       }
     } catch (err) {
       console.error("로그인 실패:", err);

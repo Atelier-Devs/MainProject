@@ -8,7 +8,7 @@ const KakaomapPage = () => {
   const isLoggedIn = !!localStorage.getItem("accessToken");
 
   return (
-    <div className="bg-white min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
       {isLoggedIn ? <Header /> : <BeforeLoginHeader />}
 
       <main className="flex-grow container mx-auto px-4 pt-32 pb-24 max-w-7xl">
@@ -19,15 +19,15 @@ const KakaomapPage = () => {
         </div>
 
         {/* 지도 + 정보 카드 */}
-        <div className="flex flex-col lg:flex-row gap-6 items-start justify-center">
+        <div className="flex flex-col lg:flex-row gap-6 items-stretch justify-center">
           {/* 지도 */}
-          <div className="lg:w-[70%] w-full h-[420px] rounded-2xl overflow-hidden shadow-md border border-gray-200">
+          <div className="lg:w-[70%] w-full lg:h-[420px] rounded-2xl overflow-hidden shadow-md border border-gray-200">
             <KakaoMap />
           </div>
 
           {/* 우측 카드 */}
-          <div className="lg:w-[30%] w-full flex flex-col space-y-2 min-h-[420px]">
-            <div className="bg-[#fdf4ea] rounded-2xl shadow-md p-6 text-[#5c4631] text-sm">
+          <div className="lg:w-[30%] w-full flex flex-col justify-between h-[420px]">
+            <div className="bg-[#fdf4ea] rounded-2xl shadow-md p-6 text-[#5c4631] text-sm w-full">
               <h3 className="text-lg font-semibold mb-3">Atelier 호텔 소개</h3>
               <p className="leading-relaxed mb-3">
                 Atelier 호텔은 예술과 휴식이 조화를 이루는 감성적인 공간입니다.
@@ -40,7 +40,7 @@ const KakaomapPage = () => {
               </ul>
             </div>
 
-            <div className="bg-[#fef7f1] rounded-2xl shadow-md p-6 text-[#5c4631] text-sm text-center space-y-2 max-w-md self-end">
+            <div className="bg-[#fef7f1] rounded-2xl shadow-md p-6 text-[#5c4631] text-sm text-center space-y-2 w-full">
               <p><strong>주소:</strong> 서울특별시 송파구 올림픽로 300 롯데월드타워</p>
               <p><strong>대표번호:</strong> +82-2-3213-1000</p>
               <p><strong>예약:</strong> +82-2-3213-1111</p>
@@ -49,10 +49,6 @@ const KakaomapPage = () => {
           </div>
         </div>
       </main>
-
-
-
-
       <Footer />
     </div>
   );

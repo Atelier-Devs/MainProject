@@ -1,3 +1,4 @@
+// src/api/paymentApi.js
 import axios from "axios";
 
 // 1. Axios 인스턴스 생성
@@ -20,7 +21,7 @@ api.interceptors.request.use(
   }
 );
 
-// 예약 생성 요청 (예약은 결제와 별도 URL에서 관리됨)
+// 예약 생성 요청 추가
 export const createReservation = async (reservationDTO) => {
   console.log("dto:", reservationDTO);
   const res = await axios.post(
@@ -59,3 +60,10 @@ export const confirmPayment = async (paymentId) => {
   const res = await api.post(`/confirm/${paymentId}`);
   return res.data;
 };
+
+// 7. 전체 결제 내역 조회 (관리자용)
+// export const fetchAllPayments = async () => {
+//   const res = await api.get("/list"); // /api/atelier/payment/list
+//   return res.data;
+// };
+

@@ -5,7 +5,9 @@ import com.example.atelier.dto.OrderDTO;
 import com.example.atelier.dto.ReservationDTO;
 import com.example.atelier.repository.OrderRepository;
 import com.example.atelier.repository.PaymentRepository;
+import com.example.atelier.repository.ReviewRepository;
 import com.example.atelier.repository.UserRepository;
+import com.google.gson.Gson;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -35,6 +37,8 @@ public class OrderServiceImpl implements OrderService{
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
+//    private final Order order;
     private IamportClient iamportClient;
 //    private  final Payment payment;
 
@@ -74,8 +78,9 @@ public class OrderServiceImpl implements OrderService{
         log.info("Order service searchOrder ------------------" + id);
         Optional<Order> result = orderRepository.findById(id);
         Order order = result.orElseThrow();
-        return modelMapper.map(order, OrderDTO.class);
+        return OrderDTO.fromEntity(order);
     }
+
 
     // 모든 주문조회(관리자모드)
     @Override
@@ -150,6 +155,15 @@ public class OrderServiceImpl implements OrderService{
             throw new IllegalStateException("본인의 주문만 환불 요청이 가능합니다.");
         }
 
+        // ✅ 리뷰 자동 삭제 로직 추가
+        Reservation reservation = order.getReservation();
+        Residence residence = reservation.getResidence();
+        if (residence != null) {
+            Integer residenceId = residence.getId();
+            reviewRepository.deleteByUserIdAndResidenceId(userId, residenceId);
+            log.info("🗑️ 리뷰 자동 삭제 완료 - userId: {}, residenceId: {}", userId, residenceId);
+        }
+
         // 이미 구현된 엔티티의 환불 요청 메서드 호출
         order.requestRefund();
     }
@@ -181,19 +195,30 @@ public class OrderServiceImpl implements OrderService{
 
         // 3️⃣ impUid 존재 확인
         String impUid = payment.getImpUid();
+        log.info("impUid: {}", impUid);
         if (impUid == null || impUid.isEmpty()) {
             log.error("❌ Payment {} - 외부 결제 ID(impUid)가 없습니다.", paymentId);
             return false;
         }
 
         // 4️⃣ PortOne API 환불 요청 데이터 구성
-        CancelData cancelData = new CancelData(impUid, true); // ✅ 전체 환불 요청
+
+// 전체 환불
+//        CancelData cancelData = new CancelData(impUid, true);
+// 또는 금액을 지정해야 할 경우
+        CancelData cancelData = new CancelData(impUid, true, payment.getAmount());
         cancelData.setReason("관리자 승인 환불");
 
+
+        log.info("cancelData: {} ", cancelData);
+
         try {
-            // 5️⃣ PortOne API에 환불 요청
+            //PortOne API에 환불 요청
+            log.info("paymentStatus: {} ",payment.getPaymentStatus());
             IamportResponse<com.siot.IamportRestClient.response.Payment> response =
                     iamportClient.cancelPaymentByImpUid(cancelData);
+            log.info("🔍 PortOne 응답 전체: {}", new Gson().toJson(response)); // 전체 JSON 구조 보기
+            log.info("🔍 PortOne 응답 코드: {}, 메시지: {}", response.getCode(), response.getMessage());
 
             if (response.getResponse() != null && "cancelled".equals(response.getResponse().getStatus())) {
                 // 6️⃣ 결제 상태 변경
@@ -217,6 +242,14 @@ public class OrderServiceImpl implements OrderService{
             log.error("❌ PortOne 서버와 통신 실패: {}", e.getMessage(), e);
             return false;
         }
+    }
+
+    @Override
+    public String testRefund(String imp_uid) throws IamportResponseException, IOException {
+        CancelData cancelData = new CancelData(imp_uid,true,BigDecimal.valueOf(100));
+        IamportResponse<com.siot.IamportRestClient.response.Payment> result = iamportClient.cancelPaymentByImpUid(cancelData);
+        return "환불 테스트"+result.getMessage();
+
     }
 
 

@@ -3,7 +3,9 @@ package com.example.atelier.service;
 import com.example.atelier.domain.Order;
 import com.example.atelier.domain.Payment;
 import com.example.atelier.dto.OrderDTO;
+import com.siot.IamportRestClient.exception.IamportResponseException;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface OrderService {
@@ -30,6 +32,7 @@ public interface OrderService {
 
     public boolean refundPayment(Integer paymentId);
 
+    public String testRefund(String imp_uid) throws IamportResponseException, IOException;
 
 
 

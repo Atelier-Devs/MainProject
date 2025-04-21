@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -46,5 +48,22 @@ public class UserServiceImpl implements UserService {
         userRepository.flush();
         // 생성된 사용자 ID 반환
         return savedUser.getId();
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> findAllAdmins() {
+        System.out.println("관리자 service");
+        return userRepository.findAllAdmins();
     }
 }

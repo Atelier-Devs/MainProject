@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -43,6 +44,7 @@ public class OrderController {
 
     // 모든 주문조회(관리자모드)
     @GetMapping("/")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<List<OrderDTO>> searchAllOrders() {
         try {
             List<OrderDTO> orderList = orderService.searchAllOrder();
@@ -74,14 +76,24 @@ public class OrderController {
     }
 
     // 관리자 환불 승인
+    @PreAuthorize("hasRole('STAFF')")
     @PostMapping("/{orderId}/approve-refund")
     public ResponseEntity<String> approveRefund(
             @PathVariable Integer orderId,
             @RequestParam Integer staffId,
             @RequestParam(defaultValue = "관리자 승인 환불") String reason
     ) {
+        try {
         orderService.approveRefund(orderId, staffId, reason);
+        log.info("관리자 {} - 주문 {} 환불 승인: 사유 = {}", staffId, orderId, reason);
         return ResponseEntity.ok("환불이 성공적으로 처리되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("요청 오류: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("상태 오류: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+        }
     }
 
     // 여러 개의 주문 상태 및 아이템 수정

@@ -1,5 +1,6 @@
 package com.example.atelier.dto;
 
+import com.example.atelier.domain.Order;
 import com.example.atelier.domain.Payment;
 import lombok.*;
 
@@ -18,14 +19,13 @@ public class PaymentDTO {
     private Integer membershipId; // 멤버십 ID
     private Integer orderId; // 주문 ID
     private BigDecimal amount; // 결제 금액
-    private String impUid; //프론트에서 impuid를 받아와야 환불이가능함
+    private String impUid; // 프론트에서 impUid 받아야 환불 가능
     private Payment.PaymentStatus paymentStatus; // 결제 상태
     private Payment.PaymentMethod paymentMethod; // 결제 방법
     private Timestamp createdAt; // 생성된 시간
     private String residenceName; // 객실 이름
-    private Integer residenceId;  // 객실 ID
-
-
+    private Integer residenceId; // 객실 ID
+    private Order.RefundStatus refundStatus; // ✅ 환불 상태 추가됨
 
     public static PaymentDTO fromEntity(Payment payment) {
         if (payment == null) return null;
@@ -41,17 +41,11 @@ public class PaymentDTO {
                 payment.getPaymentStatus(),
                 payment.getPaymentMethod(),
                 payment.getCreatedAt(),
-
-
                 payment.getReservation() != null && payment.getReservation().getResidence() != null
-                        ? payment.getReservation().getResidence().getName()
-                        : null,
+                        ? payment.getReservation().getResidence().getName() : null,
                 payment.getReservation() != null && payment.getReservation().getResidence() != null
-                        ? payment.getReservation().getResidence().getId()
-                        : null
-
+                        ? payment.getReservation().getResidence().getId() : null,
+                payment.getOrder() != null ? payment.getOrder().getRefundStatus() : null // ✅ 환불 상태 포함
         );
     }
-
-
 }

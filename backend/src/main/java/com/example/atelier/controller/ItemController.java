@@ -4,6 +4,8 @@ import com.example.atelier.domain.Item;
 import com.example.atelier.dto.ItemDTO;
 import com.example.atelier.repository.ItemRepository;
 import com.example.atelier.service.ItemService;
+import com.example.atelier.service.OrderService;
+import com.siot.IamportRestClient.exception.IamportResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -22,7 +25,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class ItemController {
     private final ItemService itemService;
-
+    private final OrderService orderService;
 //    // 아이템 생성
 //    @PostMapping("/register")
 //    public ResponseEntity<?> create(@RequestBody ItemDTO itemDTO) {
@@ -65,4 +68,10 @@ public class ItemController {
         itemService.remove(id);
     }
 
+    @GetMapping("/testRefund/{imp_uid}")
+    public String testtest(@PathVariable String imp_uid) throws IamportResponseException, IOException {
+        System.out.println("impuid"+imp_uid);
+        orderService.testRefund(imp_uid);
+        return "환불성공";
+    }
 }

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,6 +55,7 @@ public class ReservationController {
 
     // GET ALL(관리자모드)
     @GetMapping("/list")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity< List<ReservationDTO>> list() {
         System.out.println("reservation controller: ");
         List<ReservationDTO> list = reservationService.getAllReservations();

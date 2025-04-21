@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -269,6 +270,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     }
 
+    //관리자용
     @Override
     public PaymentDTO approvePayment(String impUid, PaymentDTO paymentDTO) {
         log.info("결제 승인 요청 시작: impUid = {}", impUid);
@@ -312,6 +314,16 @@ public class PaymentServiceImpl implements PaymentService {
 
     }
 
+    @Override
+    public List<PaymentDTO> getAllPayments() {
+        List<Payment> payments = paymentRepository.findAll();
+
+        return payments.stream()
+                .map(p -> modelMapper.map(p, PaymentDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
 
     //summary
     @Override
@@ -327,7 +339,7 @@ public class PaymentServiceImpl implements PaymentService {
 //        Order order = orderRepository.findByReservationId(reservationId)
 //                .orElseThrow(() -> new IllegalArgumentException("예약에 해당하는 주문이 없습니다."));
 
-        //멤버십확인. 쿼리문으로 active상태인 멤버십 가죠옴
+        //멤버십확인. 쿼리문으로 active상태인 멤버십 가져옴
         Membership membership = membershipRepository
                 .findActiveMembershipByUser(user)
                 .orElse(null);
@@ -400,4 +412,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .reservationId(reservationId)
                 .build();
     }
+
+
 }

@@ -20,10 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -92,6 +94,14 @@ public ResponseEntity<String> confirmPayment(@PathVariable Integer paymentId) {
         return ResponseEntity.ok(summary);
     }
 
+//관리자의 결제내역조회
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<List<PaymentDTO>> getAllPayments() {
+        List<PaymentDTO> list = paymentService.getAllPayments();
+        log.info("결제내역 들어오나요? list = {}",list);
+        return ResponseEntity.ok(list);
+    }
 
 
 

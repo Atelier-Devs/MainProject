@@ -5,6 +5,7 @@ import com.example.atelier.dto.PaymentDTO;
 import com.example.atelier.dto.PaymentSummaryDTO;
 import com.siot.IamportRestClient.response.IamportResponse;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PaymentService {
@@ -26,6 +27,7 @@ public interface PaymentService {
 public void sendPaymentInfoToOrder(Integer paymentId);
     PaymentSummaryDTO getSummaryForReservation(Integer reservationId);
 
+    List<PaymentDTO> getAllPayments();
 
 
 }
