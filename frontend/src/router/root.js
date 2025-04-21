@@ -14,6 +14,7 @@ import membershipRouter from "./membershipRouter";
 import refundRouter from "./refundRouter";
 import AdminComponent from "../components/admin/AdminComponent";
 import adminRouter from "./adminRouter";
+import authRouter from "./authRouter";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -98,6 +99,10 @@ const root = createBrowserRouter([
   {
     path: "admin",
     children: adminRouter(),
+  },
+  {
+    path: "auth",
+    children: authRouter(),
   },
 ]);
 

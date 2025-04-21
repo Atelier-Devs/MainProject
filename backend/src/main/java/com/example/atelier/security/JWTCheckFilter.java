@@ -38,6 +38,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (path.startsWith("/api/atelier/login")) return true;
         if (path.startsWith("/api/atelier/view/")) return true;
         if (path.startsWith("/api/atelier/item")) return true;
+        if (path.equals("/api/atelier/auth/find-id")) return true;
+        if (path.equals("/api/atelier/auth/find-password")) return true;
+        if (path.equals("/api/atelier/auth/change-password")) return true;
+        if (path.equals("/api/atelier/auth/reset-password")) return true;
 
 
 //        if (path.startsWith("/api/atelier/residence/a")) return true;

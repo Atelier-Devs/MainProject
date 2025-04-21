@@ -1,4 +1,3 @@
-// src/api/adminApi.js
 import axios from "axios";
 
 // Axios 인스턴스 (선택)
@@ -10,7 +9,7 @@ export const adminApi = axios.create({
 // JWT 자동 포함
 adminApi.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
-  console.log("[🔐 Interceptor 토큰]", token); // ✅ 콘솔 확인
+  console.log("[🔐 Interceptor 토큰]", token); // 콘솔 확인
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

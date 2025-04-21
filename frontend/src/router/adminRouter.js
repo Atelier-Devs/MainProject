@@ -1,4 +1,3 @@
-// src/router/adminRouter.js
 import { lazy, Suspense } from "react";
 import AdminComponent from "../components/admin/AdminComponent"; // 이거 추가해야 함
 

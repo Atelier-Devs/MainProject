@@ -42,7 +42,7 @@ public class CustomSecurityConfig {
         );
         // CSRF 비활성화
         http.csrf(csrf -> csrf.disable());
-// [1] 폼 로그인 비활성화
+        // [1] 폼 로그인 비활성화
         http.formLogin(form -> form.disable());
         http.authorizeHttpRequests(authorize -> authorize
                 // 회원가입, 로그인, 로그아웃은 허용
@@ -50,6 +50,13 @@ public class CustomSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/atelier/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/atelier/view/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/atelier/logout").permitAll()
+
+                // 아이디/비밀번호 찾기, 비밀번호 변경은 허용
+                .requestMatchers(HttpMethod.POST, "/api/atelier/auth/find-id").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/atelier/auth/find-password").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/atelier/auth/change-password").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/atelier/auth/reset-password").permitAll()
+
 
                 // 오류 페이지는 허용
                 .requestMatchers("/error").permitAll()

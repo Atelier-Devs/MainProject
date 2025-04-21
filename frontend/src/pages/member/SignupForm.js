@@ -151,7 +151,7 @@ const SignupForm = () => {
               required
             />
             <small className={isPasswordValid ? "green" : "red"}>
-              {isPasswordValid ? "✅ 조건 만족" : " 숫자(1~9)와 특수문자(!,@,$)를 포함하여, 최소 9자리 비밀번호를 입력하세요"}
+              {isPasswordValid ? " 조건 만족" : " 숫자(1~9)와 특수문자(!,@,$)를 포함하여, 최소 9자리 비밀번호를 입력하세요"}
             </small>
           </div>
 
@@ -167,7 +167,7 @@ const SignupForm = () => {
             />
             <small className={isPasswordMatch ? "green" : "red"}>
               {isPasswordMatch
-                ? "✅ 비밀번호가 일치합니다."
+                ? " 비밀번호가 일치합니다."
                 : " 비밀번호가 일치하지 않습니다."}
             </small>
           </div>

@@ -105,7 +105,6 @@ const LoginPage = () => {
               로그인
             </button>
           </form>
-
           <div className="mt-4">
             <button
               className="w-full bg-[#b89c7d] text-white py-2 rounded-md font-bold hover:bg-[#a58b6a] transition-all duration-300"
@@ -113,6 +112,22 @@ const LoginPage = () => {
             >
               회원가입
             </button>
+          </div>
+          <div className="mt-2 flex justify-end">
+            <div className="flex gap-2">
+              <button
+                className="px-3 py-1 text-sm bg-[#d1bfa8] text-white rounded-md font-semibold hover:bg-[#bda890] transition-all duration-300"
+                onClick={() => navigate("/auth/id")}
+              >
+                아이디 찾기
+              </button>
+              <button
+                className="px-3 py-1 text-sm bg-[#d1bfa8] text-white rounded-md font-semibold hover:bg-[#bda890] transition-all duration-300"
+                onClick={() => navigate("/auth/pw")}
+              >
+                비밀번호 찾기
+              </button>
+            </div>
           </div>
         </div>
       </div>

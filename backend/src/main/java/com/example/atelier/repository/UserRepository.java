@@ -22,4 +22,6 @@ public interface  UserRepository extends  JpaRepository<User,Integer>{
             "FROM User u ORDER BY u.totalSpent DESC")
     List<UserStatDTO> findTopUsersByTotalSpent(Pageable pageable);
 
+    Optional<User> findByNameAndPhone(String name, String phone);
+
 }
