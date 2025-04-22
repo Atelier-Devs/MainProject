@@ -32,8 +32,17 @@ public class AuthController {
     // PW 찾기
     @PostMapping("/find-password")
     public ResponseEntity<String> findPassword(@RequestBody EmailRequestDTO emailRequestDTO){
-        authService.sendTempPassword(emailRequestDTO.getEmail());
-        return ResponseEntity.ok("임시 비밀번호가 이메일로 전송되었습니다.");
+        try {
+            if (emailRequestDTO.getEmail() == null || emailRequestDTO.getEmail().isBlank()) {
+                return ResponseEntity.badRequest().body("이메일은 필수입니다.");
+            }
+
+            authService.sendTempPassword(emailRequestDTO.getEmail());
+            return ResponseEntity.ok("임시 비밀번호가 이메일로 전송되었습니다.");
+        } catch (Exception e) {
+            log.error("비밀번호 찾기 실패", e);
+            return ResponseEntity.internalServerError().body("메일 전송 중 오류가 발생했습니다.");
+        }
     }
 
     // 비로그인 PW 변경
