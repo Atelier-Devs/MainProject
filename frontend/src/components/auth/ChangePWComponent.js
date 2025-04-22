@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { resetPasswordWithTemp } from "../../api/authApi";
+import Header from "../Header";
+import Footer from "../Footer";
 
 const ChangePWComponent = () => {
   const navigate = useNavigate();
@@ -36,58 +38,77 @@ const ChangePWComponent = () => {
       alert("비밀번호가 변경되었습니다. 로그인 해주세요.");
       navigate("/member/login");
     } catch (err) {
-      alert("비밀번호 변경 실패: " + err.response?.data?.message || "서버 오류");
+      alert("비밀번호 변경 실패: " + (err.response?.data?.message || "서버 오류"));
     }
   };
 
   return (
-    <div className="p-8 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-6">비밀번호 재설정</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="email"
-          name="email"
-          placeholder="가입한 이메일"
-          value={form.email}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded"
-          required
-          readOnly={!!emailFromState} // state에서 받은 경우 수정 불가
-        />
-        <input
-          type="password"
-          name="tempPassword"
-          placeholder="임시 비밀번호"
-          value={form.tempPassword}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded"
-          required
-        />
-        <input
-          type="password"
-          name="newPassword"
-          placeholder="새 비밀번호"
-          value={form.newPassword}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded"
-          required
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="새 비밀번호 확인"
-          value={form.confirmPassword}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded"
-          required
-        />
-        <button
-          type="submit"
-          className="bg-[#b89c7d] text-white font-bold py-2 rounded hover:bg-[#a57f60] transition duration-300"
-        >
-          비밀번호 재설정
-        </button>
-      </form>
+    <div className="min-h-screen flex flex-col bg-white">
+      <Header />
+
+      <main className="flex-grow flex items-center justify-center px-4 py-16">
+        <div className="w-full max-w-xl bg-white shadow-xl rounded-2xl p-10 border border-gray-200">
+          <h2 className="text-3xl font-bold text-[#5c4631] mb-8 text-center">
+            🔐 비밀번호 재설정
+          </h2>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <input
+              type="email"
+              name="email"
+              placeholder="가입된 이메일"
+              value={form.email}
+              onChange={handleChange}
+              readOnly={!!emailFromState}
+              className="border border-gray-300 px-5 py-3 rounded-md text-base shadow-sm focus:ring-2 focus:ring-[#b89c7d] focus:outline-none transition bg-gray-100"
+              required
+            />
+            <input
+              type="password"
+              name="tempPassword"
+              placeholder="임시 비밀번호"
+              value={form.tempPassword}
+              onChange={handleChange}
+              className="border border-gray-300 px-5 py-3 rounded-md text-base shadow-sm focus:ring-2 focus:ring-[#b89c7d] focus:outline-none transition"
+              required
+            />
+            <input
+              type="password"
+              name="newPassword"
+              placeholder="새 비밀번호"
+              value={form.newPassword}
+              onChange={handleChange}
+              className="border border-gray-300 px-5 py-3 rounded-md text-base shadow-sm focus:ring-2 focus:ring-[#b89c7d] focus:outline-none transition"
+              required
+            />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="새 비밀번호 확인"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              className="border border-gray-300 px-5 py-3 rounded-md text-base shadow-sm focus:ring-2 focus:ring-[#b89c7d] focus:outline-none transition"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-gradient-to-r from-[#b89c7d] to-[#a38566] text-white py-3 text-base rounded-md font-semibold hover:opacity-90 transition"
+            >
+              비밀번호 변경
+            </button>
+            <div className="flex justify-end">
+            <button
+              onClick={() => navigate(-1)}
+              className="w-28 mt-4 bg-gray-300 text-gray-800 py-2 rounded-md font-semibold hover:bg-gray-400 transition"
+            >
+              이전
+            </button>
+          </div>
+          </form>
+        </div>
+      </main>
+
+      <Footer />
     </div>
   );
 };

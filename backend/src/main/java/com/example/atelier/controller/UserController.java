@@ -28,7 +28,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // ✅ 회원가입
+    // 회원가입
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
         try {
@@ -42,7 +42,7 @@ public class UserController {
         }
     }
 
-    // ✅ 로그인
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         String email = loginRequestDTO.getEmail();
@@ -68,14 +68,14 @@ public class UserController {
         }
     }
 
-    // ✅ 로그아웃
+    // 로그아웃
     @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.ok("로그아웃 완료");
     }
 
-    // ✅ 비밀번호 검증 API
+    // 비밀번호 검증 API
     @PostMapping("/member/verify-password")
     public ResponseEntity<?> verifyPassword(@RequestBody Map<String, String> payload) {
         String email = payload.get("email");

@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,8 +21,26 @@ public class DatabaseInitializer {
                                    RoomServiceRepository roomServiceRepo,
                                    MembershipRepository membershipRepo,
                                    ResidenceRepository residenceRepo,
-                                   ProductRepository productRepo) {
+                                   ProductRepository productRepo,
+                                   UserRepository userRepository,
+                                   PasswordEncoder passwordEncoder) {
         return args -> {
+
+            // 관리자 계정이 없을 경우 생성
+            if (userRepository.count() == 0 || userRepository.findByEmail("admin@atelier.com").isEmpty()) {
+                User admin = User.builder()
+                        .name("관리자")
+                        .email("admin@atelier.com")
+                        .password(passwordEncoder.encode("admin1234")) // 암호화 된 비밀번호
+                        .phone("010-0000-0000")
+                        .roleNames(User.Role.STAFF)
+                        .totalSpent(BigDecimal.ZERO)
+                        .refundableAmount(BigDecimal.ZERO)
+                        .build();
+
+                userRepository.save(admin);
+            }
+
             // 객실 초기값 설정
             if (residenceRepo.count() == 0) {
                 residenceRepo.saveAll(List.of(

@@ -38,7 +38,7 @@ public class MembershipServiceImpl implements MembershipService{
             totalSpent = BigDecimal.ZERO;
         }
 
-        log.info("🔍 [디버깅] User ID {} - totalSpent from DB: {}", user.getId(), totalSpent);
+        log.info("[디버깅] User ID {} - totalSpent from DB: {}", user.getId(), totalSpent);
         //  현재 등급 확인 후 승급 조건 적용
         if (membership.getCategory() == Membership.Category.GOLD && totalSpent.compareTo(new BigDecimal("1000000")) >= 0) {
             membership.setCategory(Membership.Category.DIAMOND);

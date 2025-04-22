@@ -1,7 +1,9 @@
 package com.example.atelier.service;
 
+import com.example.atelier.domain.Membership;
 import com.example.atelier.domain.User;
 import com.example.atelier.dto.UserDTO;
+import com.example.atelier.repository.MembershipRepository;
 import com.example.atelier.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; // BCryptPasswordEncoder
+    private final MembershipRepository membershipRepository;
 
     public Integer registerUser(UserDTO userDTO) {
         System.out.println("여기는 service 등록이야 :" +userDTO);
@@ -43,10 +46,17 @@ public class UserServiceImpl implements UserService {
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
         log.info("user:" +user);
-        // DB에 저장
-        User savedUser = userRepository.save(user);
-        userRepository.flush();
-        // 생성된 사용자 ID 반환
+        User savedUser = userRepository.saveAndFlush(user);
+        // 기본 멤버십 자동 생성
+        Membership membership = new Membership();
+        membership.setUser(savedUser);
+        membership.setCategory(Membership.Category.GOLD);
+        membership.setDiscount(BigDecimal.ZERO);
+        membership.setValidUntil(null);
+        membership.setStatus(Membership.Status.ACTIVE);
+
+        membershipRepository.save(membership);
+
         return savedUser.getId();
     }
 

@@ -23,7 +23,7 @@ public class UserDTO {
 
     public Map<String, Object> getClaims() {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("userId", this.id); // ✅ 추가!
+        dataMap.put("userId", this.id); // 추가!
         dataMap.put("email", email);
         dataMap.put("password", password);
         dataMap.put("phone", phone);
