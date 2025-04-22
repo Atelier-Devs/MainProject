@@ -45,8 +45,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final ModelMapper modelMapper;
     private final MembershipRepository membershipRepository;
     private final MembershipServiceImpl membershipServiceImpl;
-    private final OrderRepository orderRepository;
-    private final ItemRepository itemRepository;
+
 
     private OrderService orderService;
 

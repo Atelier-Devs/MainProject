@@ -38,7 +38,11 @@ public class OrderServiceImpl implements OrderService{
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
-//    private final Order order;
+
+
+
+
+    //    private final Order order;
     private IamportClient iamportClient;
 //    private  final Payment payment;
 
@@ -172,7 +176,6 @@ public class OrderServiceImpl implements OrderService{
     public boolean refundPayment(Integer paymentId) {
         log.info("🔄 결제 환불 요청 시작: paymentId = {}", paymentId);
 
-
         //paymentId로 DB에서 최신 Payment 데이터를 조회하는 방식
         // 이 방식은 데이터 무결성과 최신 상태를 보장한다는 점에서 안전
         // 클라이언트나 다른 계층에서 전달된 Payment 객체의 데이터는 변조 가능성이 있고, 최신 상태가 아닐 수 있기 때문에, 항상 DB를 원본으로 조회하는 것이 바람직함.
@@ -228,11 +231,17 @@ public class OrderServiceImpl implements OrderService{
 
                 // 7️⃣ 사용자 총 지출액 업데이트
                 User user = payment.getUser();
-                BigDecimal updatedTotal = user.getTotalSpent().subtract(payment.getAmount());
-                user.setTotalSpent(updatedTotal);
-                userRepository.save(user);
-                log.info("🔄 Updated totalSpent for User ID {}: {}", user.getId(), updatedTotal);
+                BigDecimal current = user.getTotalSpent();
+                BigDecimal refundAmount = payment.getAmount();
+                if (current.compareTo(refundAmount) < 0) {
+                    log.warn("🚨 유저 ID {}의 totalSpent가 음수로 내려갈 수 있어 차단됨", user.getId());
+                    user.setTotalSpent(BigDecimal.ZERO); // 하한선 0
+                } else {
+                    user.setTotalSpent(current.subtract(refundAmount));
+                }
 
+                userRepository.save(user);
+                log.info("🔄 Updated totalSpent for User ID {}: {}", user.getId(), user.getTotalSpent());
                 return true;
             } else {
                 log.warn("🚨 Payment {} - 환불 실패. PortOne 응답: {}", paymentId, response);

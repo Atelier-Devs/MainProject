@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { adminApi } from "../../api/adminApi";
+import { fetchAdminStats } from "../../api/adminApi";
 // 차트 라이브러리에서 컴포넌트 가져오기
 import {
   PieChart,
@@ -14,14 +15,29 @@ import {
 } from "recharts";
 
 const AdminStatsPage = () => {
+  console.log("📈 AdminStatsPage 렌더링됨");
   const [stats, setStats] = useState(null);
 
+  const abs = ({ totalSpent }) => Math.abs(Number(totalSpent));
+
+  const cleanedSpenders = useMemo(() => {
+    if (!stats) return [];
+    return stats.topSpenders.map((s) => ({
+      ...s,
+      totalSpent: Math.abs(Number(s.totalSpent)),
+    }));
+  }, [stats]);
+
   useEffect(() => {
-    adminApi
-      .get("/stats")
+    fetchAdminStats()
+      // .get("/stats")
       .then((res) => {
-        console.log("📊 관리자 통계 데이터:", res.data);
-        setStats(res.data);
+        console.log("📊 관리자 통계 데이터: ->이게 undefined.", res);
+        setStats(res);
+        console.log(
+          "📊 관리자 통계 데이터2: ->여기서는 undefined 나오면 안돼",
+          stats
+        );
       })
 
       .catch((err) => {
@@ -65,7 +81,7 @@ const AdminStatsPage = () => {
       {/* ✅ 막대 그래프 (인기 객실) */}
       <div className="mb-8">
         <h2 className="text-xl mb-2">인기 객실 TOP5</h2>
-        <BarChart width={500} height={300} data={stats.topRooms}>
+        <BarChart width={500} height={300} data={stats.popularRooms}>
           <XAxis dataKey="residenceName" />
           <YAxis />
           <Tooltip />
@@ -80,12 +96,12 @@ const AdminStatsPage = () => {
           layout="vertical"
           width={500}
           height={300}
-          data={stats.topUsers}
+          data={cleanedSpenders} // ✅ 여기!!
         >
-          <XAxis type="number" />
-          <YAxis dataKey="name" type="category" />n
+          <XAxis type="number" domain={[0, "dataMax"]} />
+          <YAxis dataKey="name" type="category" />
           <Tooltip />
-          <Bar dataKey="totalSpent" fill="#FFC107" />
+          <Bar dataKey="totalSpent" fill="#FFC107" isAnimationActive={false} />
         </BarChart>
       </div>
     </div>

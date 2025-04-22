@@ -33,6 +33,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public void sendTempPassword(String email) {
+        log.info("임시 비밀번호 전송 시작 - {}", email);
         try {
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("해당 이메일이 존재하지 않습니다."));
