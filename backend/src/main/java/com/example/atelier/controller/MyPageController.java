@@ -21,7 +21,7 @@ public class MyPageController {
     public ResponseEntity<MyPageDTO> getProfile(@RequestBody UserDTO userDTO) {
         log.info("마이페이지 요청 (PathVariable): {}", userDTO);
         MyPageDTO dto = myPageService.getUserMypageByEmail(userDTO.getEmail());
-        System.out.println("dto:"+dto);
+        System.out.println("@@dto:"+dto);
         return ResponseEntity.ok(dto);
     }
 }

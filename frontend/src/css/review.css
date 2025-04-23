@@ -39,3 +39,11 @@
     color: #6b7280;
     margin-top: 0.5rem;
 }
+
+.review-wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f5ef;
+    overflow: hidden;
+}

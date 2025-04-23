@@ -1,8 +1,6 @@
+// AdminStatsPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
-import { adminApi } from "../../api/adminApi";
 import { fetchAdminStats } from "../../api/adminApi";
-// 차트 라이브러리에서 컴포넌트 가져오기
 import {
   PieChart,
   Pie,
@@ -12,14 +10,19 @@ import {
   YAxis,
   Tooltip,
   Cell,
+  ResponsiveContainer,
+  LabelList,
+  Legend,
 } from "recharts";
+import { FaMoneyBillWave, FaUndo, FaPercentage, FaUser } from "react-icons/fa";
+
+const COLORS = ["#4CAF50", "#F44336"];
+const BAR_COLORS = ["#6366f1", "#f59e0b", "#10b981", "#3b82f6", "#ec4899"];
+
+
 
 const AdminStatsPage = () => {
-  console.log("📈 AdminStatsPage 렌더링됨");
   const [stats, setStats] = useState(null);
-
-  const abs = ({ totalSpent }) => Math.abs(Number(totalSpent));
-
   const cleanedSpenders = useMemo(() => {
     if (!stats) return [];
     return stats.topSpenders.map((s) => ({
@@ -28,82 +31,127 @@ const AdminStatsPage = () => {
     }));
   }, [stats]);
 
+  const maxReservationCount = useMemo(() => {
+    if (!stats || !stats.popularRooms) return 10;
+    const max = Math.max(...stats.popularRooms.map((r) => r.reservationCount));
+    return Math.ceil((max * 2) / 5) * 5; // 5단위 반올림
+  }, [stats]);
+
   useEffect(() => {
     fetchAdminStats()
-      // .get("/stats")
-      .then((res) => {
-        console.log("📊 관리자 통계 데이터: ->이게 undefined.", res);
-        setStats(res);
-        console.log(
-          "📊 관리자 통계 데이터2: ->여기서는 undefined 나오면 안돼",
-          stats
-        );
+      .then((data) => {
+        console.log("✅ 관리자 통계 API 응답:", data);  // 🔍 여기서 로그 찍으면 완벽
+        setStats(data);
       })
-
       .catch((err) => {
         alert("통계 정보를 불러오지 못했습니다");
         console.error(err);
       });
   }, []);
+  
 
-  if (!stats) return <div>로딩 중...</div>;
+  if (!stats)
+    return <div className="text-center mt-20 text-gray-500">📦 통계를 불러오는 중...</div>;
 
-  // 도넛 차트용 데이터
   const donutData = [
-    { name: "결제 총액", value: stats.totalPaymentAmount },
-    { name: "환불 총액", value: stats.totalRefundAmount },
+    { name: "총 결제액", value: stats.totalPaymentAmount },
+    { name: "총 환불액", value: stats.totalRefundAmount },
   ];
+  const refundRate = ((stats.totalRefundAmount / stats.totalPaymentAmount) * 100).toFixed(1);
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">📊 관리자 통계</h1>
+    <div className="p-8 space-y-12 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-8">📊 관리자 통계 대시보드</h1>
 
-      {/* ✅ 도넛 차트 (결제 vs 환불) */}
-      <div className="mb-8">
-        <h2 className="text-xl mb-2">결제 vs 환불</h2>
-        <PieChart width={300} height={300}>
-          <Pie
-            data={donutData}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={100}
-            label
-          >
-            <Cell fill="#4CAF50" />
-            <Cell fill="#F44336" />
-          </Pie>
-          <Tooltip />
-        </PieChart>
+      {/* 요약 카드 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <SummaryCard title="총 결제액" value={stats.totalPaymentAmount} icon={<FaMoneyBillWave />} color="from-green-400 to-green-600" />
+        <SummaryCard title="총 환불액" value={stats.totalRefundAmount} icon={<FaUndo />} color="from-rose-400 to-red-500" />
+        <SummaryCard title="환불률" value={`${refundRate}%`} icon={<FaPercentage />} color="from-yellow-400 to-yellow-500" />
+        <SummaryCard title="Top 유저 수" value={stats.topSpenders.length} icon={<FaUser />} color="from-sky-400 to-indigo-500" />
       </div>
 
-      {/* ✅ 막대 그래프 (인기 객실) */}
-      <div className="mb-8">
-        <h2 className="text-xl mb-2">인기 객실 TOP5</h2>
-        <BarChart width={500} height={300} data={stats.popularRooms}>
-          <XAxis dataKey="residenceName" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="count" fill="#2196F3" />
-        </BarChart>
-      </div>
+      {/* 도넛 차트 */}
+      <section>
+  <h2 className="text-xl font-semibold mb-4">💰 결제 vs 환불</h2>
+  <ResponsiveContainer width="100%" height={300}>
+    <PieChart>
+      <Pie
+        data={donutData}
+        dataKey="value"
+        nameKey="name"
+        cx="50%"
+        cy="50%"
+        innerRadius={70}
+        outerRadius={100}
+        paddingAngle={5}
+        cornerRadius={10}
+        label={({ name, percent }) =>
+          `${name}: ${(percent * 100).toFixed(1)}%`
+        }
+        labelLine={false}
+      >
+        {donutData.map((_, idx) => (
+          <Cell key={idx} fill={COLORS[idx]} />
+        ))}
+      </Pie>
 
-      {/* ✅ 수평 막대 (유저 지출 TOP5) */}
-      <div>
-        <h2 className="text-xl mb-2">사용자 지출 랭킹</h2>
-        <BarChart
-          layout="vertical"
-          width={500}
-          height={300}
-          data={cleanedSpenders} // ✅ 여기!!
-        >
-          <XAxis type="number" domain={[0, "dataMax"]} />
-          <YAxis dataKey="name" type="category" />
-          <Tooltip />
-          <Bar dataKey="totalSpent" fill="#FFC107" isAnimationActive={false} />
-        </BarChart>
-      </div>
+      {/* ✅ 툴팁에 금액 표시 */}
+      <Tooltip
+        formatter={(value, name) => [`${Number(value).toLocaleString()}원`, name]}
+        labelFormatter={() => ""}
+      />
+
+      <Legend verticalAlign="bottom" height={36} />
+    </PieChart>
+  </ResponsiveContainer>
+</section>
+
+      {/* 인기 객실 */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">🏨 인기 객실 TOP5</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={stats.popularRooms}>
+              
+            <XAxis dataKey="roomName" />
+            <YAxis domain={[0, maxReservationCount]}/>
+            <Tooltip />
+            <Bar dataKey="reservationCount" radius={[8, 8, 0, 0]}>
+              {stats.popularRooms.map((_, idx) => (
+                <Cell key={idx} fill={BAR_COLORS[idx % BAR_COLORS.length]} />
+              ))}
+              <LabelList dataKey="reservationCount" position="top" />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </section>
+
+      {/* 사용자 지출 랭킹 */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">👑 사용자 지출 랭킹</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart layout="vertical" data={cleanedSpenders}>
+            <XAxis type="number" domain={[0, 500]} />
+            <YAxis dataKey="name" type="category" />
+            <Tooltip />
+            <Bar dataKey="totalSpent" fill="#10b981" radius={[0, 8, 8, 0]}>
+              <LabelList dataKey="totalSpent" position="right" formatter={(v) => `${v.toLocaleString()}원`} />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </section>
+    </div>
+  );
+};
+
+const SummaryCard = ({ title, value, icon, color }) => {
+  return (
+    <div className={`p-5 rounded-xl shadow text-white bg-gradient-to-r ${color}`}>
+      <div className="text-2xl mb-2">{icon}</div>
+      <p className="text-sm font-light">{title}</p>
+      <p className="text-xl font-bold">
+        {typeof value === "number" ? value.toLocaleString() : value}
+      </p>
     </div>
   );
 };

@@ -19,6 +19,7 @@ public interface ResidenceRepository extends JpaRepository<Residence,Integer> {
                 .map(Product::getFilePath)
                 .filter(path -> path.contains(key)) // roomN 과 일치
                 .sorted()
+                .distinct()
                 .limit(3)
                 .collect(Collectors.toList());
 

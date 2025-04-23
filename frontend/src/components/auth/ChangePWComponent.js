@@ -97,13 +97,13 @@ const ChangePWComponent = () => {
               비밀번호 변경
             </button>
             <div className="flex justify-end">
-            <button
-              onClick={() => navigate(-1)}
-              className="w-28 mt-4 bg-gray-300 text-gray-800 py-2 rounded-md font-semibold hover:bg-gray-400 transition"
-            >
-              이전
-            </button>
-          </div>
+              <button
+                onClick={() => navigate(-1)}
+                className="w-28 mt-4 bg-gray-300 text-gray-800 py-2 rounded-md font-semibold hover:bg-gray-400 transition"
+              >
+                이전
+              </button>
+            </div>
           </form>
         </div>
       </main>

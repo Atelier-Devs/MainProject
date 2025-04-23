@@ -21,7 +21,6 @@ const ReviewWriteComponent = () => {
     comment: "",
   });
 
-  // 로그인 안 되어 있으면 로그인 페이지로 이동
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -30,7 +29,6 @@ const ReviewWriteComponent = () => {
     }
   }, [navigate]);
 
-  // residenceId로 초기 설정 (작성 모드)
   useEffect(() => {
     if (!isEdit && residenceId) {
       setForm((prev) => ({
@@ -41,7 +39,6 @@ const ReviewWriteComponent = () => {
     }
   }, [residenceId, isEdit]);
 
-  // 수정 모드인 경우 기존 리뷰 불러오기
   useEffect(() => {
     if (isEdit) {
       getReviewById(reviewId).then((data) => {
@@ -63,28 +60,23 @@ const ReviewWriteComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (isEdit) {
       await updateReview(reviewId, form);
     } else {
       await createReview(form);
     }
-
     navigate("/mypage");
   };
 
   return (
     <div className="max-w-2xl w-full bg-white p-10 shadow-lg rounded-2xl">
-      <h2 className="text-2xl font-bold mb-8 text-center">
+      <h2 className="text-2xl font-bold mb-8 text-center text-[#5c3d1b]">
         {isEdit ? "리뷰 수정" : "리뷰 작성"}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6 text-sm font-medium">
         <div>
-          <label
-            htmlFor="title"
-            className="block mb-1 text-gray-700 font-semibold"
-          >
+          <label htmlFor="title" className="block mb-1 text-[#5c3d1b] font-semibold">
             제목
           </label>
           <input
@@ -93,16 +85,13 @@ const ReviewWriteComponent = () => {
             value={form.title}
             onChange={handleChange}
             placeholder="리뷰 제목을 입력하세요"
-            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full border border-gray-400 rounded px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[#5c3d1b]"
             required
           />
         </div>
 
         <div>
-          <label
-            htmlFor="comment"
-            className="block mb-1 text-gray-700 font-semibold"
-          >
+          <label htmlFor="comment" className="block mb-1 text-[#5c3d1b] font-semibold">
             내용
           </label>
           <textarea
@@ -110,16 +99,13 @@ const ReviewWriteComponent = () => {
             value={form.comment}
             onChange={handleChange}
             placeholder="리뷰 내용을 입력하세요"
-            className="w-full border border-gray-300 rounded px-4 py-2 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full border border-gray-400 rounded px-5 py-3 h-28 resize-none focus:outline-none focus:ring-2 focus:ring-[#5c3d1b]"
             required
           />
         </div>
 
         <div>
-          <label
-            htmlFor="rating"
-            className="block mb-1 text-gray-700 font-semibold"
-          >
+          <label htmlFor="rating" className="block mb-1 text-[#5c3d1b] font-semibold">
             평점 (1~5)
           </label>
           <input
@@ -129,19 +115,28 @@ const ReviewWriteComponent = () => {
             onChange={handleChange}
             min="1"
             max="5"
-            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full border border-gray-400 rounded px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[#5c3d1b]"
             required
           />
         </div>
 
-        <div className="text-right pt-2">
+        <div className="text-right pt-2 flex justify-end gap-4">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="bg-white text-gray-700 px-8 py-3 font-bold rounded-md border border-gray-400 hover:bg-gray-100 transition"
+          >
+            이전 페이지
+          </button>
+
           <button
             type="submit"
-            className="bg-black text-white px-8 py-3 font-bold rounded hover:opacity-90 transition"
+            className="bg-[#a07c5b] text-white px-8 py-3 font-bold rounded-md hover:opacity-90 transition"
           >
             {isEdit ? "수정 완료" : "작성 완료"}
           </button>
         </div>
+
       </form>
     </div>
   );
