@@ -1,5 +1,4 @@
 /* review.css */
-
 /* 이미지 슬라이드에 부드러운 페이드 효과 */
 .review-image {
     transition: opacity 0.7s ease-in-out;

@@ -44,11 +44,11 @@ public class DatabaseInitializer {
             // 객실 초기값 설정
             if (residenceRepo.count() == 0) {
                 residenceRepo.saveAll(List.of(
-                        new Residence(null, Residence.Type.ROOM, "디럭스 파크 뷰 룸", "싱그러운 자연을 배경으로 즐기는 조용한 휴식 공간", new BigDecimal("250000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
-                        new Residence(null, Residence.Type.ROOM, "그랜드 디럭스 룸", "상쾌한 아침과 함께하는 품격 있는 휴식", new BigDecimal("180000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
-                        new Residence(null, Residence.Type.ROOM, "프리미어 룸", "최고급 침대에서 누리는 편안함과 여유로운 휴식", new BigDecimal("90000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
-                        new Residence(null, Residence.Type.ROOM, "프리미어 스위트", "특별한 사람과 함께하는 우아한 추억의 한조각", new BigDecimal("50000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
-                        new Residence(null, Residence.Type.ROOM, "디럭스 스위트", "넓은 거실과 정교한 인테리어가 선사하는 품격 높은 경험", new BigDecimal("150000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "디럭스 파크 뷰 룸", "싱그러운 자연을 배경으로 즐기는 조용한 나만의 공간", new BigDecimal("250000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "그랜드 디럭스 룸", "상쾌한 아침과 함께하는 휴식", new BigDecimal("180000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "프리미어 룸", "일상에서 벗어나 누리는 편안함", new BigDecimal("90000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "프리미어 스위트", "특별한 사람과 함께 소중한 추억을 장식하는 공간", new BigDecimal("50000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "디럭스 스위트", "넓은 거실과 정교한 인테리어가 선사하는 편안함", new BigDecimal("150000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
                         new Residence(null, Residence.Type.ROOM, "코너 스위트", "한강 뷰와 함께하는 프라이빗하고 특별한 공간", new BigDecimal("200000"), 2, Residence.Status.AVAILABLE, new ArrayList<>())
                 ));
             }
@@ -56,11 +56,11 @@ public class DatabaseInitializer {
             // 레스토랑 초기값 설정
             if (restaurantRepo.count() == 0) {
                 restaurantRepo.saveAll(List.of(
-                        new Restaurant("StayModern 레스토랑 - 모던 유러피안 스타일", "25000"),
-                        new Restaurant("스테이크 뷔페 - 최상급 스테이크 무한 제공", "30000"),
-                        new Restaurant("쁘띠 빠니에 - 프렌치 감성의 브런치 카페", "22000"),
-                        new Restaurant("오르세 - 파리풍 고급 다이닝", "27000"),
-                        new Restaurant("아틀리에 키친 - 감성 비스트로", "26000"),
+                        new Restaurant("StayModern 레스토랑 - 모던 유러피안 스타일의 파인 다이닝의 정석", "25000"),
+                        new Restaurant("스테이크 뷔페 - 최고급 스테이크와 다채로운 요리가 만나는 미식의 정점", "30000"),
+                        new Restaurant("쁘띠 빠니에 - 프렌치 감성의 상큼한 브런치 카페", "22000"),
+                        new Restaurant("오르세 - 퓨전 한식 고급 다이닝", "27000"),
+                        new Restaurant("아틀리에 키친 - 호텔 아틀리에의 헤드 셰프의 특선 요리 모음", "26000"),
                         new Restaurant("Bar 37 루프탑 - 시티뷰 칵테일 바", "32000")
                 ));
             }
@@ -68,12 +68,12 @@ public class DatabaseInitializer {
             // 베이커리 초기값 설정
             if (bakeryRepo.count() == 0) {
                 bakeryRepo.saveAll(List.of(
-                        new Bakery("프리미엄 크루아상 - 버터 풍미 가득한 정통 프렌치", "5000"),
-                        new Bakery("마카롱 세트 - 6종 맛의 달콤한 조화", "7000"),
-                        new Bakery("브라우니 - 진한 초콜릿의 풍미", "4500"),
-                        new Bakery("아틀리에 딸기 케이크 - 생크림과 제철딸기의 환상 조합", "15000"),
-                        new Bakery("스콘 (플레인/크랜베리) - 고소하고 부드러운 맛", "4800"),
-                        new Bakery("레몬 파운드 케이크 - 상큼한 시트러스 향", "6200")
+                        new Bakery("프리미엄 크루아상 - 버터 풍미 가득한 정통 프렌치 크루아상", "5000"),
+                        new Bakery("마카롱 세트 - 6종 맛의 달콤한 브라우니 세트", "7000"),
+                        new Bakery("브라우니 - 진한 초콜릿의 풍미가 가득한 수제 브라우니", "4500"),
+                        new Bakery("아틀리에 딸기 케이크 - 생크림과 제철딸기의 하모니로 완성되는 아틀리에의 시그니처 딸기 케이크", "15000"),
+                        new Bakery("스콘 (플레인/크랜베리) - 고소하고 부드러운 맛이 풍부한 영국식 스콘", "4800"),
+                        new Bakery("레몬 파운드 케이크 - 상큼한 시트러스 향이 가득한 파운드 케이크", "6200")
                 ));
             }
 
@@ -82,10 +82,10 @@ public class DatabaseInitializer {
                 roomServiceRepo.saveAll(List.of(
                         new RoomService("조식 세트 - 호텔식 아침 (계란, 빵, 커피 포함)", "12000"),
                         new RoomService("중식 정식 - 한식 또는 양식 중 택 1", "16000"),
-                        new RoomService("석식 코스 - 풀코스 정찬과 디저트", "21000"),
-                        new RoomService("야식 세트 - 간편하게 즐기는 늦은 밤 간식", "8000"),
-                        new RoomService("위스키 하프 보틀 - 12년산 스카치 위스키", "45000"),
-                        new RoomService("샴페인 하우스 - 고급 스파클링 와인", "60000")
+                        new RoomService("석식 코스 - 풀코스 정찬과 디저트 제공", "21000"),
+                        new RoomService("야식 세트 - 최고급 보리 맥주와 함께 즐기는 프라이드 치킨", "8000"),
+                        new RoomService("위스키 하프 보틀 - 다양한 안주와 함께하는 12년산 스카치 위스키", "45000"),
+                        new RoomService("샴페인 하우스 - 다양한 고급 스파클링 와인 제공", "60000")
                 ));
             }
 

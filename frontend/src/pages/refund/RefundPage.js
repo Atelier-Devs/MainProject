@@ -53,7 +53,7 @@ const RefundPage = () => {
   // ⛔ 환불 요청 처리
   const handleRefund = async () => {
     const confirmed = window.confirm(
-      "환불 요청 시, 서비스 이용 제한 및 리뷰 작성이 제한되며, \n 기존에 작성한 리뷰는 삭제 처리됩니다.\n정말 환불을 요청하시겠습니까?"
+      "환불 요청 시, 서비스 이용 제한 및 리뷰 작성이 제한되며,\n기존에 작성한 리뷰는 삭제 처리됩니다.\n\n정말 환불을 요청하시겠습니까?"
     );
     if (!confirmed) return;
 

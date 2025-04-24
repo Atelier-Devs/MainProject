@@ -30,8 +30,7 @@ const ResidenceRead = () => {
   const [bakeryPrice, setBakeryPrice] = useState(0);
   const [roomServicePrice, setRoomServicePrice] = useState(0);
 
-  const totalPrice =
-    roomPrice + restaurantPrice + bakeryPrice + roomServicePrice;
+  const totalPrice = roomPrice + restaurantPrice + bakeryPrice + roomServicePrice;
 
   useEffect(() => {
     if (!id) return;
@@ -85,7 +84,6 @@ const ResidenceRead = () => {
 
       <main className="flex-grow container mx-auto px-4 mt-32 pb-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
-          {/* 좌측 이미지 */}
           <div className="h-full">
             <div className="rounded-2xl overflow-hidden shadow-md h-full">
               {images[0] && (
@@ -98,38 +96,20 @@ const ResidenceRead = () => {
             </div>
           </div>
 
-          {/* 우측 예약 카드 */}
           <div className="flex flex-col bg-white shadow-lg rounded-2xl border border-gray-200 p-10 h-full justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">
-                예약 정보
-              </h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6 border-b pb-4">예약 정보</h2>
+              <p className="text-base font-bold text-gray-800 mb-2">객실: {name}</p>
+              <p className="text-sm font-bold text-gray-700 mb-1">예약자: a (a@a.com)</p>
+              <p className="text-sm font-bold text-gray-700 mb-6">멤버십: GOLD</p>
 
-              <p className="text-base font-bold text-gray-800 mb-2">
-                객실: <span className="font-bold text-gray-700">{name}</span>
-              </p>
-              <p className="text-sm font-bold text-gray-700 mb-1">
-                예약자: a (a@a.com)
-              </p>
-              <p className="text-sm font-bold text-gray-700 mb-6">
-                멤버십: GOLD
-              </p>
-
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-col justify-between"
-              >
+              <form onSubmit={handleSubmit} className="flex flex-col justify-between h-full">
                 <div>
-                  {/* 날짜 선택 */}
-                  <div className="mb-6 border-t border-gray-200 pt-6 mt-6">
-                    <h3 className="text-lg font-bold mb-3 text-[#5c4631]">
-                      날짜 선택
-                    </h3>
+                  <div className="mb-6 border-t border-gray-200 pt-6">
+                    <h3 className="text-lg font-bold mb-3 text-[#5c4631]">날짜 선택</h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          체크인
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">체크인</label>
                         <DatePicker
                           selected={checkIn}
                           onChange={(date) => setCheckIn(date)}
@@ -139,13 +119,11 @@ const ResidenceRead = () => {
                           minDate={new Date()}
                           placeholderText="날짜 선택"
                           dateFormat="yyyy.MM.dd"
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-md"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          체크아웃
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">체크아웃</label>
                         <DatePicker
                           selected={checkOut}
                           onChange={(date) => setCheckOut(date)}
@@ -155,13 +133,11 @@ const ResidenceRead = () => {
                           minDate={checkIn || new Date()}
                           placeholderText="날짜 선택"
                           dateFormat="yyyy.MM.dd"
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-md"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          인원
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">인원</label>
                         <input
                           type="number"
                           min="1"
@@ -169,41 +145,30 @@ const ResidenceRead = () => {
                           value={guestCount}
                           onChange={(e) => {
                             const value = Number(e.target.value);
-                            if (value > 10)
-                              return alert("최대 10명까지 예약 가능합니다.");
-                            if (value < 1)
-                              return alert("최소 1명 이상이어야 합니다.");
+                            if (value > 10) return alert("최대 10명까지 예약 가능합니다.");
+                            if (value < 1) return alert("최소 1명 이상이어야 합니다.");
                             setGuestCount(value);
                           }}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-md"
                         />
                       </div>
                     </div>
                   </div>
 
-                  {/* 옵션 선택 */}
                   <div className="mb-6 border-t border-gray-200 pt-6">
-                    <h3 className="text-lg font-bold mb-3 text-[#5c4631]">
-                      옵션 선택
-                    </h3>
+                    <h3 className="text-lg font-bold mb-3 text-[#5c4631]">옵션 선택</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          레스토랑
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">레스토랑</label>
                         <select
                           value={restaurantId}
                           onChange={(e) => {
                             const selectedId = Number(e.target.value);
                             setRestaurantId(selectedId);
-                            const selected = restaurantList.find(
-                              (r) => r.id === selectedId
-                            );
-                            setRestaurantPrice(
-                              selected ? Number(selected.price) : 0
-                            );
+                            const selected = restaurantList.find((r) => r.id === selectedId);
+                            setRestaurantPrice(selected ? Number(selected.price) : 0);
                           }}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-md"
                         >
                           <option value="">선택 안 함</option>
                           {restaurantList.map((r) => (
@@ -214,22 +179,16 @@ const ResidenceRead = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          베이커리
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">베이커리</label>
                         <select
                           value={bakeryId}
                           onChange={(e) => {
                             const selectedId = Number(e.target.value);
                             setBakeryId(selectedId);
-                            const selected = bakeryList.find(
-                              (b) => b.id === selectedId
-                            );
-                            setBakeryPrice(
-                              selected ? Number(selected.price) : 0
-                            );
+                            const selected = bakeryList.find((b) => b.id === selectedId);
+                            setBakeryPrice(selected ? Number(selected.price) : 0);
                           }}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-md"
                         >
                           <option value="">선택 안 함</option>
                           {bakeryList.map((b) => (
@@ -240,22 +199,16 @@ const ResidenceRead = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold mb-1">
-                          룸서비스
-                        </label>
+                        <label className="block text-sm font-semibold mb-1">룸서비스</label>
                         <select
                           value={roomServiceId}
                           onChange={(e) => {
                             const selectedId = Number(e.target.value);
                             setRoomServiceId(selectedId);
-                            const selected = roomServiceList.find(
-                              (rs) => rs.id === selectedId
-                            );
-                            setRoomServicePrice(
-                              selected ? Number(selected.price) : 0
-                            );
+                            const selected = roomServiceList.find((rs) => rs.id === selectedId);
+                            setRoomServicePrice(selected ? Number(selected.price) : 0);
                           }}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-md"
                         >
                           <option value="">선택 안 함</option>
                           {roomServiceList.map((rs) => (
@@ -267,14 +220,15 @@ const ResidenceRead = () => {
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* 총 금액 + 버튼 */}
-                <div className="border-t border-gray-200 pt-6 mt-6">
-                  <div className="flex justify-end items-center space-x-4">
+                  <div className="text-right mb-6">
+                    <div className="border-t border-gray-200 pt-6 mt-6"></div>
                     <span className="text-lg font-semibold text-gray-800">
                       예상 결제 금액: {totalPrice.toLocaleString()}원
                     </span>
+                  </div>
+
+                  <div className="flex justify-end items-center space-x-4">
                     <button
                       type="button"
                       onClick={() => navigate(-1)}

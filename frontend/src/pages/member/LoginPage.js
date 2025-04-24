@@ -28,7 +28,6 @@ const LoginPage = () => {
         alert("이메일과 암호를 재입력해주세요");
         return;
       }
-      alert("로그인 성공");
       moveToPath(payload.roleNames === "STAFF" ? "/admin" : "/dashboard");
     } catch (err) {
       alert("로그인에 실패했습니다");

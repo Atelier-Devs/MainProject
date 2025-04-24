@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ReviewWriteComponent from "../../components/review/ReviewWriteComponent";
-import "../../css/review.css";
+import "../../css/review.css"; 
 
 const ReviewWrite = () => {
     return (

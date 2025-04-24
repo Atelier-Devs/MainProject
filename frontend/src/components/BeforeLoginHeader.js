@@ -28,7 +28,6 @@ const BeforeLoginHeader = () => {
       <nav className="menu">
         <Link to="/map">오시는 길</Link>
         <Link to="/member/login">로그인</Link>
-        <Link to="/member/signup">회원가입</Link>
       </nav>
     </header>
   );

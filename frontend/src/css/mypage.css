@@ -46,9 +46,3 @@
     color: #888;
     margin-top: 8px;
 }
-
-/* 로고 이미지가 너무 커질 경우 제한 */
-img[alt="ATELIER"] {
-    max-width: 80px;
-    max-height: 80px;
-}
