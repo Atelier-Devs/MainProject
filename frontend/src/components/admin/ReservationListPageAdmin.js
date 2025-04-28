@@ -1,4 +1,3 @@
-// src/components/admin/ReservationListPage.jsx
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllReservations } from "../../api/adminApi";
@@ -38,9 +37,11 @@ const ReservationListPageAdmin = () => {
               <td className="py-2 px-4">{r.residencename}</td>
               <td className="py-2 px-4">{r.createdAt}</td>
               <td className="py-2 px-4">{r.status}</td>
-              {r.residencePrice
-                ? r.residencePrice.toLocaleString() + "원"
-                : "가격 없음"}
+              <td className="py-2 px-4">
+                {r.residencePrice
+                  ? `${r.residencePrice.toLocaleString()}원`
+                  : "가격 없음"}
+              </td>
             </tr>
           ))}
         </tbody>

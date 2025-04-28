@@ -1,6 +1,5 @@
-import { lazy, Suspense } from "react";
-
-const Loading = <div>Loading...</div>;
+// src/router/residenceRouter.js
+import { lazy } from "react";
 
 const Residence = lazy(() => import("../pages/residence/Residence"));
 const ResidenceRead = lazy(() => import("../pages/residence/ResidenceRead"));
@@ -8,20 +7,12 @@ const ResidenceRead = lazy(() => import("../pages/residence/ResidenceRead"));
 const residenceRouter = () => {
   return [
     {
-      path: "",
-      element: (
-        <Suspense fallback={Loading}>
-          <Residence />
-        </Suspense>
-      ),
+      path: "/residence",
+      element: <Residence />,
     },
     {
-      path: ":id",
-      element: (
-        <Suspense fallback={Loading}>
-          <ResidenceRead />
-        </Suspense>
-      ),
+      path: "/residence/:id",
+      element: <ResidenceRead />,
     },
   ];
 };

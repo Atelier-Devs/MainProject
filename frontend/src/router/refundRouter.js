@@ -1,12 +1,13 @@
-import React from "react";
-import { Route } from "react-router-dom";
-import RefundPage from "../pages/refund/RefundPage";
+import { lazy } from "react";
+const RefundPage = lazy(() => import("../pages/refund/RefundPage"));
 
-const refundRouter = () => [
-  {
-    path: "",
-    element: <RefundPage />,
-  },
-];
+const refundRouter = () => {
+  return [
+    {
+      path: "/refund/RefundPage",
+      element: <RefundPage />,
+    },
+  ];
+};
 
 export default refundRouter;

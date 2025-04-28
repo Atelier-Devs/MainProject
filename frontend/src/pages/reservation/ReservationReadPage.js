@@ -2,16 +2,14 @@ import React from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ReservationReadComponent from "../../components/reservation/ReservationReadComponent";
-import "../../css/reservation.css";
 
 const ReservationReadPage = () => {
   return (
-    <div className="reservation-container">
+    <div className="flex flex-col min-h-screen bg-white">
       <Header />
-      <div className="reservation-content">
-        <h1>예약 상세 목록</h1>
+      <main className="flex-grow container mx-auto px-4 pt-24 pb-32">
         <ReservationReadComponent />
-      </div>
+      </main>
       <Footer />
     </div>
   );

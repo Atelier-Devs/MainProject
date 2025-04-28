@@ -1,25 +1,17 @@
-import { lazy, Suspense } from "react";
-const Loading = <div>Loading...</div>;
-const ReservationRead = lazy(() => import("../pages/reservation/ReservationReadPage"));
-const ReservationList = lazy(() => import("../pages/reservation/ReservationListPage"));
+import { lazy } from "react";
+
+const ReservationListPage = lazy(() => import("../pages/reservation/ReservationListPage"));
+const ReservationReadPage = lazy(() => import("../pages/reservation/ReservationReadPage"));
 
 const reservationRouter = () => {
   return [
     {
-      path: "list",
-      element: (
-        <Suspense fallback={Loading}>
-          <ReservationList />
-        </Suspense>
-      ),
+      path: "/reservation/manage",
+      element: <ReservationListPage />,
     },
     {
-      path: "read/:userId",
-      element: (
-        <Suspense fallback={Loading}>
-          <ReservationRead />
-        </Suspense>
-      ),
+      path: "/reservation/:id",
+      element: <ReservationReadPage />,
     },
   ];
 };

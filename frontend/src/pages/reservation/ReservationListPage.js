@@ -1,16 +1,15 @@
 import React from "react";
-import ReservationListComponent from "../../components/reservation/ReservationListComponent";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import ReservationListComponent from "../../components/reservation/ReservationListComponent";
 
 const ReservationListPage = () => {
-
   return (
-    <div className="reservation-container">
+    <div className="flex flex-col min-h-screen bg-white">
       <Header />
-      <div className="reservation-content">
+      <main className="flex-grow container mx-auto px-4 pt-24 pb-32">
         <ReservationListComponent />
-      </div>
+      </main>
       <Footer />
     </div>
   );
