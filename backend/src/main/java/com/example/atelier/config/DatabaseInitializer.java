@@ -44,12 +44,18 @@ public class DatabaseInitializer {
             // 객실 초기값 설정
             if (residenceRepo.count() == 0) {
                 residenceRepo.saveAll(List.of(
-                        new Residence(null, Residence.Type.ROOM, "디럭스 파크 뷰 룸", "싱그러운 자연을 배경으로 즐기는 조용한 나만의 공간", new BigDecimal("250000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
-                        new Residence(null, Residence.Type.ROOM, "그랜드 디럭스 룸", "상쾌한 아침과 함께하는 휴식", new BigDecimal("180000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
-                        new Residence(null, Residence.Type.ROOM, "프리미어 룸", "일상에서 벗어나 누리는 편안함", new BigDecimal("90000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
-                        new Residence(null, Residence.Type.ROOM, "프리미어 스위트", "특별한 사람과 함께 소중한 추억을 장식하는 공간", new BigDecimal("50000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
-                        new Residence(null, Residence.Type.ROOM, "디럭스 스위트", "넓은 거실과 정교한 인테리어가 선사하는 편안함", new BigDecimal("150000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
-                        new Residence(null, Residence.Type.ROOM, "코너 스위트", "한강 뷰와 함께하는 프라이빗하고 특별한 공간", new BigDecimal("200000"), 2, Residence.Status.AVAILABLE, new ArrayList<>())
+                        new Residence(null, Residence.Type.ROOM, "디럭스 파크 뷰 룸", "싱그러운 자연을 배경으로 즐기는 조용한 나만의 공간",
+                                new BigDecimal("250000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "그랜드 디럭스 룸", "상쾌한 아침과 함께하는 휴식",
+                                new BigDecimal("180000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "프리미어 룸", "일상에서 벗어나 누리는 편안함",
+                                new BigDecimal("90000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "프리미어 스위트", "특별한 사람과 함께 소중한 추억을 장식하는 공간",
+                                new BigDecimal("50000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "디럭스 스위트", "넓은 거실과 정교한 인테리어가 선사하는 편안함",
+                                new BigDecimal("150000"), 2, Residence.Status.AVAILABLE, new ArrayList<>()),
+                        new Residence(null, Residence.Type.ROOM, "코너 스위트", "한강 뷰와 함께하는 프라이빗하고 특별한 공간",
+                                new BigDecimal("200000"), 2, Residence.Status.AVAILABLE, new ArrayList<>())
                 ));
             }
 

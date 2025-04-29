@@ -5,6 +5,8 @@ import com.example.atelier.dto.*;
 import com.example.atelier.repository.UserRepository;
 import com.example.atelier.service.UserService;
 import com.example.atelier.util.JWTUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,4 +92,23 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호 불일치");
         }
     }
+
+    // 회원탈퇴
+    @DeleteMapping("/member/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Integer userId,
+                                             HttpServletResponse response) {
+        // 1. 회원 삭제
+        userService.deleteUserById(userId);
+
+        // 2. Refresh Token 쿠키 삭제
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // 즉시 만료
+        response.addCookie(cookie);
+
+        // 3. 응답 반환
+        return ResponseEntity.ok("회원탈퇴 및 토큰 삭제 완료");
+    }
+
 }

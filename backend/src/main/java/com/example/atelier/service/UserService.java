@@ -12,4 +12,5 @@ public interface UserService {
     boolean existsByEmail(String email); // email 중복 확인
     Optional<User> findByEmail(String email);
     List<User> findAllAdmins();
+    void deleteUserById(Integer userId);
 }

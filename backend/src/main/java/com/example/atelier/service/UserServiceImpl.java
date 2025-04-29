@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -75,5 +76,12 @@ public class UserServiceImpl implements UserService {
     public List<User> findAllAdmins() {
         System.out.println("관리자 service");
         return userRepository.findAllAdmins();
+    }
+
+    @Override
+    public void deleteUserById(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        userRepository.delete(user);
     }
 }
