@@ -1,221 +1,48 @@
-/* Mypage Main Wrapper */
-.mypage-wrapper {
-    min-height: 100vh;
-    background-color: #f3eee8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5rem 1.5rem;
+/* 마이페이지 전체 컨테이너 */
+.mypage-container {
+    max-width: 1000px;
+    margin: 100px auto 60px;
+    padding: 20px;
 }
 
-/* Main Card */
+/* 섹션 제목 */
+.mypage-section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+/* 카드 스타일 */
 .mypage-card {
-    background: white;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    border-radius: 1rem;
-    padding: 3.5rem 3rem;
-    width: 100%;
-    max-width: 64rem;
-    font-size: 17px;
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    padding: 20px;
+    margin-bottom: 30px;
+    transition: transform 0.2s ease;
 }
 
-/* Logo */
-.mypage-logo {
-    display: flex;
-    justify-content: center;
+.mypage-card:hover {
+    transform: translateY(-2px);
 }
 
-.mypage-logo-img {
-    width: 6rem;
-    height: 6rem;
-    object-fit: contain;
-}
-
-/* Profile Info */
-.mypage-profile {
-    text-align: center;
-    color: #374151;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.mypage-profile p span {
-    font-weight: normal;
-}
-
-/* Divider */
-.mypage-divider {
-    border-color: #d1d5db;
-}
-
-/* Button Group */
-.mypage-button-group {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    text-align: center;
-}
-
-@media (min-width: 768px) {
-    .mypage-button-group {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-.mypage-button-section h3 {
-    font-size: 1.125rem;
+/* 텍스트 라벨 강조 */
+.mypage-label {
     font-weight: 600;
-    color: #5a3e2b;
-    margin-bottom: 0.5rem;
-}
-
-.mypage-button {
-    background-color: #a07c5b;
-    color: white;
-    padding: 0.5rem 1.5rem;
-    border-radius: 0.375rem;
-    font-weight: 600;
-    transition: background-color 0.3s;
-}
-
-.mypage-button:hover {
-    background-color: #8b6847;
-}
-
-/* Section Card (결제 내역, 리뷰) */
-.mypage-section-card {
-    background: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-    padding: 1.5rem;
-}
-
-.mypage-inner-card {
-    background: #fafafa;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-/* Footer of Inner Cards */
-.mypage-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    margin-top: 1rem;
-}
-
-/* Button Flex */
-.mypage-button-flex {
-    display: flex;
-    gap: 0.5rem;
-}
-
-/* Refund / Review / Edit / Delete Buttons */
-.mypage-button-refund,
-.mypage-button-review,
-.mypage-button-edit,
-.mypage-button-delete {
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    color: white;
-    transition: background-color 0.3s;
-}
-
-.mypage-button-refund {
-    background-color: #ef4444;
-}
-
-.mypage-button-refund:hover {
-    background-color: #dc2626;
-}
-
-.mypage-button-review {
-    background-color: #16a34a;
-}
-
-.mypage-button-review:hover {
-    background-color: #15803d;
-}
-
-.mypage-button-edit {
-    background-color: #facc15;
-    color: white;
-}
-
-.mypage-button-edit:hover {
-    background-color: #eab308;
-}
-
-.mypage-button-delete {
-    background-color: #ef4444;
-}
-
-.mypage-button-delete:hover {
-    background-color: #dc2626;
-}
-
-/* Review Stars */
-.mypage-review-stars {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.mypage-review-stars-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-/* Refund Status */
-.mypage-refund-pending,
-.mypage-refund-complete {
-    color: #f87171;
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-/* Grade Colors */
-.mypage-grade-gold {
-    color: #f59e0b;
-    font-weight: bold;
-}
-
-.mypage-grade-diamond {
-    color: #0ea5e9;
-    font-weight: bold;
-}
-
-.mypage-grade-trinity {
-    color: #ec4899;
-    font-weight: bold;
-}
-
-.mypage-grade-default {
-    color: #374151;
-    font-weight: 600;
-}
-
-/* Loading Text */
-.mypage-loading {
-    text-align: center;
-    margin-top: 5rem;
-    font-size: 1.125rem;
     color: #555;
 }
 
-/* Empty Text */
-.mypage-empty-text {
-    font-size: 1rem;
-    color: #6b7280;
+/* 별점 스타일 */
+.mypage-stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 작성일 등 작은 텍스트 */
+.mypage-meta {
+    font-size: 14px;
+    color: #888;
+    margin-top: 8px;
 }

@@ -5,6 +5,7 @@ import { createReview, updateReview, getReviewById } from "../../api/reviewApi";
 const ReviewWriteComponent = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
   const reviewId = searchParams.get("reviewId");
   const residenceId = searchParams.get("residenceId");
   const isEdit = !!reviewId;
@@ -135,6 +136,7 @@ const ReviewWriteComponent = () => {
             {isEdit ? "수정 완료" : "작성 완료"}
           </button>
         </div>
+
       </form>
     </div>
   );

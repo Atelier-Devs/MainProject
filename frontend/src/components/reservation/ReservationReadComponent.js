@@ -1,56 +1,58 @@
-// src/components/reservation/ReservationReadComponent.js
 import React, { useEffect, useState } from "react";
+import { getReservationsByUserId } from "../../api/reservationApi";
+import "../../css/reservation.css";
 import { useParams } from "react-router-dom";
-import { getReservationById } from "../../api/reservationApi";
 
 const ReservationReadComponent = () => {
-  const { id } = useParams();
-  const [reservation, setReservation] = useState(null);
+  const { userId } = useParams();
+  const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
-    const fetchReservation = async () => {
-      try {
-        const data = await getReservationById(id);
-        setReservation(data);
-      } catch (error) {
-        console.error("예약 상세 불러오기 실패", error);
-      }
-    };
-    fetchReservation();
-  }, [id]);
+    fetchUserReservations();
+  }, [userId]);
 
-  if (!reservation) {
-    return <div className="text-center mt-20">Loading...</div>;
-  }
+  const fetchUserReservations = async () => {
+    try {
+      const data = await getReservationsByUserId(userId);
+
+      if (Array.isArray(data)) {
+        setReservations(data);
+      } else if (data) {
+        setReservations([data]); // 단일 객체인 경우 배열로 감싸기
+      } else {
+        setReservations([]); // null이나 undefined일 경우 안전 처리
+      }
+
+    } catch (error) {
+      console.error("해당 유저의 예약을 불러올 수 없습니다.");
+    }
+  };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-8 shadow-lg rounded-lg">
-      <h2 className="text-2xl font-bold text-center mb-6">예약 상세 정보</h2>
-
-      <div className="space-y-4">
-        <div>
-          <span className="font-semibold text-gray-700">객실 이름:</span>
-          <span className="ml-2 text-gray-900">{reservation.roomName || "정보 없음"}</span>
-        </div>
-
-        <div>
-          <span className="font-semibold text-gray-700">체크인 날짜:</span>
-          <span className="ml-2 text-gray-900">{reservation.checkInDate?.split("T")[0]}</span>
-        </div>
-
-        <div>
-          <span className="font-semibold text-gray-700">체크아웃 날짜:</span>
-          <span className="ml-2 text-gray-900">{reservation.checkOutDate?.split("T")[0]}</span>
-        </div>
-
-        <div>
-          <span className="font-semibold text-gray-700">인원 수:</span>
-          <span className="ml-2 text-gray-900">{reservation.guestCount}명</span>
-        </div>
-
-        <div>
-          <span className="font-semibold text-gray-700">상태:</span>
-          <span className="ml-2 text-gray-900">{reservation.status || "정보 없음"}</span>
+    <div>
+      <div className="reservation-content">
+        <h2>유저 ID: {userId}의 예약 목록</h2>
+        <div className="reservation-table-container">
+          <table className="reservation-table">
+            <thead>
+              <tr>
+                <th>유저 아이디</th>
+                <th>예약 객실</th>
+                <th>예약 날짜</th>
+                <th>예약 상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reservations.map((reservation) => (
+                  <tr key={reservation.userId}>
+                    <td>{reservation.userId}</td>
+                    <td>{reservation.residenceId}</td>
+                    <td>{new Date(reservation.reservationDate).toLocaleString()}</td>
+                    <td>{reservation.status}</td>
+                  </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

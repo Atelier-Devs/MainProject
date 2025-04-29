@@ -1,18 +1,19 @@
 import React from "react";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import NewReviewListComponent from "../../components/review/NewReviewListComponent";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import ReviewReadComponent from "../components/review/ReviewReadComponent";
 
-const Review = () => {
+const ReviewRead = () => {
     return (
-        <div className="bg-gray-50 min-h-screen flex flex-col">
+        <>
             <Header />
-            <main className="flex-grow container mx-auto px-4 mt-24 pb-32">
-                <NewReviewListComponent />
-            </main>
+            <div className="min-h-screen pt-28 pb-32 bg-gray-100 flex items-start justify-center">
+                <ReviewReadComponent />
+            </div>
+
             <Footer />
-        </div>
+        </>
     );
 };
 
-export default Review;
+export default ReviewRead;

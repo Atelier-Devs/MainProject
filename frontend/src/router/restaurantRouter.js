@@ -1,20 +1,31 @@
-// src/router/restaurantRouter.js
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
+
+const Loading = <div>Loading...</div>;
 
 const Restaurant = lazy(() => import("../pages/restaurant/Restaurant"));
 const RestaurantRead = lazy(() => import("../pages/restaurant/RestaurantRead"));
 
-const restaurantRouter = () => {
+
+const RestaurantRouter = () => {
     return [
+
         {
-            path: "/restaurant",
-            element: <Restaurant />,
+            path: "",
+            element: (
+                <Suspense fallback={Loading}>
+                    <Restaurant />
+                </Suspense>
+            ),
         },
         {
-            path: "/restaurant/:id",
-            element: <RestaurantRead />,
+            path: ":restaurantId",
+            element: (
+                <Suspense fallback={Loading}>
+                    <RestaurantRead />
+                </Suspense>
+            ),
         },
     ];
 };
 
-export default restaurantRouter;
+export default RestaurantRouter;

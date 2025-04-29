@@ -1,37 +1,75 @@
 // src/router/adminRouter.js
-
-import { Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import AdminComponent from "../components/admin/AdminComponent";
-import AdminStatsPage from "../pages/admin/AdminStatsPage";
-import PaymentListAdminPage from "../components/admin/PaymentListAdminPage";
-import RefundApprovalPage from "../components/admin/RefundApprovalPage";
-import ReservationListPageAdmin from "../components/admin/ReservationListPageAdmin";
+
+// ✅ lazy import
+const AdminStatsPage = lazy(() => import("../pages/admin/AdminStatsPage"));
+
+const PaymentListAdminPage = lazy(() =>
+  import("../components/admin/PaymentListAdminPage")
+);
+const RefundApprovalPage = lazy(() =>
+  import("../components/admin/RefundApprovalPage")
+);
+const ReservationListPageAdmin = lazy(() =>
+  import("../components/admin/ReservationListPageAdmin")
+);
+
+const Loading = <div>Loading...</div>;
 
 const adminRouter = () => [
   {
     path: "",
-    element: <AdminComponent />,
+    element: (
+      <Suspense fallback={Loading}>
+        <AdminComponent />
+      </Suspense>
+    ),
     children: [
       {
         index: true,
-        element: <Navigate to="stats" />, 
-      },
-      {
-        path: "stats",
-        element: <AdminStatsPage />,
+        element: (
+          <Suspense fallback={Loading}>
+            <AdminStatsPage />
+          </Suspense>
+        ),
       },
       {
         path: "payments",
-        element: <PaymentListAdminPage />,
+        element: (
+          <Suspense fallback={Loading}>
+            <PaymentListAdminPage />
+          </Suspense>
+        ),
       },
       {
         path: "refunds",
-        element: <RefundApprovalPage />,
+        element: (
+          <Suspense fallback={Loading}>
+            <RefundApprovalPage />
+          </Suspense>
+        ),
       },
       {
         path: "reservations",
-        element: <ReservationListPageAdmin />,
+        element: (
+          <Suspense fallback={Loading}>
+            <ReservationListPageAdmin />
+          </Suspense>
+        ),
       },
+      {
+        path: "stats",
+        element: (
+          <Suspense fallback={Loading}>
+            <AdminStatsPage />
+          </Suspense>
+        ),
+      },
+      // {
+      //   path: "admin",
+      //   children: adminRouter(),
+      // },
     ],
   },
 ];

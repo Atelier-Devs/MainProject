@@ -1,25 +1,75 @@
-// src/components/payment/PaymentSummary.js
-import React from "react";
+import React, { useEffect, useState } from "react";
+import CreditCardCheckout from "./CreditCardCheckout";
+import axios from "axios";
 
-const PaymentSummary = ({ amount, status, date }) => {
+const PaymentSummary = ({ reservationId }) => {
+  const [summary, setSummary] = useState(null);
+  const [startPayment, setStartPayment] = useState(false);
+
+  useEffect(() => {
+    if (!reservationId) return;
+
+    const fetchSummary = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/api/atelier/payment/summary/${reservationId}`
+        );
+        setSummary(res.data);
+      } catch (err) {
+        console.error("요약 정보 조회 실패:", err);
+        alert("결제 정보를 불러오는 데 실패했습니다.");
+      }
+    };
+
+    fetchSummary();
+  }, [reservationId]);
+
+  if (!summary)
+    return <div className="text-gray-500">결제 정보를 불러오는 중...</div>;
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md space-y-4 max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-6">결제 내역</h2>
+    <div className="border rounded-lg p-6 shadow-md mt-4 bg-white">
+      <h2 className="text-xl font-semibold mb-4">결제 요약</h2>
 
-      <div>
-        <span className="font-semibold text-gray-700">총 금액:</span>
-        <span className="ml-2 text-gray-900">{Number(amount).toLocaleString()} KRW</span>
-      </div>
+      <p className="mb-1">이름: {summary.userName}</p>
+      <p className="mb-1">이메일: {summary.userEmail}</p>
+      <p className="mb-1">예약일: {summary.reservationDate}</p>
+      <p className="mb-1">객실 정보: {summary.roomSummary}</p>
 
-      <div>
-        <span className="font-semibold text-gray-700">결제 상태:</span>
-        <span className="ml-2 text-gray-900">{status}</span>
-      </div>
+      <hr className="my-4" />
 
-      <div>
-        <span className="font-semibold text-gray-700">결제 일자:</span>
-        <span className="ml-2 text-gray-900">{date?.split("T")[0]}</span>
-      </div>
+      <h3 className="font-bold mb-2">예약 포함 항목</h3>
+      <ul className="list-disc list-inside mb-4">
+        {summary.itemSummary &&
+          summary.itemSummary.map((item, idx) => <li key={idx}>{item}</li>)}
+      </ul>
+
+      <p>원래 금액: {summary.originalAmount.toLocaleString()}원</p>
+      <p>멤버십 등급: {summary.membershipCategory || "없음"}</p>
+      <p>할인율: {(summary.discountRate * 100).toFixed(0)}%</p>
+
+      <p className="mt-4 text-lg font-bold text-purple-700">
+        최종 결제 금액: {summary.finalAmount.toLocaleString()}원
+      </p>
+
+      {!startPayment ? (
+        <button
+          className="mt-6 bg-purple-600 text-white px-4 py-2 rounded"
+          onClick={() => setStartPayment(true)}
+        >
+          결제하기
+        </button>
+      ) : (
+        <CreditCardCheckout
+          userId={userId.id}
+          name={summary.roomSummary}
+          reservationId={summary.reservationId}
+          membershipId={summary.membershipId}
+          orderId={summary.orderId}
+          amount={summary.finalAmount}
+          paymentMethod="PHONE"
+        />
+      )}
     </div>
   );
 };

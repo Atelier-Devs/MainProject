@@ -1,7 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import React from "react";
 import PaymentListTableAdmin from "./PaymentListTableAdmin";
 import { fetchAllPayments } from "../../api/adminApi";
+// 전체 결제 내역 조회 API
+// const fetchAllPayments = async () => {
+//   const res = await axios.get("/api/atelier/payment/list");
+//   return res.data;
+// };
 
 const PaymentListAdminPage = () => {
   const {
@@ -30,13 +36,11 @@ const PaymentListAdminPage = () => {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">💳 결제 내역 (관리자)</h2>
 
-      {/* 🕓 대기 중 결제 리스트 */}
       <h3 className="text-xl font-semibold mt-6 text-blue-600">
         🕓 대기 중 (PENDING)
       </h3>
       <PaymentListTableAdmin paymentList={pendingList} onRefetch={refetch} />
 
-      {/* ✅ 결제 완료 리스트 */}
       <h3 className="text-xl font-semibold mt-10 text-green-600">
         ✅ 결제 완료 (COMPLETED)
       </h3>

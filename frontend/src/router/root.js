@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import Dashboard from "../pages/Dashboard";
 import memberRouter from "./memberRouter";
 import residenceRouter from "./residenceRouter";
 import restaurantRouter from "./restaurantRouter";
@@ -11,6 +12,7 @@ import kakaomapRouter from "./kakaomapRouter";
 import paymentRouter from "./paymentRouter";
 import membershipRouter from "./membershipRouter";
 import refundRouter from "./refundRouter";
+import AdminComponent from "../components/admin/AdminComponent";
 import adminRouter from "./adminRouter";
 import authRouter from "./authRouter";
 
@@ -19,7 +21,6 @@ const { createBrowserRouter } = require("react-router-dom");
 const Loading = <div>Loading...</div>;
 
 const Main = lazy(() => import("../pages/MainPage"));
-const Dashboard = lazy(() => import("../pages/Dashboard"));
 
 const root = createBrowserRouter([
   {
@@ -38,6 +39,15 @@ const root = createBrowserRouter([
       </Suspense>
     ),
   },
+  {
+    path: "admin",
+    element: (
+      <Suspense fallback={Loading}>
+        <AdminComponent />
+      </Suspense>
+    ),
+  },
+
   {
     path: "member",
     children: memberRouter(),
@@ -75,16 +85,16 @@ const root = createBrowserRouter([
     children: paymentRouter(),
   },
   {
-    path: "refund",
-    children: refundRouter(),
-  },
-  {
     path: "map",
     children: kakaomapRouter(),
   },
   {
     path: "membership",
     children: membershipRouter(),
+  },
+  {
+    path: "refund",
+    children: refundRouter(),
   },
   {
     path: "admin",

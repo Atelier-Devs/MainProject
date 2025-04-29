@@ -45,11 +45,12 @@ public class CustomSecurityConfig {
         // [1] 폼 로그인 비활성화
         http.formLogin(form -> form.disable());
         http.authorizeHttpRequests(authorize -> authorize
-                // 회원가입, 로그인, 로그아웃은 허용
+                // 회원가입, 로그인, 로그아웃은, 회원탈퇴 허용
                 .requestMatchers(HttpMethod.POST, "/api/atelier/register/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/atelier/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/atelier/view/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/atelier/logout").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/atelier/member/**").authenticated()
 
                 // 아이디/비밀번호 찾기, 비밀번호 변경은 허용
                 .requestMatchers(HttpMethod.POST, "/api/atelier/auth/find-id").permitAll()

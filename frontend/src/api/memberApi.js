@@ -60,3 +60,8 @@ export const verifyPassword = async ({ email, password }) => {
     return { success: false };
   }
 };
+
+export const deleteUser = async (userId) => {
+  const res = await api.delete(`/api/atelier/member/${userId}`);
+  return res.data;
+};

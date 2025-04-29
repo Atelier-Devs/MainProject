@@ -129,7 +129,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             List<GrantedAuthority> authorities = List.of(authority);
             log.info("👤 authorities 2): {}", authorities);
             UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(email, password, authorities);
+                    new UsernamePasswordAuthenticationToken(email, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             log.info("👤 authenticationToken 3): {}", authenticationToken);
             filterChain.doFilter(request, response);

@@ -1,14 +1,39 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 
-const Review = lazy(() => import("../pages/review/Review"));
+const Loading = <div>Loading...</div>;
+
+// 페이지 컴포넌트 동적 로드
+const ReviewPage = lazy(() => import("../pages/review/Review"));
 const ReviewWrite = lazy(() => import("../pages/review/ReviewWrite"));
-const ReviewRead = lazy(() => import("../pages/review/ReviewRead"));
+const ReviewReadComponent = lazy(() => import("../components/review/ReviewReadComponent"));
 
 const reviewRouter = () => {
     return [
-        { path: "/review", element: <Review /> },
-        { path: "/review/write", element: <ReviewWrite /> },
-        { path: "/review/:reviewId", element: <ReviewRead /> },
+        {
+            index: true,  // 기본 경로 /review 에서 ReviewPage 렌더링
+            element: (
+                <Suspense fallback={Loading}>
+                    <ReviewPage />
+                </Suspense>
+            ),
+        },
+        {
+            path: "write",  // /review/write - 리뷰 작성 페이지
+            element: (
+                <Suspense fallback={Loading}>
+                    <ReviewWrite /> 
+                </Suspense>
+            ),
+        },
+        {
+            path: ":reviewId",  // /review/:reviewId - 특정 리뷰 상세보기 페이지
+            element: (
+                <Suspense fallback={Loading}>
+                    <ReviewReadComponent />
+                </Suspense>
+            ),
+        },
+
     ];
 };
 

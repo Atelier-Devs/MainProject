@@ -1,4 +1,6 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
+
+const Loading = <div>Loading...</div>;
 
 const Roomservice = lazy(() => import("../pages/roomservice/Roomservice"));
 const RoomserviceRead = lazy(() => import("../pages/roomservice/RoomserviceRead"));
@@ -6,12 +8,20 @@ const RoomserviceRead = lazy(() => import("../pages/roomservice/RoomserviceRead"
 const roomserviceRouter = () => {
     return [
         {
-            path: "/roomservice",
-            element: <Roomservice />,
+            path: "",
+            element: (
+                <Suspense fallback={Loading}>
+                    <Roomservice />
+                </Suspense>
+            ),
         },
         {
-            path: "/roomservice/:id",
-            element: <RoomserviceRead />,
+            path: ":roomserviceId",
+            element: (
+                <Suspense fallback={Loading}>
+                    <RoomserviceRead />
+                </Suspense>
+            ),
         },
     ];
 };
