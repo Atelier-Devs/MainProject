@@ -22,7 +22,6 @@ import java.util.Optional;
 @Slf4j
 public class ReservationServiceImpl implements ReservationService{
 
-
     private final ModelMapper modelMapper;
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
@@ -132,7 +131,7 @@ public class ReservationServiceImpl implements ReservationService{
                 .guestCount(dto.getGuestCount())
                 .status(Reservation.Status.PENDING)
                 .createdAt(new Timestamp(System.currentTimeMillis()))
-                .items(new ArrayList<>()) // ✅ 꼭 초기화해줘야 add() 가능
+                .items(new ArrayList<>()) // 꼭 초기화해줘야 add() 가능
                 .build();
         // 먼저 저장해서 reservation.id 생성
         Reservation savedReservation = reservationRepository.save(reservation);

@@ -20,7 +20,7 @@ public class Log {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_d")
+    @JoinColumn(name = "user_id")
     private User user;
 
     private String action;
