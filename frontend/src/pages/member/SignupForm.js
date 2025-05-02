@@ -99,7 +99,7 @@ const SignupForm = () => {
       <div className="signup-flex-wrapper">
         {/* 왼쪽 입력 카드 */}
         <div className="signup-card">
-          <form onSubmit={submitClick}>
+          <form>
             <div className="input-group">
               <label>이름 *</label>
               <input
@@ -163,13 +163,6 @@ const SignupForm = () => {
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
-
-            {/* 모바일에서 버튼 표시 */}
-            <div className="signup-button-container desktop-only">
-            <button type="submit" className="submit-button">
-              회원가입
-            </button>
-          </div>
           </form>
         </div>
 
@@ -222,13 +215,12 @@ const SignupForm = () => {
             </label>
           </div>
 
-          {/* PC에서만 버튼 표시 */}
+          {/* 오직 오른쪽에서만 회원가입 버튼 */}
           <div className="signup-button-container desktop-only">
-            <button type="submit" className="submit-button">
+            <button type="button" className="submit-button" onClick={submitClick}>
               회원가입
             </button>
           </div>
-          
         </div>
       </div>
 
