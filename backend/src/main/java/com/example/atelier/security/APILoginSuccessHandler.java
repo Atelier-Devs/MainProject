@@ -2,22 +2,23 @@ package com.example.atelier.security;
 
 import com.example.atelier.domain.User;
 import com.example.atelier.dto.UserDTO;
+import com.example.atelier.security.CustomUserDetails;
 import com.example.atelier.util.JWTUtil;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
+@Component
 @Log4j2
 public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -25,42 +26,54 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        log.info("-----Success-----");
-        log.info(authentication);
-        log.info("-----------------");
+        log.info("✅ 로그인 성공");
 
-        // 기본적으로 Spring Security는 org.springframework.security.core.userdetails.User를 반환함
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-        String email = principal.getUsername();
-        String encodedPassword = principal.getPassword();
         int userId = principal.getUserId();
-        log.info("principal.getUserId() = {}", userId); // 확인
-        // 권한 추출: 예를 들어, 첫 번째 권한에서 "ROLE_" 접두어를 제거
-        String authority = principal.getAuthorities().stream()
+        String email = principal.getUsername();
+
+        log.info("👤 userId = {}", userId);
+
+        // 권한 추출 (ROLE_ 제거)
+        String roleStr = principal.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("ROLE_CUSTOMER");
-//                .getAuthority();
-        String roleStr = authority.startsWith("ROLE_") ? authority.substring(5) : authority;
+                .orElse("ROLE_CUSTOMER")
+                .replace("ROLE_", "");
 
-        // 새 UserDTO를 생성 (이름, 전화번호, createdAt 등은 필요에 따라 null 처리)
-        UserDTO dto = new UserDTO(userId, null, email, encodedPassword, null, User.Role.valueOf(roleStr.toUpperCase()), null);
-        // getClaims()는 dto에 설정된 값을 기반으로 map을 만듭니다.
+        // DTO 생성 (비밀번호 및 민감 정보 제외)
+        UserDTO dto = new UserDTO(
+                userId,
+                null, // name
+                email,
+                null, // password
+                null, // phone
+                User.Role.valueOf(roleStr.toUpperCase()),
+                null  // createdAt
+        );
+
+        // ✅ Claims 생성 → JWT 발급
         Map<String, Object> claims = dto.getClaims();
 
-        // 토큰 생성 (예: access token 10분, refresh token 24시간)
-        String accessToken = JWTUtil.generateToken(claims, 60 * 24); // 24시간
-        String refreshToken = JWTUtil.generateToken(claims, 60 * 24); // 24시간
+        String accessToken = JWTUtil.generateToken(claims, 60 * 24);
+        String refreshToken = JWTUtil.generateToken(claims, 60 * 24);
+
         claims.put("accessToken", accessToken);
         claims.put("refreshToken", refreshToken);
 
+        // ✅ 응답 설정 및 반환
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
         Gson gson = new Gson();
         String json = gson.toJson(claims);
-        response.setContentType("application/json; charset=utf-8");
-        PrintWriter printWriter = response.getWriter();
-        printWriter.println(json);
-        printWriter.close();
-        log.info("userId from principal: {}", userId);
-        log.info("claims before token: {}", claims);
+
+        PrintWriter writer = response.getWriter();
+        writer.println(json);
+        writer.flush();
+        writer.close();
+
+        log.info("✅ 응답 claims: {}", claims);
     }
 }

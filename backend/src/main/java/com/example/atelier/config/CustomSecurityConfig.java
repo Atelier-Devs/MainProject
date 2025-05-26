@@ -1,5 +1,6 @@
 package com.example.atelier.config;
 
+
 import com.example.atelier.security.APILoginFailHandler;
 import com.example.atelier.security.APILoginSuccessHandler;
 import com.example.atelier.security.CustomAccessDeniedHandler;
@@ -20,92 +21,66 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Configuration
-@Log4j2
+@EnableMethodSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity // 메서드 별 권한 체크
+@Log4j2
 public class CustomSecurityConfig {
+
+    private final APILoginSuccessHandler apiLoginSuccessHandler;
+    private final APILoginFailHandler apiLoginFailHandler;
+    private final JWTCheckFilter jwtCheckFilter;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("----security config----");
 
-        // CORS 설정
-        http.cors(httpSecurityCorsConfigurer ->
-                httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource())
-        );
-        // 세션 사용하지 않음
-        http.sessionManagement(sessionConfig ->
-                sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
-        // CSRF 비활성화
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.csrf(csrf -> csrf.disable());
-        // [1] 폼 로그인 비활성화
-        http.formLogin(form -> form.disable());
-        http.authorizeHttpRequests(authorize -> authorize
-                // 회원가입, 로그인, 로그아웃은, 회원탈퇴 허용
-                .requestMatchers(HttpMethod.POST, "/api/atelier/register/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/atelier/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/atelier/view/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/atelier/logout").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/atelier/member/**").authenticated()
-
-                // 아이디/비밀번호 찾기, 비밀번호 변경은 허용
-                .requestMatchers(HttpMethod.POST, "/api/atelier/auth/find-id").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/atelier/auth/find-password").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/atelier/auth/change-password").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/atelier/auth/reset-password").permitAll()
-
-
-                // 오류 페이지는 허용
-                .requestMatchers("/error").permitAll()
-
-                // 그 외 모든 요청은 인증 필요
-                .anyRequest().authenticated()
-        );
-
-        // 폼 로그인 설정 (로그인 URL, 성공/실패 핸들러)
-        http.formLogin(config -> {
-            config.loginPage("/api/atelier/login");
-            config.loginProcessingUrl("/api/atelier/login"); // 추가: 실제 로그인 요청 처리 URL 지정
-            config.usernameParameter("email");
-            config.passwordParameter("password");
-            config.successHandler(new APILoginSuccessHandler());
-            config.failureHandler(new APILoginFailHandler());
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.formLogin(form -> {
+            form.loginProcessingUrl("/api/atelier/login");
+            form.usernameParameter("email");
+            form.passwordParameter("password");
+            form.successHandler(new APILoginSuccessHandler());
+            form.failureHandler(new APILoginFailHandler());
         });
 
 
-        // JWT 체크 필터 추가 (UsernamePasswordAuthenticationFilter 이전에 실행)
-        http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        // 예외 처리
-        http.exceptionHandling(exception ->
-                exception.accessDeniedHandler(new CustomAccessDeniedHandler())
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/api/atelier/register", "/api/atelier/register/**").permitAll()                .requestMatchers(HttpMethod.POST, "/api/atelier/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/atelier/view/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/atelier/logout").permitAll()
+                .requestMatchers("/error").permitAll()
+                .requestMatchers("/upload/**").permitAll()
+                .anyRequest().authenticated()
         );
+
+        http.addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class);
+
+        http.exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler));
 
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","HEAD","OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type","Access-Control-Request-Headers",  // 추가
-                "Access-Control-Request-Method",   // 추가
-                "Origin",                          // 추가
-                "Accept"));
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // 암호화 알고리즘
+        return new BCryptPasswordEncoder();
     }
 }

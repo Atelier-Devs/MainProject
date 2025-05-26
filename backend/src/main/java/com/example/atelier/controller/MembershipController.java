@@ -26,7 +26,7 @@ import java.util.List;
 public class MembershipController {
 
     private final MembershipRepository membershipRepository;
-    private final   MembershipService membershipService;
+    private final MembershipService membershipService;
 
     // POST
     @PostMapping("/add")

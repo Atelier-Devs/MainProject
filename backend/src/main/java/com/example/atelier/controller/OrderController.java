@@ -84,9 +84,9 @@ public class OrderController {
             @RequestParam(defaultValue = "관리자 승인 환불") String reason
     ) {
         try {
-        orderService.approveRefund(orderId, staffId, reason);
-        log.info("관리자 {} - 주문 {} 환불 승인: 사유 = {}", staffId, orderId, reason);
-        return ResponseEntity.ok("환불이 성공적으로 처리되었습니다.");
+            orderService.approveRefund(orderId, staffId, reason);
+            log.info("관리자 {} - 주문 {} 환불 승인: 사유 = {}", staffId, orderId, reason);
+            return ResponseEntity.ok("환불이 성공적으로 처리되었습니다.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("요청 오류: " + e.getMessage());
         } catch (IllegalStateException e) {

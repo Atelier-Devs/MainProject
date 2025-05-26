@@ -1,0 +1,85 @@
+2025-05-19T09:45:07.771Z  INFO 1 --- [project1] [           main] c.example.atelier.Project1Application    : Starting Project1Application v0.0.1-SNAPSHOT using Java 17.0.15 with PID 1 (/app/app.jar started by root in /app)
+2025-05-19T09:45:07.790Z DEBUG 1 --- [project1] [           main] c.example.atelier.Project1Application    : Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-05-19T09:45:07.792Z  INFO 1 --- [project1] [           main] c.example.atelier.Project1Application    : No active profile set, falling back to 1 default profile: "default"
+2025-05-19T09:45:10.598Z  INFO 1 --- [project1] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-19T09:45:11.027Z  INFO 1 --- [project1] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 397 ms. Found 17 JPA repository interfaces.
+2025-05-19T09:45:14.354Z  INFO 1 --- [project1] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-19T09:45:14.395Z  INFO 1 --- [project1] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-19T09:45:14.396Z  INFO 1 --- [project1] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-05-19T09:45:14.794Z  INFO 1 --- [project1] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-19T09:45:14.798Z  INFO 1 --- [project1] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 6831 ms
+2025-05-19T09:45:16.211Z  INFO 1 --- [project1] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-19T09:45:16.498Z  INFO 1 --- [project1] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.5.Final
+2025-05-19T09:45:16.606Z  INFO 1 --- [project1] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-19T09:45:17.596Z  INFO 1 --- [project1] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-19T09:45:17.687Z  INFO 1 --- [project1] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-19T09:45:19.106Z  INFO 1 --- [project1] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@52a74328
+2025-05-19T09:45:19.119Z  INFO 1 --- [project1] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-19T09:45:19.528Z  INFO 1 --- [project1] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+        Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+        Database driver: undefined/unknown
+        Database version: 8.0.42
+        Autocommit mode: undefined/unknown
+        Isolation level: undefined/unknown
+        Minimum pool size: undefined/unknown
+        Maximum pool size: undefined/unknown
+2025-05-19T09:45:23.212Z  INFO 1 --- [project1] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-19T09:45:23.653Z  INFO 1 --- [project1] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-19T09:45:24.886Z  INFO 1 --- [project1] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-05-19T09:45:28.064Z  WARN 1 --- [project1] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-19T09:45:28.248Z  INFO 1 --- [project1] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-05-19T09:45:30.805Z  INFO 1 --- [project1] [           main] c.e.atelier.service.OrderServiceImpl     : ✅ IamportClient initialized with API Key: 1280581557236711
+2025-05-19T09:45:30.963Z  INFO 1 --- [project1] [           main] c.e.atelier.service.PaymentServiceImpl   : ✅ IamportClient initialized with API Key: 1280581557236711
+2025-05-19T09:45:31.121Z  INFO 1 --- [project1] [           main] c.example.atelier.util.CustomFileUtil    : 파일 업로드 경로: /app/upload
+2025-05-19T09:45:31.589Z  INFO 1 --- [project1] [           main] c.e.atelier.config.CustomSecurityConfig  : -------------security config------------
+2025-05-19T09:45:32.625Z DEBUG 1 --- [project1] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JWTCheckFilter, UsernamePasswordAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-05-19T09:45:34.230Z  INFO 1 --- [project1] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-19T09:45:34.294Z  INFO 1 --- [project1] [           main] c.example.atelier.Project1Application    : Started Project1Application in 28.225 seconds (process running for 32.137)
+Hibernate: select count(*) from users u1_0
+Hibernate: select u1_0.id,u1_0.created_at,u1_0.email,u1_0.name,u1_0.password,u1_0.phone,u1_0.refundable_amount,u1_0.role_names,u1_0.total_spent from users u1_0 where u1_0.email=?
+Hibernate: select count(*) from residences r1_0
+Hibernate: select count(*) from restaurant r1_0
+Hibernate: select count(*) from bakery b1_0
+Hibernate: select count(*) from room_service rs1_0
+Hibernate: select count(*) from memberships m1_0
+Hibernate: select b1_0.id,b1_0.name,b1_0.price,b1_0.user_id from bakery b1_0 order by b1_0.id
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: select r1_0.id,r1_0.capacity,r1_0.description,r1_0.name,r1_0.price,r1_0.status,r1_0.type from residences r1_0 order by r1_0.id
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: select r1_0.id,r1_0.name,r1_0.price,r1_0.user_id from restaurant r1_0 order by r1_0.id
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: select rs1_0.id,rs1_0.name,rs1_0.price,rs1_0.user_id from room_service rs1_0 order by rs1_0.id
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+Hibernate: insert into product (bakery_id,del_flag,file_name,file_path,file_type,residence_id,restaurant_id,room_service_id) values (?,?,?,?,?,?,?,?)
+ubuntu@ip-172-31-15-15:~$

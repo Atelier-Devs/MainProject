@@ -25,7 +25,10 @@ const renderStars = (rating) => {
 const BakeryCard = ({ bakery }) => {
   const imageFile = bakery.images?.[0] || "";
   const imageUrl = imageFile
-    ? `http://localhost:8080/api/atelier/view/${imageFile.replace(/^upload\/bakery\//, "")}`
+    ? `http://hotelatelier.shop/api/atelier/view/${imageFile.replace(
+        /^upload\/bakery\//,
+        ""
+      )}`
     : "";
 
   // 제목과 설명을 " - " 기준으로 분리
@@ -34,11 +37,7 @@ const BakeryCard = ({ bakery }) => {
   return (
     <div className="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition duration-200">
       {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-60 object-cover"
-        />
+        <img src={imageUrl} alt={title} className="w-full h-60 object-cover" />
       )}
       <div className="p-4 flex flex-col justify-between h-36">
         <div>
@@ -56,7 +55,6 @@ const BakeryCard = ({ bakery }) => {
     </div>
   );
 };
-
 
 const Bakery = () => {
   const [bakeries, setBakeries] = useState([]);

@@ -5,8 +5,6 @@ import com.example.atelier.dto.*;
 import com.example.atelier.repository.UserRepository;
 import com.example.atelier.service.UserService;
 import com.example.atelier.util.JWTUtil;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +19,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/atelier")
 @Slf4j
 public class UserController {
@@ -32,9 +29,10 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO userDTO) {
         try {
             Integer userId = userService.registerUser(userDTO);
+            log.info("register controller 100) {userid: {}}", userId);
             return ResponseEntity.ok("User registered successfully. ID: " + userId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -45,30 +43,32 @@ public class UserController {
     }
 
     // 로그인
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
-        String email = loginRequestDTO.getEmail();
-        String password = loginRequestDTO.getPassword();
-
-        User user = userService.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일이 존재하지 않습니다."));
-
-        if (user.getPassword().equals(password)) { // 실제 운영 시에는 passwordEncoder.matches 사용 권장
-            Map<String, Object> valueMap = new HashMap<>();
-            valueMap.put("userId", user.getId());
-            valueMap.put("email", user.getEmail());
-            valueMap.put("name", user.getName());
-            valueMap.put("phone", user.getPhone());
-            valueMap.put("roleNames", user.getRoleNames().name());
-
-            String token = JWTUtil.generateToken(valueMap, 60); // 60분 유효
-            return ResponseEntity.ok(new LoginResponseDTO(
-                    "성공", token, user.getId(), user.getName(), user.getEmail(), user.getRoleNames().name()));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponseDTO("Login failed: Invalid email or password."));
-        }
-    }
+//    @PostMapping("/login")
+//    @ResponseBody
+//    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+//        log.info("데이터 들어오나요? {}",loginRequestDTO);
+//        String email = loginRequestDTO.getEmail();
+//        String password = loginRequestDTO.getPassword();
+//
+//        User user = userService.findByEmail(email)
+//                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일이 존재하지 않습니다."));
+//
+//        if (user.getPassword().equals(password)) { // 실제 운영 시에는 passwordEncoder.matches 사용 권장
+//            Map<String, Object> valueMap = new HashMap<>();
+//            valueMap.put("userId", user.getId());
+//            valueMap.put("email", user.getEmail());
+//            valueMap.put("name", user.getName());
+//            valueMap.put("phone", user.getPhone());
+//            valueMap.put("roleNames", user.getRoleNames().name());
+//
+//            String token = JWTUtil.generateToken(valueMap, 60); // 60분 유효
+//            return ResponseEntity.ok(new LoginResponseDTO(
+//                    "성공", token, user.getId(), user.getName(), user.getEmail(), user.getRoleNames().name()));
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body(new ErrorResponseDTO("Login failed: Invalid email or password."));
+//        }
+//    }
 
     // 로그아웃
     @GetMapping("/logout")
@@ -92,23 +92,4 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호 불일치");
         }
     }
-
-    // 회원탈퇴
-    @DeleteMapping("/member/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable Integer userId,
-                                             HttpServletResponse response) {
-        // 1. 회원 삭제
-        userService.deleteUserById(userId);
-
-        // 2. Refresh Token 쿠키 삭제
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0); // 즉시 만료
-        response.addCookie(cookie);
-
-        // 3. 응답 반환
-        return ResponseEntity.ok("회원탈퇴 및 토큰 삭제 완료");
-    }
-
 }

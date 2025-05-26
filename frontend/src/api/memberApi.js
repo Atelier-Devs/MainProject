@@ -1,7 +1,7 @@
 import axios from "axios";
 import qs from "qs";
 
-export const API_SERVER_HOST = "http://localhost:8080";
+export const API_SERVER_HOST = "https://hotelatelier.shop";
 const prefix = `${API_SERVER_HOST}/api/atelier`;
 
 const api = axios.create({
@@ -54,14 +54,12 @@ export const signupPost = async (signupParam) => {
 
 export const verifyPassword = async ({ email, password }) => {
   try {
-    const res = await api.post(`/api/atelier/member/verify-password`, { email, password });
+    const res = await api.post(`/api/atelier/member/verify-password`, {
+      email,
+      password,
+    });
     return { success: true, data: res.data };
   } catch (err) {
     return { success: false };
   }
-};
-
-export const deleteUser = async (userId) => {
-  const res = await api.delete(`/api/atelier/member/${userId}`);
-  return res.data;
 };

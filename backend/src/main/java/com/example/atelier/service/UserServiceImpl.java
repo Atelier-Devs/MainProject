@@ -2,6 +2,7 @@ package com.example.atelier.service;
 
 import com.example.atelier.domain.Membership;
 import com.example.atelier.domain.User;
+import com.example.atelier.dto.RegisterRequestDTO;
 import com.example.atelier.dto.UserDTO;
 import com.example.atelier.repository.MembershipRepository;
 import com.example.atelier.repository.UserRepository;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder; // BCryptPasswordEncoder
     private final MembershipRepository membershipRepository;
 
-    public Integer registerUser(UserDTO userDTO) {
+    public Integer registerUser(RegisterRequestDTO userDTO) {
         System.out.println("여기는 service 등록이야 :" +userDTO);
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
@@ -76,12 +76,5 @@ public class UserServiceImpl implements UserService {
     public List<User> findAllAdmins() {
         System.out.println("관리자 service");
         return userRepository.findAllAdmins();
-    }
-
-    @Override
-    public void deleteUserById(Integer userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        userRepository.delete(user);
     }
 }

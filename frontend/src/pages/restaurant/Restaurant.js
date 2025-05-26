@@ -11,9 +11,13 @@ const renderStars = (rating) => {
 
   return (
     <div className="flex items-center gap-1">
-      {[...Array(full)].map((_, i) => <FaStar key={`f-${i}`} color="#facc15" />)}
+      {[...Array(full)].map((_, i) => (
+        <FaStar key={`f-${i}`} color="#facc15" />
+      ))}
       {half && <FaStarHalfAlt color="#facc15" />}
-      {[...Array(empty)].map((_, i) => <FaRegStar key={`e-${i}`} color="#e5e7eb" />)}
+      {[...Array(empty)].map((_, i) => (
+        <FaRegStar key={`e-${i}`} color="#e5e7eb" />
+      ))}
     </div>
   );
 };
@@ -21,19 +25,21 @@ const renderStars = (rating) => {
 const RestaurantCard = ({ restaurant }) => {
   const imageFile = restaurant.images?.[0] || "";
   const imageUrl = imageFile
-    ? `http://localhost:8080/api/atelier/view/${imageFile.replace(/^upload\/restaurant\//, "")}`
+    ? `http://hotelatelier.shop/api/atelier/view/${imageFile.replace(
+        /^upload\/restaurant\//,
+        ""
+      )}`
     : "";
 
-  const [title, description] = restaurant.name?.split(" - ") || [restaurant.name, ""];
+  const [title, description] = restaurant.name?.split(" - ") || [
+    restaurant.name,
+    "",
+  ];
 
   return (
     <div className="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition duration-200">
       {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-60 object-cover"
-        />
+        <img src={imageUrl} alt={title} className="w-full h-60 object-cover" />
       )}
       <div className="p-4 flex flex-col justify-between h-36">
         <div>
@@ -51,7 +57,6 @@ const RestaurantCard = ({ restaurant }) => {
     </div>
   );
 };
-
 
 const Restaurant = () => {
   const [restaurants, setRestaurants] = useState([]);

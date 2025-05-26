@@ -89,7 +89,7 @@ public class ProductController {
         productDTO.setId(id);
         ProductDTO oldProductDTO = productService.get(id);
 
-        // 기존의 파일들(데이터베이스에 존재하는 파일들 - 수정 과정에서 삭제되었을 수 있음)
+        // 기존의 파일들(데이터베이스에 존재하는 파일들 - 수정 과저엥서 삭제되었을 수 있음)
         List<String> oldFileNames = oldProductDTO.getUploadFileNames();
         // 새로 업로드 해야 하는 파일들
         List<MultipartFile> files = productDTO.getFiles();

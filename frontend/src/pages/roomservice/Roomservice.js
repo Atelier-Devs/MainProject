@@ -7,10 +7,10 @@ import { getAllRoomservices } from "../../api/roomserviceApi";
 const RoomServiceCard = ({ service }) => {
   const imageFile = service.images?.[0] || "";
   const imageUrl = imageFile
-    ? `http://localhost:8080/api/atelier/view/${imageFile.replace(
-      /^upload\/roomservice\//,
-      ""
-    )}`
+    ? `http://hotelatelier.shop/api/atelier/view/${imageFile.replace(
+        /^upload\/roomservice\//,
+        ""
+      )}`
     : "";
 
   // 제목 - 설명 분리
@@ -19,11 +19,7 @@ const RoomServiceCard = ({ service }) => {
   return (
     <div className="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition duration-200">
       {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-60 object-cover"
-        />
+        <img src={imageUrl} alt={title} className="w-full h-60 object-cover" />
       )}
       <div className="p-4 flex flex-col justify-between h-36">
         <div>
@@ -63,10 +59,7 @@ const RoomService = () => {
       <main className="max-w-7xl mx-auto p-6 pt-32 pb-24">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
-            <RoomServiceCard
-              key={service.id}
-              service={service}
-            />
+            <RoomServiceCard key={service.id} service={service} />
           ))}
         </div>
       </main>

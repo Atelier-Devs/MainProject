@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const API_SERVER_HOST = "http://localhost:8080";
+export const API_SERVER_HOST = "https://hotelatelier.shop";
 const prefix = `${API_SERVER_HOST}/api/atelier/review`;
 
 const getAuthToken = () => {
@@ -41,12 +41,11 @@ export const updateReview = async (reviewId, updateData) => {
   const res = await axios.put(`${prefix}/modify/${reviewId}`, updateData, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json', // 👈 명시적으로 추가 권장
+      "Content-Type": "application/json", // 👈 명시적으로 추가 권장
     },
   });
   return res.data;
 };
-
 
 export const deleteReview = async (reviewId) => {
   const token = getAuthToken();
@@ -63,4 +62,3 @@ export const getMyReviews = async () => {
   });
   return res.data;
 };
-

@@ -241,7 +241,7 @@ public class PaymentServiceImpl implements PaymentService {
 //
 //        try {
 //            ResponseEntity<String> response = restTemplate.exchange(paymentApprovalUrl, HttpMethod.POST, requestEntity, String.class);
-//
+//ㄴㄴ
 //            if (!response.getStatusCode().is2xxSuccessful()) {
 //                throw new RuntimeException("결제 승인 요청 실패: " + response.getBody());
 //            }

@@ -3,7 +3,7 @@ import axios from "axios";
 
 // 1. Axios 인스턴스 생성
 const api = axios.create({
-  baseURL: "http://localhost:8080/api/atelier/payment",
+  baseURL: "https://hotelatelier.shop/api/atelier/payment",
   withCredentials: true,
 });
 
@@ -25,7 +25,7 @@ api.interceptors.request.use(
 export const createReservation = async (reservationDTO) => {
   console.log("dto:", reservationDTO);
   const res = await axios.post(
-    "http://localhost:8080/api/atelier/reservations/add",
+    "https://hotelatelier.shop/api/atelier/reservations/add",
     reservationDTO,
     {
       withCredentials: true,
@@ -66,4 +66,3 @@ export const confirmPayment = async (paymentId) => {
 //   const res = await api.get("/list"); // /api/atelier/payment/list
 //   return res.data;
 // };
-

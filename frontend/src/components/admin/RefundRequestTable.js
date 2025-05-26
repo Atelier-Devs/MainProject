@@ -8,11 +8,11 @@ const RefundRequestTable = ({ refundList, onApprove }) => {
   const approveMutation = useMutation({
     mutationFn: approveRefund,
     onSuccess: () => {
-      alert("✅ 환불 승인 완료");
+      alert(" 환불 승인 완료");
       onApprove(); // 목록 다시 불러오기
     },
     onError: () => {
-      alert("❌ 승인 실패");
+      alert("승인 실패");
     },
   });
 

@@ -12,7 +12,7 @@ const PaymentSummary = ({ reservationId }) => {
     const fetchSummary = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/atelier/payment/summary/${reservationId}`
+          `http://hotelatelier.shop/api/atelier/payment/summary/${reservationId}`
         );
         setSummary(res.data);
       } catch (err) {

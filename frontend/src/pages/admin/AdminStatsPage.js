@@ -46,10 +46,10 @@ const AdminStatsPage = () => {
   }, [stats]);
 
   if (isLoading)
-    return <div className="text-center mt-20 text-gray-500">📦 통계를 불러오는 중...</div>;
+    return <div className="text-center mt-20 text-gray-500">통계를 불러오는 중...</div>;
 
   if (error)
-    return <div className="text-center mt-20 text-red-500">❌ 통계 불러오기 실패</div>;
+    return <div className="text-center mt-20 text-red-500">통계 불러오기 실패</div>;
 
   const donutData = [
     { name: "총 결제액", value: stats.totalPaymentAmount },
@@ -60,7 +60,7 @@ const AdminStatsPage = () => {
 
   return (
     <div className="p-8 space-y-12 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">📊 관리자 통계 대시보드</h1>
+      <h1 className="text-3xl font-bold mb-8">관리자 통계 대시보드</h1>
 
       {/* 요약 카드 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -72,7 +72,7 @@ const AdminStatsPage = () => {
 
       {/* 도넛 차트 */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">💰 결제 vs 환불</h2>
+        <h2 className="text-xl font-semibold mb-4"> 결제 vs 환불</h2>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
@@ -100,7 +100,7 @@ const AdminStatsPage = () => {
 
       {/* 인기 객실 */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">🏨 인기 객실 TOP5</h2>
+        <h2 className="text-xl font-semibold mb-4">인기 객실 TOP5</h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={stats.popularRooms}>
             <XAxis dataKey="roomName" />
@@ -118,7 +118,7 @@ const AdminStatsPage = () => {
 
       {/* 사용자 지출 랭킹 */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">👑 사용자 지출 랭킹</h2>
+        <h2 className="text-xl font-semibold mb-4">사용자 지출 랭킹</h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart layout="vertical" data={cleanedSpenders}>
             <XAxis type="number" domain={[0, 500]} />
@@ -128,7 +128,7 @@ const AdminStatsPage = () => {
               <LabelList dataKey="totalSpent" position="right" formatter={(v) => `${v.toLocaleString()}원`} />
             </Bar>
           </BarChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer>s
       </section>
     </div>
   );

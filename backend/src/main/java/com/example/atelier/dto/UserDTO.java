@@ -25,7 +25,7 @@ public class UserDTO {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("userId", this.id); // 추가!
         dataMap.put("email", email);
-        dataMap.put("password", password);
+//        dataMap.put("password", password);
         dataMap.put("phone", phone);
         dataMap.put("name", name); // 사용자 이름도 추가
         // roleNames가 null인 경우 기본 역할 CUSTOMER 할당

@@ -1,5 +1,5 @@
 import axios from "axios";
-export const API_SERVER_HOST = "http://localhost:8080";
+export const API_SERVER_HOST = "https://hotelatelier.shop";
 const prefix = `${API_SERVER_HOST}/api/atelier/residence`;
 
 const getAuthToken = () => {
@@ -19,7 +19,7 @@ export const getAllResidences = async () => {
 
 // 특정 ID로 객실 정보 가져오기
 export const getResidenceById = async (id) => {
-  console.log("id:")
+  console.log("id:");
   const token = getAuthToken();
   const res = await axios.get(`${prefix}/${id}`, {
     headers: { Authorization: `Bearer ${token}` },

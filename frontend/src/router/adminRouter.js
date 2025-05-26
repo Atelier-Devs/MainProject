@@ -2,7 +2,7 @@
 import { lazy, Suspense } from "react";
 import AdminComponent from "../components/admin/AdminComponent";
 
-// ✅ lazy import
+// lazy import
 const AdminStatsPage = lazy(() => import("../pages/admin/AdminStatsPage"));
 
 const PaymentListAdminPage = lazy(() =>

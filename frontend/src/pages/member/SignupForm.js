@@ -38,7 +38,9 @@ const SignupForm = () => {
   const handleConfirmPasswordChange = (e) => {
     const newConfirmPassword = e.target.value;
     setConfirmPassword(newConfirmPassword);
-    setIsPasswordMatch(password === newConfirmPassword && newConfirmPassword !== "");
+    setIsPasswordMatch(
+      password === newConfirmPassword && newConfirmPassword !== ""
+    );
   };
 
   const handleAgreeAll = () => {
@@ -173,8 +175,10 @@ const SignupForm = () => {
           <div className="terms-block">
             <h3>개인정보 수집 및 이용에 대한 안내</h3>
             <p className="terms-desc">
-              수집 항목: 이름, 이메일, 비밀번호, 전화번호<br />
-              수집 목적: 회원 식별 및 서비스 제공<br />
+              수집 항목: 이름, 이메일, 비밀번호, 전화번호
+              <br />
+              수집 목적: 회원 식별 및 서비스 제공
+              <br />
               보유 기간: 회원 탈퇴 시까지
             </p>
             <label>
@@ -191,7 +195,8 @@ const SignupForm = () => {
             <h3>개인정보 제3자 제공에 대한 안내</h3>
             <p className="terms-desc">
               제공 대상: 결제사, 배송사 등<br />
-              제공 목적: 서비스 제공을 위한 정보 전달<br />
+              제공 목적: 서비스 제공을 위한 정보 전달
+              <br />
               보유 및 이용 기간: 회원 탈퇴 시까지
             </p>
             <label>
@@ -215,9 +220,9 @@ const SignupForm = () => {
             </label>
           </div>
 
-          {/* 오직 오른쪽에서만 회원가입 버튼 */}
+          {/* 데스크탑에서만 버튼 표시 */}
           <div className="signup-button-container desktop-only">
-            <button type="button" className="submit-button" onClick={submitClick}>
+            <button onClick={submitClick} className="submit-button">
               회원가입
             </button>
           </div>

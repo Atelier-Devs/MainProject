@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService{
         this.iamportClient = new IamportClient(apiKey, apiSecret);
         log.info("✅ IamportClient initialized with API Key: {}", apiKey);
     }
-    // 주문 생성
+    // 환불 생성
     @Override
     public int createOrder(Payment payment) {
         User user = payment.getUser();
@@ -131,7 +131,7 @@ public class OrderServiceImpl implements OrderService{
         boolean refundSuccess = refundPayment(payment.getId());
 
         if (!refundSuccess) {
-            log.error("❌ 환불 실패: paymentId = {}", payment.getId());
+            log.error("환불 실패: paymentId = {}", payment.getId());
             throw new RuntimeException("아임포트 환불 실패");
         }
 
@@ -159,13 +159,13 @@ public class OrderServiceImpl implements OrderService{
             throw new IllegalStateException("본인의 주문만 환불 요청이 가능합니다.");
         }
 
-        // ✅ 리뷰 자동 삭제 로직 추가
+        //  리뷰 자동 삭제 로직 추가
         Reservation reservation = order.getReservation();
         Residence residence = reservation.getResidence();
         if (residence != null) {
             Integer residenceId = residence.getId();
             reviewRepository.deleteByUserIdAndResidenceId(userId, residenceId);
-            log.info("🗑️ 리뷰 자동 삭제 완료 - userId: {}, residenceId: {}", userId, residenceId);
+            log.info("리뷰 자동 삭제 완료 - userId: {}, residenceId: {}", userId, residenceId);
         }
 
         // 이미 구현된 엔티티의 환불 요청 메서드 호출
@@ -174,7 +174,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public boolean refundPayment(Integer paymentId) {
-        log.info("🔄 결제 환불 요청 시작: paymentId = {}", paymentId);
+        log.info(" 결제 환불 요청 시작: paymentId = {}", paymentId);
 
         //paymentId로 DB에서 최신 Payment 데이터를 조회하는 방식
         // 이 방식은 데이터 무결성과 최신 상태를 보장한다는 점에서 안전
@@ -184,34 +184,27 @@ public class OrderServiceImpl implements OrderService{
         // 보안과 데이터 신뢰성이 우선.
 
         //  결제 정보 가져오기
-        // 1️⃣ Payment 정보 직접 조회
+        //  Payment 정보 직접 조회
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
 
         // Payment에서 Order 정보 가져오기 (Order와 Payment가 양방향 관계인 경우)
         Order order = payment.getOrder();
-        // 2️⃣ 결제 상태 확인
+        //  결제 상태 확인
         if (payment.getPaymentStatus() != Payment.PaymentStatus.COMPLETED) {
-            log.warn("🚨 Payment {} - 완료된 결제만 환불 가능합니다. 현재 상태: {}", paymentId, payment.getPaymentStatus());
+            log.warn(" Payment {} - 완료된 결제만 환불 가능합니다. 현재 상태: {}", paymentId, payment.getPaymentStatus());
             return false;
         }
 
-        // 3️⃣ impUid 존재 확인
+        //  impUid 존재 확인
         String impUid = payment.getImpUid();
         log.info("impUid: {}", impUid);
         if (impUid == null || impUid.isEmpty()) {
-            log.error("❌ Payment {} - 외부 결제 ID(impUid)가 없습니다.", paymentId);
+            log.error(" Payment {} - 외부 결제 ID(impUid)가 없습니다.", paymentId);
             return false;
         }
-
-        // 4️⃣ PortOne API 환불 요청 데이터 구성
-
-// 전체 환불
-//        CancelData cancelData = new CancelData(impUid, true);
-// 또는 금액을 지정해야 할 경우
         CancelData cancelData = new CancelData(impUid, true, payment.getAmount());
         cancelData.setReason("관리자 승인 환불");
-
 
         log.info("cancelData: {} ", cancelData);
 
@@ -220,35 +213,35 @@ public class OrderServiceImpl implements OrderService{
             log.info("paymentStatus: {} ",payment.getPaymentStatus());
             IamportResponse<com.siot.IamportRestClient.response.Payment> response =
                     iamportClient.cancelPaymentByImpUid(cancelData);
-            log.info("🔍 PortOne 응답 전체: {}", new Gson().toJson(response)); // 전체 JSON 구조 보기
-            log.info("🔍 PortOne 응답 코드: {}, 메시지: {}", response.getCode(), response.getMessage());
+            log.info(" PortOne 응답 전체: {}", new Gson().toJson(response)); // 전체 JSON 구조 보기
+            log.info(" PortOne 응답 코드: {}, 메시지: {}", response.getCode(), response.getMessage());
 
             if (response.getResponse() != null && "cancelled".equals(response.getResponse().getStatus())) {
-                // 6️⃣ 결제 상태 변경
+                //  결제 상태 변경
                 payment.setPaymentStatus(Payment.PaymentStatus.REFUNDED);
                 paymentRepository.save(payment);
-                log.info("✅ Payment {} - 환불 성공", paymentId);
+                log.info(" Payment {} - 환불 성공", paymentId);
 
-                // 7️⃣ 사용자 총 지출액 업데이트
+                //사용자 총 지출액 업데이트
                 User user = payment.getUser();
                 BigDecimal current = user.getTotalSpent();
                 BigDecimal refundAmount = payment.getAmount();
                 if (current.compareTo(refundAmount) < 0) {
-                    log.warn("🚨 유저 ID {}의 totalSpent가 음수로 내려갈 수 있어 차단됨", user.getId());
+                    log.warn(" 유저 ID {}의 totalSpent가 음수로 내려갈 수 있어 차단됨", user.getId());
                     user.setTotalSpent(BigDecimal.ZERO); // 하한선 0
                 } else {
                     user.setTotalSpent(current.subtract(refundAmount));
                 }
 
                 userRepository.save(user);
-                log.info("🔄 Updated totalSpent for User ID {}: {}", user.getId(), user.getTotalSpent());
+                log.info(" Updated totalSpent for User ID {}: {}", user.getId(), user.getTotalSpent());
                 return true;
             } else {
-                log.warn("🚨 Payment {} - 환불 실패. PortOne 응답: {}", paymentId, response);
+                log.warn("Payment {} - 환불 실패. PortOne 응답: {}", paymentId, response);
                 return false;
             }
         } catch (IamportResponseException | IOException e) {
-            log.error("❌ PortOne 서버와 통신 실패: {}", e.getMessage(), e);
+            log.error(" PortOne 서버와 통신 실패: {}", e.getMessage(), e);
             return false;
         }
     }

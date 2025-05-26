@@ -19,7 +19,6 @@ public class StaffStatusController {
 
     private final StaffStatusServiceImpl staffStatusService;
 
-
     @GetMapping("/stats")
     @PreAuthorize("hasRole('STAFF')")
     public StaffStatusDTO getStaffStatistics() {

@@ -4,7 +4,6 @@ import { deleteReview } from "../../api/reviewApi";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import logo1 from "../../image/logo1.png";
-import { deleteUser } from "../../api/memberApi";
 
 const MyPageComponent = () => {
   const [profile, setProfile] = useState(null);
@@ -62,34 +61,6 @@ const MyPageComponent = () => {
         ...prev,
         reviewDTOS: prev.reviewDTOS.filter((r) => r.id !== id),
       }));
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    const password = window.prompt("비밀번호를 입력해주세요:");
-  
-    if (!password) {
-      alert("비밀번호를 입력해야 탈퇴할 수 있습니다.");
-      return;
-    }
-  
-    if (window.confirm("정말 탈퇴하시겠습니까?")) {
-      try {
-        // 서버에 회원탈퇴 요청
-        console.log("탈퇴 요청하는 사용자 ID:", profile.id);
-        await deleteUser(profile.id);
-  
-        // 클라이언트 토큰 삭제
-        localStorage.removeItem("accessToken");
-  
-        alert("회원 탈퇴가 완료되었습니다.");
-  
-        // 메인페이지 이동
-        navigate("/");
-      } catch (error) {
-        console.error("회원 탈퇴 실패:", error);
-        alert("탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.");
-      }
     }
   };
 
@@ -239,19 +210,7 @@ const MyPageComponent = () => {
               <p className="text-base text-gray-500">작성한 리뷰가 없습니다.</p>
             )}
           </div>
-          
         )}
-
-        {/* 회원 탈퇴 버튼 */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleDeleteAccount}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-md font-semibold transition"
-          >
-            회원 탈퇴
-          </button>
-        </div>
-
       </div>
     </div>
   );
