@@ -65,10 +65,10 @@ nginx.conf
 
 ## Docker 실행 방법
 
-## 1. EC2 SSH 접속 후 프로젝트 폴더 진입
-## 2. .env 파일 설정 (.env 참고)
-## 3. Docker 이미지 빌드 및 컨테이너 실행
-## 4. https://www.hotelatelier.shop 접속
+- 1. EC2 SSH 접속 후 프로젝트 폴더 진입
+- 2. .env 파일 설정 (.env 참고)
+- 3. Docker 이미지 빌드 및 컨테이너 실행
+- 4. https://www.hotelatelier.shop 접속
 
 ---
 
